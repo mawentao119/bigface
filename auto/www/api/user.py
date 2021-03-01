@@ -57,6 +57,11 @@ class User(Resource):
     def __create(self, args):
         result = {"status": "success", "msg": "成功：创建用户."}
 
+        if session['username'] == "Admin":
+            result["status"] = "fail"
+            result["msg"] = "失败：Admin只能创建项目及项目管理员，不能直接创建用户，请直接创建项目."
+            return result
+
         main_project = self.app.config['DB'].get_user_main_project(
             session['username'])
         owner = self.app.config['DB'].get_projectowner(main_project)

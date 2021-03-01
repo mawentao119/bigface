@@ -387,7 +387,7 @@ class TestDB():
         # self.runsql(
         #     '''INSERT INTO project(projectname,owner,users) VALUES('Demo_Project','Admin','Admin');''')
         self.runsql(
-            '''INSERT INTO project(projectname,owner,users) VALUES('darwen','Admin','Admin');''')
+            '''INSERT INTO project(projectname,owner,users) VALUES('DemoProject','Admin','Admin');''')
 
     def add_project(self, projectname, owner, users):
         return self.runsql("INSERT INTO project(projectname,owner,users) VALUES('{}','{}','{}');".format(

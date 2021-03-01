@@ -9,7 +9,7 @@ def getlogger(name='loggerself',dir=''):
  
     starttime = date.strftime(datetime.now(),'%Y%m%d%H')
 
-    path = os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))) if dir == '' else dir
+    path = os.path.dirname(os.getcwd()) if dir == '' else dir
     LogFile = path + "/logs/" + "app_"+starttime+".log"
 
     os.mkdir(path + "/logs/") if not os.path.exists(path + "/logs/") else None

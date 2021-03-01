@@ -14,21 +14,7 @@ import os
 from utils.dbclass import TestDB
 
 class Config:
-    # conf_path = os.getcwd() + "/.beats/auto.json"
 
-    #if exists_path(conf_path):
-    #    config = json.load(codecs.open(conf_path, 'r', 'utf-8'))
-
-    #    MAIL_SERVER = config["smtp"]["server"]
-    #    MAIL_PORT = config["smtp"]["port"]
-    #    MAIL_USE_TLS = True
-    #    MAIL_USERNAME = config["smtp"]["username"]
-    #    MAIL_PASSWORD = config["smtp"]["password"]
-    #    DEFAULT_MAIL_SENDER = "lymking@foxmail.com"
-    #    FLASKY_ADMIN = config["smtp"]["username"]
-    #    MAIL_USE_SSL = config["smtp"]["ssl"]
-
-    # MAIL_DEBUG = True
     SSL_REDIRECT = False
 
     SECRET_KEY = 'QWERTYUIOPASDFGHJ'
@@ -36,11 +22,22 @@ class Config:
     LOGGING_LEVEL = logging.INFO
     SHOW_DIR_DETAIL = False
 
-    # get_cwd = xxx/work/workspace/Admin/uniRobot
-    AUTO_HOME = os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))).replace('\\','/')
-    # AUTO_HOME = /data/uniRobot/work
-    AUTO_TEMP = AUTO_HOME + '/runtime'
+    # ../os.getcwd()
+    BASE_DIR = os.path.dirname(os.getcwd()).replace('\\','/')
+    # BASE_DIR = /data/davinci_env
+    AUTO_HOME = os.path.join(BASE_DIR,"work")
+    DB_DIR    = os.path.join(AUTO_HOME,"DBs")
+    SPACE_DIR = os.path.join(AUTO_HOME, "workspace")
+    AUTO_TEMP = os.path.join(AUTO_HOME, "runtime")
+
+    os.mkdir(AUTO_HOME) if not os.path.exists(AUTO_HOME) else None
+    os.mkdir(DB_DIR) if not os.path.exists(DB_DIR) else None
+    os.mkdir(SPACE_DIR) if not os.path.exists(SPACE_DIR) else None
+    os.mkdir(os.path.join(SPACE_DIR, 'Admin')) if not os.path.exists(
+        os.path.join(SPACE_DIR, 'Admin')) else None
+    os.mkdir(os.path.join(SPACE_DIR,'Admin/DemoProject')) if not os.path.exists(os.path.join(SPACE_DIR,'Admin/DemoProject')) else None
     os.mkdir(AUTO_TEMP) if not os.path.exists(AUTO_TEMP) else None
+
 
     DB = TestDB(AUTO_HOME)
 
