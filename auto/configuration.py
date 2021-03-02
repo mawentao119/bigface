@@ -19,8 +19,10 @@ class Config:
     LOGGING_LEVEL = logging.INFO
     SHOW_DIR_DETAIL = False
 
+    APP_DIR = os.getcwd()
+    CASE_TEMPLATE_DIR = os.path.join(APP_DIR,'auto/www/templates/case_template')
     # ../os.getcwd()
-    BASE_DIR = os.path.dirname(os.getcwd()).replace('\\','/')
+    BASE_DIR = os.path.dirname(APP_DIR).replace('\\','/')
     # BASE_DIR = /data/davinci_env
     AUTO_HOME = os.path.join(BASE_DIR,"work")
     DB_DIR    = os.path.join(AUTO_HOME,"DBs")

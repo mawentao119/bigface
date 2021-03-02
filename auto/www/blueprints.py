@@ -9,7 +9,7 @@ import os
 import markdown
 from flask import Blueprint, render_template, session, redirect, url_for, current_app, send_file, request
 from utils.file import get_splitext, exists_path, get_projectnamefromkey, read_file
-from utils.parsing import prepare_editorjs
+from utils.model_design import show_ui
 from utils.do_report import get_distinct_suites, rpt_caseratio, rpt_runprogress, rpt_moduleprogress, rpt_moduleinfo
 from utils.mylogger import getlogger
 
@@ -25,7 +25,14 @@ def index():
 @routes.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
     if 'username' in session:
-        return render_template('dashboard.html', username=session['username'])
+        app = current_app._get_current_object()
+        tpltdir = app.config["CASE_TEMPLATE_DIR"]
+        options = []
+        for root, dirs, files in os.walk(tpltdir, topdown=False):
+            for f in files:
+                (n, e) = os.path.splitext(f)
+                options.append(n) if e == '.html' else None
+        return render_template('dashboard.html', username=session['username'], options=options)
     else:
         return render_template('login.html')
 
@@ -40,6 +47,8 @@ def get_report():
 
 @routes.route("/editor/<key>")
 def editor(key):
+
+    #app = current_app._get_current_object()
 
     rpkey = key.replace("--", "/")
     t = get_splitext(rpkey)
@@ -73,8 +82,9 @@ def editor(key):
         return send_file(rpkey)
 
     if t[1] in (".tmd"):
-        res = read_file(rpkey)
-        return render_template("test_design.html", key=rpkey, value=res["data"])
+        res = show_ui(rpkey)
+
+        return render_template(res["html"], key=rpkey, value=res["data"])
     return render_template(default)
 
 

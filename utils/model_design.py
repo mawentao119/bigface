@@ -5,9 +5,10 @@ __author__ = "mawentao119@gmail.com"
 """
 Model based test design
 """
-import os
+import os, codecs, importlib
 import time
 import json
+from utils.file import write_file
 from utils.mylogger import getlogger
 
 log = getlogger('Utils.Model_Design')
@@ -132,6 +133,67 @@ def gen_casefile(model_file, method, output_file):
     walk_model(mod, method, output_file)
 
     return {"status": "success", "msg": "生成文件：{}.".format(output_file)}
+
+def show_ui(tmdfile):
+    "找到 模版的 html ，解析出 tmd 文件的数据内容"
+    data = ""
+    html = "default.html"
+
+    log.info("处理用例文件：{}".format(tmdfile))
+
+    if not os.path.exists(tmdfile):
+        log.error("文件不存在：{}".format(tmdfile))
+        return {"html": html, "data": data}
+
+    f = codecs.open(tmdfile, 'r', "utf-8")
+    data = f.read()
+    f.close()
+
+    mod = json.load(open(tmdfile, encoding='utf-8'))
+
+    tplname = mod.get("modelData").get("templateName")
+    if tplname:
+        html = "case_template/" + tplname + '.html'
+    else:
+        html = "default.html"
+
+    log.info("Html 模版文件：{}".format(html))
+
+    return {"html": html, "data": data}
+
+def create_model(args):
+
+    tplname = args['category']
+    tmdfile = args["key"] + '/' + args['name'] + '.tmd'
+
+    des = 'utils.case_lib.' + tplname
+    t = importlib.import_module(des)
+    tmp = t.template(tplname, tmdfile, "")
+
+    result = tmp.create_model()
+
+    return result
+
+def save_model(args):
+
+    result = {"status": "success", "msg": "成功：保存成功."}
+
+    user_path = args["key"]
+    data = json.loads(args["data"])
+
+    tplname = data.get("modelData").get("templateName")
+    log.info("模版名：{} 文件：{}".format(tplname,user_path))
+
+    if tplname:
+        des = 'utils.case_lib.'+tplname
+        t = importlib.import_module(des)
+        tmp = t.template(tplname, user_path, data)
+        result = tmp.save_data()
+    else:
+        result["status"] = "fail"
+        result["msg"] = "失败：保存的数据中无法找到modelData.templateName"
+
+    return result
 
 
 if __name__ == '__main__':
