@@ -64,7 +64,7 @@ class Project(Resource):
         return result, 201
 
     def __create(self, args):
-
+        "Create Project , User , Save Settings .."
         name = args["name"]
         manager = args["manager"]
         passwd = generate_password_hash("123")
@@ -85,6 +85,7 @@ class Project(Resource):
         if not exists_path(project_path):
             mk_dirs(project_path)
             mk_dirs(os.path.join(project_path, 'platforminterface'))
+            mk_dirs(os.path.join(project_path, 'templates'))
 
         if not self.app.config['DB'].add_project(name, manager, ''):
             result["status"] = "fail"

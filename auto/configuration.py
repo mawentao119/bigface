@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 
-__author__ = "苦叶子"
+__author__ = "mawentao119@gmail.com"
 
 """
-
-公众号: 开源优测
-
-Email: lymking@foxmail.com
-
+Init the App
+init Admin and DemoProject
 """
 import logging
 import os
@@ -35,7 +32,10 @@ class Config:
     os.mkdir(SPACE_DIR) if not os.path.exists(SPACE_DIR) else None
     os.mkdir(os.path.join(SPACE_DIR, 'Admin')) if not os.path.exists(
         os.path.join(SPACE_DIR, 'Admin')) else None
-    os.mkdir(os.path.join(SPACE_DIR,'Admin/DemoProject')) if not os.path.exists(os.path.join(SPACE_DIR,'Admin/DemoProject')) else None
+    os.mkdir(os.path.join(SPACE_DIR,'Admin/DemoProject')) if not \
+        os.path.exists(os.path.join(SPACE_DIR,'Admin/DemoProject')) else None
+    os.mkdir(os.path.join(SPACE_DIR, 'Admin/DemoProject/templates')) if not os.path.exists(
+        os.path.join(SPACE_DIR, 'Admin/DemoProject/templates')) else None
     os.mkdir(AUTO_TEMP) if not os.path.exists(AUTO_TEMP) else None
 
 
