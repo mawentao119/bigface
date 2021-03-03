@@ -14,7 +14,7 @@ log = getlogger('Utils.Model_Design')
 
 
 def walk_model(mod, method, output_file):
-
+    "遍历图形， 生成每条执行路线"
     startnode = None
     for node in mod["nodeDataArray"]:
         if node["id"] == -1:
@@ -45,7 +45,7 @@ def walk_model(mod, method, output_file):
 
 
 def output_path(ps, casenum, method, output_file):
-
+    "将每条链路，附带上属性及描述，写输出文件"
     if len(ps) == 0:
         log.error("路径为空，请检查模型文件")
         return
@@ -92,7 +92,7 @@ def output_path(ps, casenum, method, output_file):
 
 
 def gen_modelgraph(jsonfile):
-
+    "json数据 图形化：有向无环图"
     mod = json.load(open(jsonfile, encoding='utf-8'))
 
     # 让 link 的 end 指向 具体 node

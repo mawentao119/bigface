@@ -45,6 +45,7 @@ class CaseTemplate(object):
 
         return result
 
+
     def gen_casetemplate(self):
         print(">> Gen Case Template ..")
 
