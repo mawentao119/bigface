@@ -6,7 +6,7 @@ class template(CaseTemplate):
 
     def __init__(self, tplname, tmdfile, data):
         CaseTemplate.__init__(self,tplname, tmdfile ,data)
-        self.desc = "通过操作驱动，动作和状态转换模版"
+        self.desc = "数据驱动及多输入节点状态"
 
     def create_model(self):
         self.log.info("通过模版{} ,创建文件：{}".format(self.tplname, self.tmdfile))
@@ -24,8 +24,6 @@ class template(CaseTemplate):
             return result
 
         if not os.path.exists(user_path):
-            tplfile = os.path.join(self.app.config["CASE_TEMPLATE_DIR"], 'template1.tplt')
-            self.log.info("Create Case Model from tempate file:{}".format(tplfile))
             copy_file(tplfile, user_path)
         else:
             result["status"] = "fail"

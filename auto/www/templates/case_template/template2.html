@@ -1,0 +1,986 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <title>State Chart</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='lib/easyui/themes/bootstrap/easyui.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='lib/easyui/themes/icon.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/auto.css') }}">
+
+  <style type="text/css">
+    .lines-no .datagrid-body td {
+      border-right: 1px dotted transparent;
+      border-bottom: 1px dotted transparent;
+    }
+  </style>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/DataInspector.css') }}">
+  <script src="{{ url_for('static', filename='lib/gojs/DataInspector.js') }}"></script>
+
+  <script src="{{ url_for('static', filename='lib/gojs/migo.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/easyui/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/easyui/jquery.easyui.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/auto.js') }}"></script>
+  <script id="code">
+    function init() {
+      //if (window.goSamples) goSamples();  // init for these samples -- you don't need to call this
+      var $ = go.GraphObject.make; // for conciseness in defining templates
+
+      // 节点外观，圆角长方形
+      var roundedRectangleParams = {
+        parameter1: 2, // set the rounded corner
+        spot1: go.Spot.TopLeft,
+        spot2: go.Spot.BottomRight // make content go all the way to inside edges of rounded corners
+      };
+
+      myDiagram =
+        $(go.Diagram, "myDiagramDiv", // must name or refer to the DIV HTML element
+          {
+            "animationManager.initialAnimationStyle": go.AnimationManager.None, //初识动画
+            "InitialAnimationStarting": function (e) {
+              var animation = e.subject.defaultAnimation;
+              animation.easing = go.Animation.EaseOutExpo;
+              animation.duration = 900;
+              animation.add(e.diagram, 'scale', 0.1, 1);
+              animation.add(e.diagram, 'opacity', 0, 1);
+            },
+
+            // 滚轮缩放
+            "toolManager.mouseWheelBehavior": go.ToolManager.WheelZoom,
+            // 双击新建节点
+            "clickCreatingTool.archetypeNodeData": {
+              text: "new node"
+            },
+            // 重复于撤销 undo & redo
+            "undoManager.isEnabled": true,
+            // 取得节点位置
+            positionComputation: function (diagram, pt) {
+              return new go.Point(Math.floor(pt.x), Math.floor(pt.y));
+            }
+          });
+
+      //window.parent.myDiagram = myDiagram    //真正到全局变量，跳过IFrame
+
+      // when the document is modified, add a "*" to the title and enable the "Save" button
+      myDiagram.addDiagramListener("Modified", function (e) {
+        var button = document.getElementById("SaveButton");
+        if (button) button.disabled = !myDiagram.isModified;
+        var idx = document.title.indexOf("*");
+        if (myDiagram.isModified) {
+          if (idx < 0) document.title += "*";
+        } else {
+          if (idx >= 0) document.title = document.title.substr(0, idx);
+        }
+      });
+
+      // define the Node template
+      myDiagram.nodeTemplate =
+        $(go.Node, "Auto", {
+            locationSpot: go.Spot.Top,
+            isShadowed: true,
+            shadowBlur: 1,
+            shadowOffset: new go.Point(0, 1),
+            shadowColor: "rgba(0, 0, 0, .14)"
+          },
+          new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
+          // define the node's outer shape, which will surround the TextBlock
+          $(go.Shape, "RoundedRectangle", roundedRectangleParams, {
+            name: "SHAPE",
+            fill: "#ccecf1",
+            strokeWidth: 0,
+            stroke: null,
+            portId: "", // this Shape is the Node's port, not the whole Node
+            fromLinkable: true,
+            fromLinkableSelfNode: true,
+            fromLinkableDuplicates: true,
+            toLinkable: true,
+            toLinkableSelfNode: true,
+            toLinkableDuplicates: true,
+            cursor: "pointer"
+          }),
+          $(go.TextBlock, {
+              font: "bold small-caps 11pt helvetica, bold arial, sans-serif",
+              margin: 7,
+              stroke: "rgba(0, 0, 0, .87)",
+              editable: true // editing the text automatically updates the model data
+            },
+            new go.Binding("text").makeTwoWay())
+        );
+
+
+      // unlike the normal selection Adornment, this one includes a Button
+      myDiagram.nodeTemplate.selectionAdornmentTemplate =
+        $(go.Adornment, "Spot",
+          $(go.Panel, "Auto",
+            $(go.Shape, "RoundedRectangle", roundedRectangleParams, {
+              fill: null,
+              stroke: "#7986cb",
+              strokeWidth: 3
+            }),
+            $(go.Placeholder) // a Placeholder sizes itself to the selected Node
+          ),
+          // the button to create a "next" node, at the top-right corner
+          $("Button", {
+              alignment: go.Spot.TopRight,
+              click: addNodeAndLink // this function is defined below
+            },
+            $(go.Shape, "PlusLine", {
+              width: 6,
+              height: 6
+            })
+          ) // end button
+        ); // end Adornment
+
+      myDiagram.nodeTemplateMap.add("Start",
+        $(go.Node, "Spot", {
+            desiredSize: new go.Size(70, 70)
+          },
+          new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
+          $(go.Shape, "Circle", {
+            fill: "#52ce60",
+            /* green */
+            stroke: null,
+            portId: "",
+            fromLinkable: true,
+            fromLinkableSelfNode: true,
+            fromLinkableDuplicates: true,
+            toLinkable: true,
+            toLinkableSelfNode: true,
+            toLinkableDuplicates: true,
+            cursor: "pointer"
+          }),
+          $(go.TextBlock, "Start", {
+            font: "bold 14pt helvetica, bold arial, sans-serif",
+            stroke: "whitesmoke"
+          })
+        )
+      );
+
+      // clicking the button inserts a new node to the right of the selected node,
+      // and adds a link to that new node
+      function addNodeAndLink(e, obj) {
+        var adornment = obj.part;
+        var diagram = e.diagram;
+        diagram.startTransaction("Add State");
+
+        // get the node data for which the user clicked the button
+        var fromNode = adornment.adornedPart;
+        var fromData = fromNode.data;
+        // create a new "State" data object, positioned off to the right of the adorned Node
+        var toData = {
+          text: "new"
+        };
+        var p = fromNode.location.copy();
+        p.x += 160;
+        toData.loc = go.Point.stringify(p); // the "loc" property is a string, not a Point object
+        // add the new node data to the model
+        var model = diagram.model;
+        model.addNodeData(toData);
+
+        // create a link data from the old node data to the new node data
+        var linkdata = {
+          from: model.getKeyForNodeData(fromData), // or just: fromData.id
+          to: model.getKeyForNodeData(toData),
+          text: "transition",
+          weight: "1.0"
+        };
+        // and add the link data to the model
+        model.addLinkData(linkdata);
+
+        // select the new Node
+        var newnode = diagram.findNodeForData(toData);
+        diagram.select(newnode);
+
+        diagram.commitTransaction("Add State");
+
+        // if the new node is off-screen, scroll the diagram to show the new node
+        diagram.scrollToRect(newnode.actualBounds);
+      }
+
+      // replace the default Link template in the linkTemplateMap
+      myDiagram.linkTemplate =
+        $(go.Link, // the whole link panel
+          {
+            curve: go.Link.Bezier,
+            adjusting: go.Link.Stretch,
+            reshapable: true,
+            relinkableFrom: true,
+            relinkableTo: true,
+            toShortLength: 3
+          },
+          new go.Binding("points").makeTwoWay(),
+          new go.Binding("curviness"),
+          $(go.Shape, // the link shape
+            {
+              strokeWidth: 1.0
+            },
+            new go.Binding('stroke', 'mainpath', function (mainpath) {
+              return mainpath ? "#52ce60" /* green */ : 'black';
+            }),
+            new go.Binding('strokeWidth', 'weight', function (weight) {
+              return weight ? weight : 1.0;
+            })
+          ),
+          $(go.Shape, // the arrowhead
+            {
+              toArrow: "standard",
+              stroke: null
+            },
+            new go.Binding('fill', 'mainpath', function (mainpath) {
+              return mainpath ? "#52ce60" /* green */ : 'black';
+            })),
+          $(go.Panel, "Auto",
+            $(go.Shape, // the label background, which becomes transparent around the edges
+              {
+                fill: $(go.Brush, "Radial", {
+                  0: "rgb(245, 245, 245)",
+                  0.7: "rgb(245, 245, 245)",
+                  1: "rgba(245, 245, 245, 0)"
+                }),
+                stroke: null
+              }),
+            $(go.TextBlock, "transition", // the label text
+              {
+                textAlign: "center",
+                font: "9pt helvetica, arial, sans-serif",
+                margin: 4,
+                editable: true // enable in-place editing
+              },
+              // editing the text automatically updates the model data
+              new go.Binding("text").makeTwoWay())
+          )
+        );
+
+      // read in the JSON data from the "mySavedModel" element
+      init_load();
+      myDiagram.select(myDiagram.nodes.first());
+
+      // Declare which properties to show and how.
+      // By default, all properties on the model data objects are shown unless the inspector option "includesOwnProperties" is set to false.
+
+      // Show the primary selection's data, or blanks if no Part is selected:
+      var inspector = new Inspector('elementInspector', myDiagram, {
+        // allows for multiple nodes to be inspected at once
+        multipleSelection: true,
+        // max number of node properties will be shown when multiple selection is true
+        showSize: 4,
+        // when multipleSelection is true, when showAllProperties is true it takes the union of properties
+        // otherwise it takes the intersection of properties
+        showAllProperties: true,
+        // uncomment this line to only inspect the named properties below instead of all properties on each object:
+        // includesOwnProperties: false,
+        properties: {
+          "id": {
+            readOnly: true,
+            show: Inspector.showIfNode
+          },
+          "key": {
+            readOnly: true,
+            show: Inspector.showIfLink
+          },
+          "text": {},
+          "description": {},
+          "outputvariable": {
+            show: Inspector.showIfNode
+          },
+          "action": {
+            show: Inspector.showIfLink
+          },
+          "parameters": {
+            show: Inspector.showIfLink
+          },
+
+          "disabled": {
+            show: Inspector.showIfNode,
+            type: 'checkbox'
+          },
+          "properties": {
+            show: Inspector.showIfNode
+          },
+
+          "weight": {
+            show: Inspector.showIfLink,
+            type: "select",
+            choices: function (node, propName) {
+              if (Array.isArray(node.data.choices)) return node.data.choices;
+              return ["1.0", "2.0", "3.0"];
+            }
+          },
+          "mainpath": {
+            show: Inspector.showIfLink,
+            type: 'checkbox'
+          },
+          "isGroup": {
+            readOnly: true,
+            show: Inspector.showIfPresent
+          },
+          "category": {
+            readOnly: true,
+            show: Inspector.showIfPresent
+          },
+
+          "loc": {
+            show: false
+          },
+          "points": {
+            show: false
+          },
+          "from": {
+            show: false
+          },
+          "to": {
+            show: false
+          },
+
+        }
+      });
+
+      // Always show the model.modelData:
+      inspector2 = new Inspector('modelInspector', myDiagram, {
+        inspectSelection: false,
+        properties: {
+          "templateName": {
+            readOnly: true
+          },
+          "nodes": {
+            readOnly: true
+          },
+          "links": {
+            readOnly: true
+          },
+          "actions": {
+            readOnly: true
+          },
+          "variables": {
+            readOnly: true
+          },
+          "init_actions": {},
+          "version": {},
+          "variable": {
+            show: false
+          }
+        }
+      });
+      inspector2.inspectObject(myDiagram.model.modelData);
+
+    } // ** END OF init()
+
+    // 判断是否是内部变量
+    function isInner(v) {
+      if (v) {
+        return v.trim().startsWith('_');
+      } else {
+        return false;
+      }
+    }
+    // 保存模型数据到后台文件
+    function save() {
+
+      // 遍历模型，生成模型变量信息 myDiagram.model.modelData.variable
+      let vars = new Array(); // 新到变量数组
+
+      // 遍历node.outputvariable
+      let nodes = myDiagram.model.nodeDataArray;
+      for (let i in nodes) {
+        let tmp = nodes[i].outputvariable;
+        if (!tmp || tmp.trim() == "") {
+          continue;
+        }
+        let vs = nodes[i].outputvariable.split(',');
+        // 搜集所有变量并去重
+        for (let v in vs) {
+          if (isInner(vs[v])) { //过滤掉内部变量
+            delete vs[v]
+            continue;
+          }
+          if (vs[v].trim().startsWith('"') || vs[v].trim().startsWith("'") || vs[v].trim().startsWith('[') || vs[v]
+            .trim().startsWith('{')) { // "new"+var1 || 'zhangsan' || [var1,"abc"] || {"abc":123}
+            delete vs[v]
+            continue;
+          }
+          for (let z in vars) {
+            if (vs[v].trim() == vars[z].name.trim()) {
+              vars[z].used.push('n' + nodes[i].text)
+              delete vs[v];
+              break;
+            }
+          }
+        }
+
+        // 添加新增变量
+        for (let v in vs) {
+          if (isInner(vs[v])) {
+            continue;
+          }
+          vars.push({
+            "name": vs[v].trim(),
+            "description": "",
+            "value": "",
+            "rule": "",
+            "used": ['n' + nodes[i].text]
+          })
+        }
+
+      } // END For nodes
+
+      // 遍历link.parameters
+      let links = myDiagram.model.linkDataArray;
+      for (let i in links) {
+        let tmp = links[i].parameters;
+        if (!tmp || tmp.trim() == "") {
+          continue;
+        }
+        let vs = links[i].parameters.split(',');
+        // 搜集所有变量并去重
+        for (let v in vs) {
+          if (isInner(vs[v])) { //过滤掉内部变量
+            delete vs[v];
+            continue;
+          }
+          if (vs[v].trim().startsWith('"')) { // "new"+var1 || "zhangsan"
+            delete vs[v]
+            continue;
+          }
+          for (let z in vars) {
+            if (vs[v].trim() == vars[z].name.trim()) {
+              vars[z].used.push('l' + links[i].text)
+              delete vs[v];
+              break;
+            }
+          }
+        }
+
+        // 添加新增变量
+        for (let v in vs) {
+          if (isInner(vs[v])) {
+            continue;
+          }
+          vars.push({
+            "name": vs[v].trim(),
+            "description": "",
+            "value": "",
+            "rule": "",
+            "used": ['l' + links[i].text]
+          })
+        }
+
+      } // END For Links
+
+      // 与现存变量进行合并
+      let curvars = myDiagram.model.modelData.variable;
+      for (let c in curvars) {
+        for (let v in vars) {
+          if (curvars[c].name.trim() == vars[v].name.trim()) {
+            vars[v].value = curvars[c].value;
+            vars[v].description = curvars[c].description;
+            vars[v].rule = curvars[c].rule;
+          }
+        }
+      }
+
+      myDiagram.model.setDataProperty(myDiagram.model.modelData, "variable", vars);
+
+      myDiagram.model.setDataProperty(myDiagram.model.modelData, "variables", myDiagram.model.modelData.variable
+        .length);
+      myDiagram.model.setDataProperty(myDiagram.model.modelData, "nodes", myDiagram.model.nodeDataArray.length);
+      myDiagram.model.setDataProperty(myDiagram.model.modelData, "links", myDiagram.model.linkDataArray.length);
+
+      // 导出模型数据
+      modjson = myDiagram.model.toJson();
+      document.getElementById("mySavedModel").value = modjson;
+
+      var key = "{{ key }}";
+      var data = {
+        "method": "save",
+        "key": key,
+        "data": myDiagram.model.toJson(),
+      };
+      do_ajax("post", "/api/v1/test_design/", data, after_save);
+
+    } // End of save()
+
+    // 从json文件加载模型
+    function load() {
+      myDiagram.model = go.Model.fromJson(document.getElementById("mySavedModel").value);
+      myDiagram.select(myDiagram.nodes.first());
+    }
+
+    // 保存模型数据变更，先load 再 save
+    function load_save() {
+      load();
+      save();
+    }
+
+    // 首次加载页面load 数据，需要同时初始化 tabs
+    function init_load() {
+      load();
+      reload_vb();
+      reload_invb();
+      reload_act();
+    }
+
+    function after_save(data) {
+      var success = "success"
+      if (data["status"] == success) {
+        //加载模型变量数据
+        reload_vb();
+        reload_invb();
+        reload_act();
+
+        // 刷新模型inspector
+        inspector2.inspectObject(myDiagram.model.modelData);
+      }
+      do_msg(data)
+    }
+
+    function reload_vb() {
+      //加载模型变量数据
+      $('#vb').datagrid('loadData', {
+        'total': 1,
+        'rows': myDiagram.model.modelData.variable
+      });
+    }
+
+    function reload_invb() {
+
+      // 遍历模型，生成模型变量信息: 内部变量 tab
+      let invars = new Array();
+
+      // 遍历node.outputvariable
+      let nodes = myDiagram.model.nodeDataArray;
+      for (let i of nodes) {
+        let tmp = i.outputvariable;
+        if (!tmp || tmp.trim() == "") { //没有配置或空
+          continue;
+        }
+        let vs = i.outputvariable.split(',');
+        // 搜集所有变量并去重
+        for (let v in vs) {
+          if (!(isInner(vs[v]))) { //过滤掉输入变量-非内部变量
+            delete vs[v]; // 从vs删除这个变量
+            continue;
+          }
+          if ((vs[v].indexOf('=') != -1) && !(vs[v].endsWith('='))) {
+            let vals = vs[v].split('=');
+            for (let z of invars) {
+              if (vals[0].trim() == z.name.trim()) {
+                z.used.push('n' + i.text)
+                if (!(vals[1].trim() == z.value.trim())) {
+                  console.log("Warn:变量[" + vals[0] + "]值不一致 " + i.text + "[" + vals[1].trim() + "] VS " + z.used + "[" +
+                    z.value.trim() + "]");
+                }
+                delete vs[v];
+                break;
+              }
+            }
+          } else {
+            for (let z of invars) {
+              if (vs[v].trim() == z.name.trim()) {
+                z.used.push('n' + i.text)
+                delete vs[v];
+                break;
+              }
+            }
+          }
+        }
+
+        // 添加新增变量
+        for (let v of vs) {
+          if (!(isInner(v))) {
+            continue;
+          }
+          if ((v.indexOf('=') != -1) && !(v.endsWith('='))) {
+            let vals = v.split('=');
+            invars.push({
+              "name": vals[0].trim(),
+              "value": vals[1].trim(),
+              "used": ['n' + i.text]
+            });
+          } else {
+            invars.push({
+              "name": v.trim(),
+              "value": "",
+              "used": ['n' + i.text]
+            });
+          }
+
+        }
+
+      } // END For nodes
+
+      // 遍历links.parameters
+      let links = myDiagram.model.linkDataArray;
+      for (let i of links) {
+        let tmp = i.parameters;
+        if (!tmp || tmp.trim() == "") { //没有配置或空
+          continue;
+        }
+        let vs = i.parameters.split(',');
+        // 搜集所有变量并去重
+        for (let v in vs) {
+          if (!(isInner(vs[v]))) { //过滤掉输入变量-非内部变量
+            delete vs[v];
+            continue;
+          }
+          for (let z of invars) {
+            if (vs[v].trim() == z.name.trim()) {
+              z.used.push('l' + i.text)
+              delete vs[v];
+              break;
+            }
+          }
+        }
+
+        // 添加新增变量
+        for (let v of vs) {
+          if (!(isInner(v))) {
+            continue;
+          }
+          if (v.indexOf('=') != -1) {
+            console.log("参数错误:link " + i.text + " parameters 不允许出现'='!");
+          } else {
+            invars.push({
+              "name": v.trim(),
+              "value": "",
+              "used": ['l' + i.text]
+            });
+          }
+
+        }
+
+      } // END For Links
+
+      $('#invb').datagrid('loadData', {
+        'total': 1,
+        'rows': invars
+      });
+    }
+
+    function reload_act() {
+      let invars = new Array();
+      let links = new Array();
+      for (let i of myDiagram.model.linkDataArray) {
+        links.push(i);
+      }
+      // 遍历links.action
+      for (let i of links) {
+        if (!i.action || i.action.trim() == "") { //没有配置或空
+          continue;
+        }
+        let exists = false;
+        for (let z of invars) {
+          if (i.action.trim() == z.action.trim()) {
+            z.used.push(i.text);
+            z.parameters.push("(" + i.parameters + ")");
+            exists = true;
+            break;
+          }
+        }
+        if (!exists) {
+          invars.push({
+            "action": i.action.trim(),
+            "parameters": ["(" + i.parameters + ")"],
+            "used": [i.text]
+          });
+        }
+      }
+
+      $('#act').datagrid('loadData', {
+        'total': 1,
+        'rows': invars
+      });
+    }
+
+    function edit_var(win_id, ff_id) {
+      let data = $("#{0}".lym_format(ff_id)).serializeObject();
+
+      let curvars = myDiagram.model.modelData.variable;
+      for (let c of curvars) {
+        if (c.name == data.name) {
+          c.value = data.value;
+          c.description = data.description;
+          c.rule = data.rule;
+        }
+      }
+      close_win(win_id);
+      save();
+    }
+
+    function gen_casetemplate() {
+      var key = "{{ key }}";
+      var data = {
+        "method": "casetemplate",
+        "key": key,
+        "data": {
+          "detail": "enmu"
+        },
+      };
+      do_ajax("post", "/api/v1/test_design/", data, do_msg);
+    }
+
+    function gen_handcase() {
+      var key = "{{ key }}";
+      var data = {
+        "method": "handcase",
+        "key": key,
+        "data": {
+          "detail": "enmu"
+        },
+      };
+      do_ajax("post", "/api/v1/test_design/", data, do_msg);
+    }
+
+    function gen_autocase() {
+      var key = "{{ key }}";
+      var data = {
+        "method": "autocase",
+        "key": key,
+        "data": {
+          "detail": "enmu"
+        },
+      };
+      do_ajax("post", "/api/v1/test_design/", data, do_msg);
+    }
+  </script>
+</head>
+
+<body class="easyui-layout" onload="init()">
+  <div data-options="region:'center'">
+    <div class="easyui-layout" data-options="fit:true">
+      <div data-options="region:'north',split:true" style="height:60%">
+        <div id="myDiagramDiv" style="border: solid 1px black; width: 100%; height: 100%; background: whitesmoke">
+        </div>
+      </div>
+      <div data-options="region:'center'">
+        <div id="tt" data-options="tools:'#tab-tools', justified:true, selected:1" style="width:100%;height:100%">
+          <div title="模型" style="padding:5px">
+            <textarea id="mySavedModel" style="width:100%;height:100%">{{value}}</textarea>
+          </div>
+          <div title="输入变量" style="padding:2px">
+            <table id="vb"></table>
+          </div>
+          <div title="中间变量" style="padding:2px">
+            <table id="invb"></table>
+          </div>
+          <div title="Actions" style="padding:2px">
+            <table id="act"></table>
+          </div>
+          <div title="用例生成" style="padding:10px">
+            <p>1. 变量分为输入变量(常量) 和 内部生成变量（'_'符号开头）</p>
+            <p>2. 输入变量（parameter）需要初始化数据，不能被重新赋值，内部生成变量（outputvariable）系统内部赋值</p>
+            <p>3. parameter形式(不能带‘=’)：para ｜ _para </p>
+            <p>para需要初始化，_para由前面的node初始化</p>
+            <p>4. properties形式: prop | _prop == para | _prop1.lenth() > 5</p>
+            <p>prop表示存在或真，这里就是断言表达式</p>
+            <p>5. outputvariable形式(内部变量必须被赋值): varname | _varname=var |_varname=_var2</p>
+            <p>varname 表示输入变量，需要初始化，_varname表示系统生成变量需要赋值，如果没有，则认为'_'之后的为其值</p>
+            <p>6. 所有的可编辑属性都是字符串，标点符号请用英文逗号</p>
+          </div>
+        </div>
+        <div id="m_mod">
+          <div data-options="iconCls:'icon-refresh'" onclick="load_save()">刷新变更</div>
+        </div>
+        <div id="m_var">
+          <div id="EditVar" data-options="iconCls:'icon-edit'" onclick="editvar()">配置变量</div>
+        </div>
+        <div id="m_case">
+          <div onclick="gen_casetemplate()">生成用例模版</div>
+          <div onclick="gen_handcase()">生成手工用例</div>
+          <!-- <div data-options="iconCls:'icon-search'">Search</div> -->
+          <div onclick="gen_autocase()">生成自动化用例</div>
+        </div>
+        <div id="tab-tools">
+          <a href="#" id="SaveButton" class="easyui-linkbutton" data-options="disabled:false,iconCls:'icon-save'"
+            onclick="save()" style="margin-left: 5px;">保存模型</a>
+        </div>
+
+        <script>
+          $(function () {
+
+            var p = $('#tt').tabs().tabs('tabs')[4];
+            var mb = p.panel('options').tab.find('a.tabs-inner');
+            mb.menubutton({
+              menu: '#m_case',
+            }).click(function () {
+              $('#tt').tabs('select', 4);
+            });
+
+            var p = $('#tt').tabs().tabs('tabs')[0];
+            var mb = p.panel('options').tab.find('a.tabs-inner');
+            mb.menubutton({
+              menu: '#m_mod',
+            }).click(function () {
+              $('#tt').tabs('select', 0);
+            });
+
+            var p = $('#tt').tabs().tabs('tabs')[1];
+            var mb = p.panel('options').tab.find('a.tabs-inner');
+            mb.menubutton({
+              menu: '#m_var',
+            }).click(function () {
+              $('#tt').tabs('select', 1);
+            });
+
+          });
+
+          $('#vb').datagrid({
+            singleSelect: true,
+            //fitColumns: true,
+            rownumbers: true,
+            columns: [
+              [{
+                  field: 'name',
+                  title: '变量名(name)',
+                  width: 80
+                },
+                {
+                  field: 'value',
+                  title: '取值(value)',
+                  width: 150
+                },
+                {
+                  field: 'rule',
+                  title: '规则(rule)',
+                  width: 150
+                },
+                {
+                  field: 'used',
+                  title: '使用者(used)',
+                  width: 300
+                },
+                {
+                  field: 'description',
+                  title: '描述(description)',
+                  width: 150
+                },
+              ]
+            ]
+          });
+
+          $('#invb').datagrid({
+            singleSelect: true,
+            //fitColumns: true,
+            rownumbers: true,
+            columns: [
+              [{
+                  field: 'name',
+                  title: '变量名(name)',
+                  width: 100
+                },
+                {
+                  field: 'value',
+                  title: '取值(value)',
+                  width: 200
+                },
+                {
+                  field: 'used',
+                  title: '使用者(used)',
+                  width: 350
+                },
+              ]
+            ]
+          });
+
+          $('#act').datagrid({
+            singleSelect: true,
+            //fitColumns: true,
+            rownumbers: true,
+            columns: [
+              [{
+                  field: 'action',
+                  title: 'Action Name',
+                  width: 100
+                },
+                {
+                  field: 'parameters', // (a, b) (a,b,c)
+                  title: '参数组合情况(parameters)',
+                  width: 200
+                },
+                {
+                  field: 'used',
+                  title: '使用者(used)',
+                  width: 350
+                },
+              ]
+            ]
+          });
+
+          // 切换tab页面同步刷新数据,否则无法显示更新的数据
+          $('#tt').tabs({
+            onSelect: function (title) {
+              if (title == '输入变量') {
+                $('#vb').datagrid('resize');
+              }
+              if (title == '中间变量') {
+                $('#invb').datagrid('resize');
+              }
+              if (title == 'Actions') {
+                $('#act').datagrid('resize');
+              }
+            }
+          });
+
+          function editvar() {
+            var row = $('#vb').datagrid('getSelected');
+            if (row) {
+              $("#edit_var_ff input#varname").textbox("setValue", row.name);
+              $("#edit_var_ff input#vardesc").textbox("setValue", row.description);
+              $("#edit_var_ff input#varvalue").textbox("setValue", row.value);
+              $("#edit_var_ff input#varrule").textbox("setValue", row.rule);
+              open_win('edit_var');
+            } else {
+              show_msg("Alert", "Tip：请先选择一个变量～");
+            }
+          }
+        </script>
+      </div> //End Center
+    </div>
+  </div>
+
+  <div data-options="region:'east',split:true,hideCollapsedContent:false" title="属性配置"
+    style="width:25%;max-width:400px;padding:5px 10px;">
+    <div style="margin-bottom:5px">
+      <span style="display: inline-block; vertical-align: top;">
+        Selected Part:<br />
+        <div id="elementInspector" class="inspector" style="width: 100%;"> </div><br />
+        Model.modelData:<br />
+        <div id="modelInspector" class="inspector" style="width: 100%;"> </div><br />
+      </span>
+    </div>
+  </div>
+
+  <!-- edit var -->
+  <div id="edit_var" class="easyui-window" title="编辑变量"
+    data-options="modal:true,closed:true,minimizable:false,maximizable:false,collapsible:false"
+    style="width:320px;height:300px;padding:10px;">
+    <form id="edit_var_ff" method="post">
+      <div style="margin-bottom:10px">
+        <input class="easyui-textbox" id="varname" name="name" label="变量名" labelPosition="left" style="width:100%"
+          data-options="required:true" readonly>
+      </div>
+      <div style="margin-bottom:10px">
+        <input class="easyui-textbox" id="vardesc" name="description" label="描述" labelPosition="left" style="width:100%"
+          data-options="required:true">
+      </div>
+      <div style="margin-bottom:10px">
+        <input class="easyui-textbox" id="varvalue" name="value" label="取值" labelPosition="left" style="width:100%"
+          data-options="required:true">
+      </div>
+      <div style="margin-bottom:10px">
+        <input class="easyui-textbox" id="varrule" name="rule" label="规则" labelPosition="left" style="width:100%"
+          data-options="required:true">
+      </div>
+    </form>
+    <div style="text-align:right;padding:5px 0">
+      <a href="javascript:void(0)" class="easyui-linkbutton" onclick="close_win('edit_var')"
+        style="width:60px">Cancle</a>
+      <a href="javascript:void(0)" class="easyui-linkbutton" onclick="edit_var('edit_var', 'edit_var_ff')"
+        style="width:60px">Save</a>
+    </div>
+  </div>
+  <!-- end -->
+
+</body>
+
+</html>

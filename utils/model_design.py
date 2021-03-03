@@ -8,7 +8,6 @@ Model based test design
 import os, codecs, importlib
 import time
 import json
-from utils.file import write_file
 from utils.mylogger import getlogger
 
 log = getlogger('Utils.Model_Design')
@@ -115,7 +114,7 @@ def gen_modelgraph(jsonfile):
     return mod
 
 
-def gen_casefile(model_file, method, output_file):
+def gen_casefile1(model_file, method, output_file):
 
     os.remove(output_file) if os.path.exists(output_file) else None
 
@@ -168,7 +167,7 @@ def create_model(args):
 
     des = 'utils.case_lib.' + tplname
     t = importlib.import_module(des)
-    tmp = t.template(tplname, tmdfile, "")
+    tmp = t.template(tplname, tmdfile, {})
 
     result = tmp.create_model()
 
@@ -194,6 +193,27 @@ def save_model(args):
         result["msg"] = "失败：保存的数据中无法找到modelData.templateName"
 
     return result
+
+def gen_casefile(args):
+
+    method = args["method"]
+    tmdfile = args["key"]
+
+    mod = json.load(open(tmdfile, encoding='utf-8'))
+
+    tplname = mod.get("modelData").get("templateName")
+
+    des = 'utils.case_lib.'+tplname
+    t = importlib.import_module(des)
+    tmp = t.template(tplname, tmdfile, {})
+
+
+    if method == "handcase":
+        return tmp.gen_mancase()
+    if method == "autocase":
+        return tmp.gen_autocase()
+    if method == "casetemplate":
+        return tmp.gen_casetemplate()
 
 
 if __name__ == '__main__':

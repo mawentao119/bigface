@@ -66,7 +66,9 @@ class TestDesign(Resource):
         return result
 
     def __save(self, args):
+
         result = save_model(args)
+
         self.app.config['DB'].insert_loginfo(
             session['username'], 'model', 'edit', args["key"], result['status'])
 
@@ -74,16 +76,6 @@ class TestDesign(Resource):
 
     def __gen_casefile(self, args):
 
-        modle_file = args["key"]
-
-        if args["method"] == "casetemplate":
-            output_file = os.path.splitext(modle_file)[0] + '.tplt'
-        else:
-            output_file = os.path.splitext(modle_file)[0] + '.robot'
-
-        self.log.info("开始生成用例模版，模型：{}, 输出模版：{}".format(
-            modle_file, output_file))
-        #result = {"status": "success", "msg": "成功：保存成功."}
-        result = gen_casefile(modle_file, args["method"], output_file)
+        result = gen_casefile(args)
 
         return result
