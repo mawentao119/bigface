@@ -24,347 +24,188 @@
   <script type="text/javascript" src="{{ url_for('static', filename='lib/auto.js') }}"></script>
   <script id="code">
     function init() {
-      //if (window.goSamples) goSamples();  // init for these samples -- you don't need to call this
-      var $ = go.GraphObject.make; // for conciseness in defining templates
-
-      // 节点外观，圆角长方形
-      var roundedRectangleParams = {
-        parameter1: 2, // set the rounded corner
-        spot1: go.Spot.TopLeft,
-        spot2: go.Spot.BottomRight // make content go all the way to inside edges of rounded corners
-      };
+      var $ = go.GraphObject.make;
 
       myDiagram =
-        $(go.Diagram, "myDiagramDiv", // must name or refer to the DIV HTML element
+        $(go.Diagram, "myDiagramDiv",
           {
-            "animationManager.initialAnimationStyle": go.AnimationManager.None, //初识动画
-            "InitialAnimationStarting": function (e) {
-              var animation = e.subject.defaultAnimation;
-              animation.easing = go.Animation.EaseOutExpo;
-              animation.duration = 900;
-              animation.add(e.diagram, 'scale', 0.1, 1);
-              animation.add(e.diagram, 'opacity', 0, 1);
-            },
-
-            // 滚轮缩放
-            "toolManager.mouseWheelBehavior": go.ToolManager.WheelZoom,
-            // 双击新建节点
-            "clickCreatingTool.archetypeNodeData": {
-              text: "new node"
-            },
-            // 重复于撤销 undo & redo
-            "undoManager.isEnabled": true,
-            // 取得节点位置
-            positionComputation: function (diagram, pt) {
-              return new go.Point(Math.floor(pt.x), Math.floor(pt.y));
-            }
+            // when a drag-drop occurs in the Diagram's background, make it a top-level node
+            mouseDrop: function(e) { finishDrop(e, null); },
+            layout:  // Diagram has simple horizontal layout
+              $(go.GridLayout,
+                { wrappingWidth: Infinity, alignment: go.GridLayout.Position, cellSize: new go.Size(1, 1) }),
+            "commandHandler.archetypeGroupData": { isGroup: true, text: "Group", horiz: false },
+            "undoManager.isEnabled": true
           });
 
-      //window.parent.myDiagram = myDiagram    //真正到全局变量，跳过IFrame
+      // The one template for Groups can be configured to be either layout out its members
+      // horizontally or vertically, each with a different default color.
 
-      // when the document is modified, add a "*" to the title and enable the "Save" button
-      myDiagram.addDiagramListener("Modified", function (e) {
-        var button = document.getElementById("SaveButton");
-        if (button) button.disabled = !myDiagram.isModified;
-        var idx = document.title.indexOf("*");
-        if (myDiagram.isModified) {
-          if (idx < 0) document.title += "*";
+      function makeLayout(horiz) {  // a Binding conversion function
+        if (horiz) {
+          return $(go.GridLayout,
+            {
+              wrappingWidth: Infinity, alignment: go.GridLayout.Position,
+              cellSize: new go.Size(1, 1), spacing: new go.Size(4, 4)
+            });
         } else {
-          if (idx >= 0) document.title = document.title.substr(0, idx);
+          return $(go.GridLayout,
+            {
+              wrappingColumn: 1, alignment: go.GridLayout.Position,
+              cellSize: new go.Size(1, 1), spacing: new go.Size(4, 4)
+            });
         }
-      });
-
-      // define the Node template
-      myDiagram.nodeTemplate =
-        $(go.Node, "Auto", {
-            locationSpot: go.Spot.Top,
-            isShadowed: true,
-            shadowBlur: 1,
-            shadowOffset: new go.Point(0, 1),
-            shadowColor: "rgba(0, 0, 0, .14)"
-          },
-          new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
-          // define the node's outer shape, which will surround the TextBlock
-          $(go.Shape, "RoundedRectangle", roundedRectangleParams, {
-            name: "SHAPE",
-            fill: "#ccecf1",
-            strokeWidth: 0,
-            stroke: null,
-            portId: "", // this Shape is the Node's port, not the whole Node
-            fromLinkable: true,
-            fromLinkableSelfNode: true,
-            fromLinkableDuplicates: true,
-            toLinkable: true,
-            toLinkableSelfNode: true,
-            toLinkableDuplicates: true,
-            cursor: "pointer"
-          }),
-          $(go.TextBlock, {
-              font: "bold small-caps 11pt helvetica, bold arial, sans-serif",
-              margin: 7,
-              stroke: "rgba(0, 0, 0, .87)",
-              editable: true // editing the text automatically updates the model data
-            },
-            new go.Binding("text").makeTwoWay())
-        );
-
-
-      // unlike the normal selection Adornment, this one includes a Button
-      myDiagram.nodeTemplate.selectionAdornmentTemplate =
-        $(go.Adornment, "Spot",
-          $(go.Panel, "Auto",
-            $(go.Shape, "RoundedRectangle", roundedRectangleParams, {
-              fill: null,
-              stroke: "#7986cb",
-              strokeWidth: 3
-            }),
-            $(go.Placeholder) // a Placeholder sizes itself to the selected Node
-          ),
-          // the button to create a "next" node, at the top-right corner
-          $("Button", {
-              alignment: go.Spot.TopRight,
-              click: addNodeAndLink // this function is defined below
-            },
-            $(go.Shape, "PlusLine", {
-              width: 6,
-              height: 6
-            })
-          ) // end button
-        ); // end Adornment
-
-      myDiagram.nodeTemplateMap.add("Start",
-        $(go.Node, "Spot", {
-            desiredSize: new go.Size(70, 70)
-          },
-          new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
-          $(go.Shape, "Circle", {
-            fill: "#52ce60",
-            /* green */
-            stroke: null,
-            portId: "",
-            fromLinkable: true,
-            fromLinkableSelfNode: true,
-            fromLinkableDuplicates: true,
-            toLinkable: true,
-            toLinkableSelfNode: true,
-            toLinkableDuplicates: true,
-            cursor: "pointer"
-          }),
-          $(go.TextBlock, "Start", {
-            font: "bold 14pt helvetica, bold arial, sans-serif",
-            stroke: "whitesmoke"
-          })
-        )
-      );
-
-      // clicking the button inserts a new node to the right of the selected node,
-      // and adds a link to that new node
-      function addNodeAndLink(e, obj) {
-        var adornment = obj.part;
-        var diagram = e.diagram;
-        diagram.startTransaction("Add State");
-
-        // get the node data for which the user clicked the button
-        var fromNode = adornment.adornedPart;
-        var fromData = fromNode.data;
-        // create a new "State" data object, positioned off to the right of the adorned Node
-        var toData = {
-          text: "new"
-        };
-        var p = fromNode.location.copy();
-        p.x += 160;
-        toData.loc = go.Point.stringify(p); // the "loc" property is a string, not a Point object
-        // add the new node data to the model
-        var model = diagram.model;
-        model.addNodeData(toData);
-
-        // create a link data from the old node data to the new node data
-        var linkdata = {
-          from: model.getKeyForNodeData(fromData), // or just: fromData.id
-          to: model.getKeyForNodeData(toData),
-          text: "transition",
-          weight: "1.0"
-        };
-        // and add the link data to the model
-        model.addLinkData(linkdata);
-
-        // select the new Node
-        var newnode = diagram.findNodeForData(toData);
-        diagram.select(newnode);
-
-        diagram.commitTransaction("Add State");
-
-        // if the new node is off-screen, scroll the diagram to show the new node
-        diagram.scrollToRect(newnode.actualBounds);
       }
 
-      // replace the default Link template in the linkTemplateMap
-      myDiagram.linkTemplate =
-        $(go.Link, // the whole link panel
-          {
-            curve: go.Link.Bezier,
-            adjusting: go.Link.Stretch,
-            reshapable: true,
-            relinkableFrom: true,
-            relinkableTo: true,
-            toShortLength: 3
-          },
-          new go.Binding("points").makeTwoWay(),
-          new go.Binding("curviness"),
-          $(go.Shape, // the link shape
-            {
-              strokeWidth: 1.0
-            },
-            new go.Binding('stroke', 'mainpath', function (mainpath) {
-              return mainpath ? "#52ce60" /* green */ : 'black';
-            }),
-            new go.Binding('strokeWidth', 'weight', function (weight) {
-              return weight ? weight : 1.0;
-            })
-          ),
-          $(go.Shape, // the arrowhead
-            {
-              toArrow: "standard",
-              stroke: null
-            },
-            new go.Binding('fill', 'mainpath', function (mainpath) {
-              return mainpath ? "#52ce60" /* green */ : 'black';
-            })),
-          $(go.Panel, "Auto",
-            $(go.Shape, // the label background, which becomes transparent around the edges
-              {
-                fill: $(go.Brush, "Radial", {
-                  0: "rgb(245, 245, 245)",
-                  0.7: "rgb(245, 245, 245)",
-                  1: "rgba(245, 245, 245, 0)"
-                }),
-                stroke: null
-              }),
-            $(go.TextBlock, "transition", // the label text
-              {
-                textAlign: "center",
-                font: "9pt helvetica, arial, sans-serif",
-                margin: 4,
-                editable: true // enable in-place editing
-              },
-              // editing the text automatically updates the model data
-              new go.Binding("text").makeTwoWay())
-          )
-        );
+      function defaultColor(horiz) {  // a Binding conversion function
+        return horiz ? "#FFDD33" : "#33D3E5";
+      }
 
-      // read in the JSON data from the "mySavedModel" element
-      init_load();
-      myDiagram.select(myDiagram.nodes.first());
+      function defaultFont(horiz) {  // a Binding conversion function
+        return horiz ? "bold 18px sans-serif" : "bold 16px sans-serif";
+      }
 
-      // Declare which properties to show and how.
-      // By default, all properties on the model data objects are shown unless the inspector option "includesOwnProperties" is set to false.
-
-      // Show the primary selection's data, or blanks if no Part is selected:
-      var inspector = new Inspector('elementInspector', myDiagram, {
-        // allows for multiple nodes to be inspected at once
-        multipleSelection: true,
-        // max number of node properties will be shown when multiple selection is true
-        showSize: 4,
-        // when multipleSelection is true, when showAllProperties is true it takes the union of properties
-        // otherwise it takes the intersection of properties
-        showAllProperties: true,
-        // uncomment this line to only inspect the named properties below instead of all properties on each object:
-        // includesOwnProperties: false,
-        properties: {
-          "id": {
-            readOnly: true,
-            show: Inspector.showIfNode
-          },
-          "key": {
-            readOnly: true,
-            show: Inspector.showIfLink
-          },
-          "text": {},
-          "description": {},
-          "outputvariable": {
-            show: Inspector.showIfNode
-          },
-          "action": {
-            show: Inspector.showIfLink
-          },
-          "parameters": {
-            show: Inspector.showIfLink
-          },
-
-          "disabled": {
-            show: Inspector.showIfNode,
-            type: 'checkbox'
-          },
-          "properties": {
-            show: Inspector.showIfNode
-          },
-
-          "weight": {
-            show: Inspector.showIfLink,
-            type: "select",
-            choices: function (node, propName) {
-              if (Array.isArray(node.data.choices)) return node.data.choices;
-              return ["1.0", "2.0", "3.0"];
-            }
-          },
-          "mainpath": {
-            show: Inspector.showIfLink,
-            type: 'checkbox'
-          },
-          "isGroup": {
-            readOnly: true,
-            show: Inspector.showIfPresent
-          },
-          "category": {
-            readOnly: true,
-            show: Inspector.showIfPresent
-          },
-
-          "loc": {
-            show: false
-          },
-          "points": {
-            show: false
-          },
-          "from": {
-            show: false
-          },
-          "to": {
-            show: false
-          },
-
-        }
-      });
-
-      // Always show the model.modelData:
-      inspector2 = new Inspector('modelInspector', myDiagram, {
-        inspectSelection: false,
-        properties: {
-          "templateName": {
-            readOnly: true
-          },
-          "nodes": {
-            readOnly: true
-          },
-          "links": {
-            readOnly: true
-          },
-          "actions": {
-            readOnly: true
-          },
-          "variables": {
-            readOnly: true
-          },
-          "init_actions": {},
-          "version": {},
-          "variable": {
-            show: false
+      // this function is used to highlight a Group that the selection may be dropped into
+      function highlightGroup(e, grp, show) {
+        if (!grp) return;
+        e.handled = true;
+        if (show) {
+          // cannot depend on the grp.diagram.selection in the case of external drag-and-drops;
+          // instead depend on the DraggingTool.draggedParts or .copiedParts
+          var tool = grp.diagram.toolManager.draggingTool;
+          var map = tool.draggedParts || tool.copiedParts;  // this is a Map
+          // now we can check to see if the Group will accept membership of the dragged Parts
+          if (grp.canAddMembers(map.toKeySet())) {
+            grp.isHighlighted = true;
+            return;
           }
         }
-      });
-      inspector2.inspectObject(myDiagram.model.modelData);
+        grp.isHighlighted = false;
+      }
 
-    } // ** END OF init()
+      // Upon a drop onto a Group, we try to add the selection as members of the Group.
+      // Upon a drop onto the background, or onto a top-level Node, make selection top-level.
+      // If this is OK, we're done; otherwise we cancel the operation to rollback everything.
+      function finishDrop(e, grp) {
+        var ok = (grp !== null
+          ? grp.addMembers(grp.diagram.selection, true)
+          : e.diagram.commandHandler.addTopLevelParts(e.diagram.selection, true));
+        if (!ok) e.diagram.currentTool.doCancel();
+      }
+
+      myDiagram.groupTemplate =
+        $(go.Group, "Auto",
+          {
+            background: "transparent",
+            ungroupable: true,
+            // highlight when dragging into the Group
+            mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
+            mouseDragLeave: function(e, grp, next) { highlightGroup(e, grp, false); },
+            computesBoundsAfterDrag: true,
+            // when the selection is dropped into a Group, add the selected Parts into that Group;
+            // if it fails, cancel the tool, rolling back any changes
+            mouseDrop: finishDrop,
+            handlesDragDropForMembers: true,  // don't need to define handlers on member Nodes and Links
+            // Groups containing Groups lay out their members horizontally
+            layout: makeLayout(false)
+          },
+          new go.Binding("layout", "horiz", makeLayout),
+          new go.Binding("background", "isHighlighted", function(h) {
+            return h ? "rgba(255,0,0,0.2)" : "transparent";
+          }).ofObject(),
+          $(go.Shape, "Rectangle",
+            { fill: null, stroke: defaultColor(false), strokeWidth: 2 },
+            new go.Binding("stroke", "horiz", defaultColor),
+            new go.Binding("stroke", "color")),
+          $(go.Panel, "Vertical",  // title above Placeholder
+            $(go.Panel, "Horizontal",  // button next to TextBlock
+              { stretch: go.GraphObject.Horizontal, background: defaultColor(false) },
+              new go.Binding("background", "horiz", defaultColor),
+              new go.Binding("background", "color"),
+              $("SubGraphExpanderButton",
+                { alignment: go.Spot.Right, margin: 5 }),
+              $(go.TextBlock,
+                {
+                  alignment: go.Spot.Left,
+                  editable: true,
+                  margin: 5,
+                  font: defaultFont(false),
+                  opacity: 0.75,  // allow some color to show through
+                  stroke: "#404040"
+                },
+                new go.Binding("font", "horiz", defaultFont),
+                new go.Binding("text", "text").makeTwoWay())
+            ),  // end Horizontal Panel
+            $(go.Placeholder,
+              { padding: 5, alignment: go.Spot.TopLeft })
+          )  // end Vertical Panel
+        );
+
+      myDiagram.nodeTemplate =
+        $(go.Node, "Auto",
+          { // dropping on a Node is the same as dropping on its containing Group, even if it's top-level
+            mouseDrop: function(e, node) { finishDrop(e, node.containingGroup); }
+          },
+          $(go.Shape, "Rectangle",
+            { fill: "#ACE600", stroke: null },
+            new go.Binding("fill", "color")),
+          $(go.TextBlock,
+            {
+              margin: 5,
+              editable: true,
+              font: "bold 13px sans-serif",
+              opacity: 0.75,
+              stroke: "#404040"
+            },
+            new go.Binding("text", "text").makeTwoWay())
+        );
+
+      // initialize the Palette and its contents
+      myPalette =
+        $(go.Palette, "myPaletteDiv",
+          {
+            nodeTemplateMap: myDiagram.nodeTemplateMap,
+            groupTemplateMap: myDiagram.groupTemplateMap
+          });
+
+      myPalette.model = new go.GraphLinksModel([
+        { text: "lightgreen", color: "#ACE600" },
+        { text: "yellow", color: "#FFDD33" },
+        { text: "lightblue", color: "#33D3E5" },
+        { isGroup: true, text: "H Group", horiz: true },
+        { isGroup: true, text: "V Group", horiz: false }
+      ]);
+
+      var slider = document.getElementById("levelSlider");
+      slider.addEventListener('change', reexpand);
+      slider.addEventListener('input', reexpand);
+
+      load();
+    }
+
+    function reexpand(e) {
+      myDiagram.commit(function(diag) {
+        var level = parseInt(document.getElementById("levelSlider").value);
+        diag.findTopLevelGroups().each(function(g) { expandGroups(g, 0, level); })
+      } ,"reexpand");
+    }
+    function expandGroups(g, i, level) {
+      if (!(g instanceof go.Group)) return;
+      g.isSubGraphExpanded = i < level;
+      g.memberParts.each(function(m) {
+        expandGroups(m, i + 1, level);
+      })
+    }
+
+    // save a model to and load a model from JSON text, displayed below the Diagram
+    function save() {
+      document.getElementById("mySavedModel").value = myDiagram.model.toJson();
+      myDiagram.isModified = false;
+    }
+    function load() {
+      myDiagram.model = go.Model.fromJson(document.getElementById("mySavedModel").value);
+    }
+
 
     // 判断是否是内部变量
     function isInner(v) {
@@ -479,12 +320,6 @@
         }
       }
 
-      myDiagram.model.setDataProperty(myDiagram.model.modelData, "variable", vars);
-
-      myDiagram.model.setDataProperty(myDiagram.model.modelData, "variables", myDiagram.model.modelData.variable
-        .length);
-      myDiagram.model.setDataProperty(myDiagram.model.modelData, "nodes", myDiagram.model.nodeDataArray.length);
-      myDiagram.model.setDataProperty(myDiagram.model.modelData, "links", myDiagram.model.linkDataArray.length);
 
       // 导出模型数据
       modjson = myDiagram.model.toJson();
@@ -749,8 +584,11 @@
   <div data-options="region:'center'">
     <div class="easyui-layout" data-options="fit:true">
       <div data-options="region:'north',split:true" style="height:60%">
-        <div id="myDiagramDiv" style="border: solid 1px black; width: 100%; height: 100%; background: whitesmoke">
-        </div>
+        <div style="width: 100%; display: flex; justify-content: space-between">
+    <div id="myPaletteDiv" style="width: 130px; margin-right: 2px; background-color: whitesmoke; border: solid 1px black"></div>
+    <div id="myDiagramDiv" style="flex-grow: 1; height: 500px; border: solid 1px black"></div>
+  </div>
+
       </div>
       <div data-options="region:'center'">
         <div id="tt" data-options="tools:'#tab-tools', justified:true, selected:1" style="width:100%;height:100%">
@@ -776,6 +614,10 @@
             <p>5. outputvariable形式(内部变量必须被赋值): varname | _varname=var |_varname=_var2</p>
             <p>varname 表示输入变量，需要初始化，_varname表示系统生成变量需要赋值，如果没有，则认为'_'之后的为其值</p>
             <p>6. 所有的可编辑属性都是字符串，标点符号请用英文逗号</p>
+            <p>
+    The slider controls how many nested levels of Groups are expanded. <br>
+    Semantic zoom level: <input id="levelSlider" type="range" min="0" max="5" value="3">
+  </p>
           </div>
         </div>
         <div id="m_mod">
@@ -795,145 +637,6 @@
             onclick="save()" style="margin-left: 5px;">保存模型</a>
         </div>
 
-        <script>
-          $(function () {
-
-            var p = $('#tt').tabs().tabs('tabs')[4];
-            var mb = p.panel('options').tab.find('a.tabs-inner');
-            mb.menubutton({
-              menu: '#m_case',
-            }).click(function () {
-              $('#tt').tabs('select', 4);
-            });
-
-            var p = $('#tt').tabs().tabs('tabs')[0];
-            var mb = p.panel('options').tab.find('a.tabs-inner');
-            mb.menubutton({
-              menu: '#m_mod',
-            }).click(function () {
-              $('#tt').tabs('select', 0);
-            });
-
-            var p = $('#tt').tabs().tabs('tabs')[1];
-            var mb = p.panel('options').tab.find('a.tabs-inner');
-            mb.menubutton({
-              menu: '#m_var',
-            }).click(function () {
-              $('#tt').tabs('select', 1);
-            });
-
-          });
-
-          $('#vb').datagrid({
-            singleSelect: true,
-            //fitColumns: true,
-            rownumbers: true,
-            columns: [
-              [{
-                  field: 'name',
-                  title: '变量名(name)',
-                  width: 80
-                },
-                {
-                  field: 'value',
-                  title: '取值(value)',
-                  width: 150
-                },
-                {
-                  field: 'rule',
-                  title: '规则(rule)',
-                  width: 150
-                },
-                {
-                  field: 'used',
-                  title: '使用者(used)',
-                  width: 300
-                },
-                {
-                  field: 'description',
-                  title: '描述(description)',
-                  width: 150
-                },
-              ]
-            ]
-          });
-
-          $('#invb').datagrid({
-            singleSelect: true,
-            //fitColumns: true,
-            rownumbers: true,
-            columns: [
-              [{
-                  field: 'name',
-                  title: '变量名(name)',
-                  width: 100
-                },
-                {
-                  field: 'value',
-                  title: '取值(value)',
-                  width: 200
-                },
-                {
-                  field: 'used',
-                  title: '使用者(used)',
-                  width: 350
-                },
-              ]
-            ]
-          });
-
-          $('#act').datagrid({
-            singleSelect: true,
-            //fitColumns: true,
-            rownumbers: true,
-            columns: [
-              [{
-                  field: 'action',
-                  title: 'Action Name',
-                  width: 100
-                },
-                {
-                  field: 'parameters', // (a, b) (a,b,c)
-                  title: '参数组合情况(parameters)',
-                  width: 200
-                },
-                {
-                  field: 'used',
-                  title: '使用者(used)',
-                  width: 350
-                },
-              ]
-            ]
-          });
-
-          // 切换tab页面同步刷新数据,否则无法显示更新的数据
-          $('#tt').tabs({
-            onSelect: function (title) {
-              if (title == '输入变量') {
-                $('#vb').datagrid('resize');
-              }
-              if (title == '中间变量') {
-                $('#invb').datagrid('resize');
-              }
-              if (title == 'Actions') {
-                $('#act').datagrid('resize');
-              }
-            }
-          });
-
-          function editvar() {
-            var row = $('#vb').datagrid('getSelected');
-            if (row) {
-              $("#edit_var_ff input#varname").textbox("setValue", row.name);
-              $("#edit_var_ff input#vardesc").textbox("setValue", row.description);
-              $("#edit_var_ff input#varvalue").textbox("setValue", row.value);
-              $("#edit_var_ff input#varrule").textbox("setValue", row.rule);
-              open_win('edit_var');
-            } else {
-              show_msg("Alert", "Tip：请先选择一个变量～");
-            }
-          }
-        </script>
       </div> //End Center
     </div>
   </div>
@@ -950,35 +653,6 @@
     </div>
   </div>
 
-  <!-- edit var -->
-  <div id="edit_var" class="easyui-window" title="编辑变量"
-    data-options="modal:true,closed:true,minimizable:false,maximizable:false,collapsible:false"
-    style="width:320px;height:300px;padding:10px;">
-    <form id="edit_var_ff" method="post">
-      <div style="margin-bottom:10px">
-        <input class="easyui-textbox" id="varname" name="name" label="变量名" labelPosition="left" style="width:100%"
-          data-options="required:true" readonly>
-      </div>
-      <div style="margin-bottom:10px">
-        <input class="easyui-textbox" id="vardesc" name="description" label="描述" labelPosition="left" style="width:100%"
-          data-options="required:true">
-      </div>
-      <div style="margin-bottom:10px">
-        <input class="easyui-textbox" id="varvalue" name="value" label="取值" labelPosition="left" style="width:100%"
-          data-options="required:true">
-      </div>
-      <div style="margin-bottom:10px">
-        <input class="easyui-textbox" id="varrule" name="rule" label="规则" labelPosition="left" style="width:100%"
-          data-options="required:true">
-      </div>
-    </form>
-    <div style="text-align:right;padding:5px 0">
-      <a href="javascript:void(0)" class="easyui-linkbutton" onclick="close_win('edit_var')"
-        style="width:60px">Cancle</a>
-      <a href="javascript:void(0)" class="easyui-linkbutton" onclick="edit_var('edit_var', 'edit_var_ff')"
-        style="width:60px">Save</a>
-    </div>
-  </div>
   <!-- end -->
 
 </body>
