@@ -107,6 +107,3 @@ class template(CaseTemplate):
         self.log.info("生成手工用例")
         return {"status": "success", "msg": "生成文件：{}.".format(self.tmdfile)}
 
-if __name__ == "__main__":
-    tmp = template("template2","/data/tester/davinci_env/work/workspace/user1/project1/templates/1.tmd", {} )
-    tmd.gen_autocase()
