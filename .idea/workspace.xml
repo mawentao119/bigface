@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="ab43467d-ad90-46a2-99ca-651bd4d7e6ad" name="Default" comment="add new template by hand">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/model_base.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/model_base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/model_design.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/model_design.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -16,44 +14,33 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/utils/case_lib/template1.py">
+        <entry file="file://$PROJECT_DIR$/auto/www/templates/case_template/template2.tplt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="927">
-              <caret line="161" column="53" lean-forward="true" selection-start-line="161" selection-start-column="53" selection-end-line="161" selection-end-column="53" />
+            <state relative-caret-position="300">
+              <caret line="20" column="42" lean-forward="true" selection-start-line="20" selection-start-column="42" selection-end-line="20" selection-end-column="42" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/auto/www/templates/case_template/template2.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="444">
+              <caret line="619" column="6" selection-start-line="619" selection-start-column="6" selection-end-line="619" selection-end-column="6" />
               <folding>
-                <element signature="e#0#6#0" expanded="true" />
-                <element signature="e#937#2920#0" />
-                <element signature="e#311#1248#0" />
-                <element signature="e#254#515#0" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/utils/model_design.py">
+        <entry file="file://$PROJECT_DIR$/auto/www/templates/case_template/template1.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="94" lean-forward="true" selection-start-line="94" selection-end-line="94" />
-              <folding>
-                <element signature="e#95#123#0" expanded="true" />
-                <element signature="e#4306#4787#0" />
-                <element signature="e#4997#5251#0" />
-                <element signature="e#4999#5801#0" />
-                <element signature="e#5847#6334#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/utils/model_base.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="614">
-              <caret line="56" lean-forward="true" selection-start-line="56" selection-end-line="56" />
-              <folding>
-                <element signature="e#895#1162#0" />
-              </folding>
+            <state relative-caret-position="165">
+              <caret line="504" column="37" selection-start-line="504" selection-start-column="33" selection-end-line="504" selection-end-column="37" />
             </state>
           </provider>
         </entry>
@@ -69,8 +56,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>confdir</find>
-      <find>self.confdir</find>
       <find>get_project_path</find>
       <find>AUT</find>
       <find>setting</find>
@@ -99,6 +84,8 @@
       <find>dashb</find>
       <find>保存模型</find>
       <find>modelD</find>
+      <find>fromj</find>
+      <find>save(</find>
     </findStrings>
     <replaceStrings>
       <replace>summary</replace>
@@ -127,7 +114,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/auto/www/templates/project_mng.html" />
         <option value="$PROJECT_DIR$/utils/clear.py" />
         <option value="$PROJECT_DIR$/utils/parsing.py" />
         <option value="$PROJECT_DIR$/auto/www/api/keyword.py" />
@@ -173,17 +159,17 @@
         <option value="$PROJECT_DIR$/auto/www/templates/case_template/template1.tplt" />
         <option value="$PROJECT_DIR$/auto/www/templates/case_template/template1.html" />
         <option value="$PROJECT_DIR$/auto/www/api/test_design.py" />
-        <option value="$PROJECT_DIR$/auto/www/templates/case_template/template2.tplt" />
         <option value="$PROJECT_DIR$/utils/case_lib/template2.py" />
         <option value="$PROJECT_DIR$/utils/case_lib/template1.py" />
         <option value="$PROJECT_DIR$/utils/model_design.py" />
         <option value="$PROJECT_DIR$/utils/model_base.py" />
+        <option value="$PROJECT_DIR$/auto/www/templates/case_template/template2.tplt" />
+        <option value="$PROJECT_DIR$/auto/www/templates/case_template/template2.html" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-1901" />
-    <option name="y" value="-130" />
+    <option name="y" value="23" />
     <option name="width" value="1440" />
     <option name="height" value="877" />
   </component>
@@ -216,7 +202,7 @@
               <item name="davinci" type="462c0819:PsiDirectoryNode" />
               <item name="auto" type="462c0819:PsiDirectoryNode" />
               <item name="www" type="462c0819:PsiDirectoryNode" />
-              <item name="api" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="davinci" type="b2602c69:ProjectViewProjectNode" />
@@ -224,6 +210,7 @@
               <item name="auto" type="462c0819:PsiDirectoryNode" />
               <item name="www" type="462c0819:PsiDirectoryNode" />
               <item name="templates" type="462c0819:PsiDirectoryNode" />
+              <item name="case_template" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="davinci" type="b2602c69:ProjectViewProjectNode" />
@@ -383,20 +370,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1534349381434</updated>
-    </task>
-    <task id="LOCAL-00051" summary="bug fix">
-      <created>1594983256976</created>
-      <option name="number" value="00051" />
-      <option name="presentableId" value="LOCAL-00051" />
-      <option name="project" value="LOCAL" />
-      <updated>1594983256976</updated>
-    </task>
-    <task id="LOCAL-00052" summary="bug fix">
-      <created>1595002610149</created>
-      <option name="number" value="00052" />
-      <option name="presentableId" value="LOCAL-00052" />
-      <option name="project" value="LOCAL" />
-      <updated>1595002610150</updated>
     </task>
     <task id="LOCAL-00053" summary="optimise UI">
       <created>1595075861682</created>
@@ -727,7 +700,21 @@
       <option name="project" value="LOCAL" />
       <updated>1614741886335</updated>
     </task>
-    <option name="localTasksCounter" value="100" />
+    <task id="LOCAL-00100" summary="add new template by hand">
+      <created>1614911277233</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1614911277233</updated>
+    </task>
+    <task id="LOCAL-00101" summary="add new template by hand">
+      <created>1615131939966</created>
+      <option name="number" value="00101" />
+      <option name="presentableId" value="LOCAL-00101" />
+      <option name="project" value="LOCAL" />
+      <updated>1615131939966</updated>
+    </task>
+    <option name="localTasksCounter" value="102" />
     <servers />
   </component>
   <component name="TodoView">
@@ -740,10 +727,9 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1920" y="-157" width="1920" height="1057" extended-state="6" />
-    <editor active="true" />
+    <frame x="0" y="173" width="1440" height="877" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.14483494" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19456366" />
       <window_info id="Favorites" order="1" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49785408" weight="0.32871288" />
@@ -753,7 +739,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.7015544" />
       <window_info anchor="bottom" id="Terminal" order="7" sideWeight="0.49776787" weight="0.22072539" />
-      <window_info active="true" anchor="bottom" id="Python Console" order="8" sideWeight="0.49776787" visible="true" weight="0.21865284" />
+      <window_info active="true" anchor="bottom" id="Python Console" order="8" sideWeight="0.49776787" visible="true" weight="0.2687898" />
       <window_info anchor="bottom" id="Version Control" order="9" sideWeight="0.49713877" weight="0.32356688" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50214595" side_tool="true" weight="0.32891566" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -1109,24 +1095,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/auto/www/templates/case_template/template1.tplt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="12" selection-start-line="14" selection-start-column="3" selection-end-line="14" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/utils/temp.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="8" column="30" lean-forward="true" selection-start-line="8" selection-end-line="8" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/auto/www/templates/case_template/template1.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="365">
-          <caret line="498" column="50" selection-start-line="498" selection-start-column="46" selection-end-line="498" selection-end-column="50" />
         </state>
       </provider>
     </entry>
@@ -1147,11 +1119,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/auto/www/templates/case_template/template2.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-14163" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/auto/www/blueprints.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="836">
@@ -1159,13 +1126,6 @@
           <folding>
             <element signature="e#54#63#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/auto/www/templates/case_template/template2.tplt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="1" lean-forward="true" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
         </state>
       </provider>
     </entry>
@@ -1196,15 +1156,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/utils/case_lib/template1.py">
+    <entry file="file://$PROJECT_DIR$/utils/model_base.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="927">
-          <caret line="161" column="53" lean-forward="true" selection-start-line="161" selection-start-column="53" selection-end-line="161" selection-end-column="53" />
+        <state relative-caret-position="434">
+          <caret line="56" lean-forward="true" selection-start-line="56" selection-end-line="56" />
           <folding>
-            <element signature="e#0#6#0" expanded="true" />
-            <element signature="e#937#2920#0" />
-            <element signature="e#311#1248#0" />
-            <element signature="e#254#515#0" />
+            <element signature="e#895#1162#0" />
           </folding>
         </state>
       </provider>
@@ -1223,12 +1180,48 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/utils/model_base.py">
+    <entry file="file://$PROJECT_DIR$/utils/case_lib/template1.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="614">
-          <caret line="56" lean-forward="true" selection-start-line="56" selection-end-line="56" />
+        <state relative-caret-position="927">
+          <caret line="161" column="53" lean-forward="true" selection-start-line="161" selection-start-column="53" selection-end-line="161" selection-end-column="53" />
           <folding>
-            <element signature="e#895#1162#0" />
+            <element signature="e#0#6#0" expanded="true" />
+            <element signature="e#937#2920#0" />
+            <element signature="e#311#1248#0" />
+            <element signature="e#254#515#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/auto/www/templates/case_template/template1.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="504" column="37" selection-start-line="504" selection-start-column="33" selection-end-line="504" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/auto/www/templates/case_template/template1.tplt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="14" column="148" lean-forward="true" selection-start-line="14" selection-start-column="2" selection-end-line="14" selection-end-column="148" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/auto/www/templates/case_template/template2.tplt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="20" column="42" lean-forward="true" selection-start-line="20" selection-start-column="42" selection-end-line="20" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/auto/www/templates/case_template/template2.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="444">
+          <caret line="619" column="6" selection-start-line="619" selection-start-column="6" selection-end-line="619" selection-end-column="6" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
