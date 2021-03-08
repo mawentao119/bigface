@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ab43467d-ad90-46a2-99ca-651bd4d7e6ad" name="Default" comment="add new template by hand">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/case_lib/template2.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/case_lib/template2.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -13,34 +14,11 @@
   <component name="ChangesViewManager" show_ignored="true" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/auto/www/templates/case_template/template2.tplt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="20" column="42" lean-forward="true" selection-start-line="20" selection-start-column="42" selection-end-line="20" selection-end-column="42" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/auto/www/templates/case_template/template2.html">
+        <entry file="file://$PROJECT_DIR$/utils/case_lib/template2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="444">
-              <caret line="619" column="6" selection-start-line="619" selection-start-column="6" selection-end-line="619" selection-end-column="6" />
-              <folding>
-                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/auto/www/templates/case_template/template1.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="504" column="37" selection-start-line="504" selection-start-column="33" selection-end-line="504" selection-end-column="37" />
+            <state relative-caret-position="138">
+              <caret line="92" column="44" selection-start-line="92" selection-start-column="44" selection-end-line="92" selection-end-column="44" />
             </state>
           </provider>
         </entry>
@@ -159,12 +137,12 @@
         <option value="$PROJECT_DIR$/auto/www/templates/case_template/template1.tplt" />
         <option value="$PROJECT_DIR$/auto/www/templates/case_template/template1.html" />
         <option value="$PROJECT_DIR$/auto/www/api/test_design.py" />
-        <option value="$PROJECT_DIR$/utils/case_lib/template2.py" />
         <option value="$PROJECT_DIR$/utils/case_lib/template1.py" />
         <option value="$PROJECT_DIR$/utils/model_design.py" />
         <option value="$PROJECT_DIR$/utils/model_base.py" />
         <option value="$PROJECT_DIR$/auto/www/templates/case_template/template2.tplt" />
         <option value="$PROJECT_DIR$/auto/www/templates/case_template/template2.html" />
+        <option value="$PROJECT_DIR$/utils/case_lib/template2.py" />
       </list>
     </option>
   </component>
@@ -370,13 +348,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1534349381434</updated>
-    </task>
-    <task id="LOCAL-00053" summary="optimise UI">
-      <created>1595075861682</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
-      <option name="project" value="LOCAL" />
-      <updated>1595075861683</updated>
     </task>
     <task id="LOCAL-00054" summary="modify method query--&gt;get_projecttask">
       <created>1595077154262</created>
@@ -714,7 +685,14 @@
       <option name="project" value="LOCAL" />
       <updated>1615131939966</updated>
     </task>
-    <option name="localTasksCounter" value="102" />
+    <task id="LOCAL-00102" summary="add new template by hand">
+      <created>1615173048433</created>
+      <option name="number" value="00102" />
+      <option name="presentableId" value="LOCAL-00102" />
+      <option name="project" value="LOCAL" />
+      <updated>1615173048433</updated>
+    </task>
+    <option name="localTasksCounter" value="103" />
     <servers />
   </component>
   <component name="TodoView">
@@ -727,9 +705,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="173" width="1440" height="877" extended-state="6" />
+    <frame x="0" y="23" width="1440" height="877" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19456366" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20028612" />
       <window_info id="Favorites" order="1" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49785408" weight="0.32871288" />
@@ -738,10 +717,10 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.7015544" />
-      <window_info anchor="bottom" id="Terminal" order="7" sideWeight="0.49776787" weight="0.22072539" />
-      <window_info active="true" anchor="bottom" id="Python Console" order="8" sideWeight="0.49776787" visible="true" weight="0.2687898" />
-      <window_info anchor="bottom" id="Version Control" order="9" sideWeight="0.49713877" weight="0.32356688" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50214595" side_tool="true" weight="0.32891566" />
+      <window_info anchor="bottom" id="Terminal" order="7" sideWeight="0.49776787" weight="0.22038217" />
+      <window_info anchor="bottom" id="Python Console" order="8" sideWeight="0.49776787" weight="0.26751593" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="9" sideWeight="0.49642345" visible="true" weight="0.32356688" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5035765" side_tool="true" visible="true" weight="0.32356688" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -1041,20 +1020,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/auto/www/templates/test_design_bak.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="11115">
-          <caret line="741" column="11" lean-forward="true" selection-start-line="741" selection-start-column="11" selection-end-line="741" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/auto/www/templates/user_template/user1/project1/test_design.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="753" column="26" selection-start-line="753" selection-start-column="26" selection-end-line="753" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/auto/www/templates/test_design_bak.html" />
+    <entry file="file://$PROJECT_DIR$/auto/www/templates/user_template/user1/project1/test_design.html" />
     <entry file="file://$PROJECT_DIR$/auto/www/templates/test_design.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-2764">
@@ -1095,13 +1062,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/utils/temp.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="30" lean-forward="true" selection-start-line="8" selection-end-line="8" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/temp.py" />
     <entry file="file://$PROJECT_DIR$/utils/file.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="483">
@@ -1126,13 +1087,6 @@
           <folding>
             <element signature="e#54#63#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils/case_lib/template2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="310">
-          <caret line="26" column="41" lean-forward="true" selection-start-line="26" selection-start-column="41" selection-end-line="26" selection-end-column="41" />
         </state>
       </provider>
     </entry>
@@ -1193,13 +1147,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/auto/www/templates/case_template/template1.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="504" column="37" selection-start-line="504" selection-start-column="33" selection-end-line="504" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/auto/www/templates/case_template/template1.tplt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
@@ -1207,22 +1154,44 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/auto/www/templates/case_template/template2.tplt">
+    <entry file="file://$PROJECT_DIR$/auto/www/templates/case_template/template1.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" column="42" lean-forward="true" selection-start-line="20" selection-start-column="42" selection-end-line="20" selection-end-column="42" />
+        <state relative-caret-position="729">
+          <caret line="504" column="37" selection-start-line="504" selection-start-column="33" selection-end-line="504" selection-end-column="37" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/auto/www/templates/case_template/template2.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="444">
-          <caret line="619" column="6" selection-start-line="619" selection-start-column="6" selection-end-line="619" selection-end-column="6" />
+        <state relative-caret-position="9114">
+          <caret line="609" column="16" selection-start-line="609" selection-start-column="16" selection-end-line="609" selection-end-column="16" />
           <folding>
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#textarea#0;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#2;n#div#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#3;n#div#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#4;n#div#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/auto/www/templates/case_template/template2.tplt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="20" column="42" selection-start-line="20" selection-start-column="42" selection-end-line="20" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/case_lib/template2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="138">
+          <caret line="92" column="44" selection-start-line="92" selection-start-column="44" selection-end-line="92" selection-end-column="44" />
         </state>
       </provider>
     </entry>

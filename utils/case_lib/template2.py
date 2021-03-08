@@ -89,8 +89,8 @@ class template(CaseTemplate):
                 groupkeywords.append(n.get("text"))
             groups_keywords.append(groupkeywords)
 
+        i = 1
         for kw in product(*groups_keywords):
-            i = 1
             with open(outputfile, 'a') as ff:
                 ff.write("TestCase_{} \n".format(i))
                 ff.write("    [Documentation]  {} \n".format(kw))
