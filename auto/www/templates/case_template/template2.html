@@ -30,7 +30,7 @@
         $(go.Diagram, "myDiagramDiv",
           {
             // when a drag-drop occurs in the Diagram's background, make it a top-level node
-            mouseDrop: function(e) { finishDrop(e, null); },
+            mouseDrop: function (e) { finishDrop(e, null); },
             layout:  // Diagram has simple horizontal layout
               $(go.GridLayout,
                 { wrappingWidth: Infinity, alignment: go.GridLayout.Position, cellSize: new go.Size(1, 1) }),
@@ -99,8 +99,8 @@
             background: "transparent",
             ungroupable: true,
             // highlight when dragging into the Group
-            mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
-            mouseDragLeave: function(e, grp, next) { highlightGroup(e, grp, false); },
+            mouseDragEnter: function (e, grp, prev) { highlightGroup(e, grp, true); },
+            mouseDragLeave: function (e, grp, next) { highlightGroup(e, grp, false); },
             computesBoundsAfterDrag: true,
             // when the selection is dropped into a Group, add the selected Parts into that Group;
             // if it fails, cancel the tool, rolling back any changes
@@ -110,7 +110,7 @@
             layout: makeLayout(false)
           },
           new go.Binding("layout", "horiz", makeLayout),
-          new go.Binding("background", "isHighlighted", function(h) {
+          new go.Binding("background", "isHighlighted", function (h) {
             return h ? "rgba(255,0,0,0.2)" : "transparent";
           }).ofObject(),
           $(go.Shape, "Rectangle",
@@ -144,7 +144,7 @@
       myDiagram.nodeTemplate =
         $(go.Node, "Auto",
           { // dropping on a Node is the same as dropping on its containing Group, even if it's top-level
-            mouseDrop: function(e, node) { finishDrop(e, node.containingGroup); }
+            mouseDrop: function (e, node) { finishDrop(e, node.containingGroup); }
           },
           $(go.Shape, "Rectangle",
             { fill: "#ACE600", stroke: null },
@@ -184,15 +184,15 @@
     }
 
     function reexpand(e) {
-      myDiagram.commit(function(diag) {
+      myDiagram.commit(function (diag) {
         var level = parseInt(document.getElementById("levelSlider").value);
-        diag.findTopLevelGroups().each(function(g) { expandGroups(g, 0, level); })
-      } ,"reexpand");
+        diag.findTopLevelGroups().each(function (g) { expandGroups(g, 0, level); })
+      }, "reexpand");
     }
     function expandGroups(g, i, level) {
       if (!(g instanceof go.Group)) return;
       g.isSubGraphExpanded = i < level;
-      g.memberParts.each(function(m) {
+      g.memberParts.each(function (m) {
         expandGroups(m, i + 1, level);
       })
     }
@@ -350,18 +350,18 @@
     // 首次加载页面load 数据，需要同时初始化 tabs
     function init_load() {
       load();
-      reload_vb();
-      reload_invb();
-      reload_act();
+      //reload_vb();
+      //reload_invb();
+      //reload_act();
     }
 
     function after_save(data) {
       var success = "success"
       if (data["status"] == success) {
         //加载模型变量数据
-        reload_vb();
-        reload_invb();
-        reload_act();
+        //reload_vb();
+        //reload_invb();
+        //reload_act();
 
         // 刷新模型inspector
         inspector2.inspectObject(myDiagram.model.modelData);
@@ -486,10 +486,10 @@
 
       } // END For Links
 
-      $('#invb').datagrid('loadData', {
-        'total': 1,
-        'rows': invars
-      });
+      //$('#invb').datagrid('loadData', {
+      //  'total': 1,
+      //  'rows': invars
+      //});
     }
 
     function reload_act() {
@@ -585,9 +585,10 @@
     <div class="easyui-layout" data-options="fit:true">
       <div data-options="region:'north',split:true" style="height:60%">
         <div style="width: 100%; display: flex; justify-content: space-between">
-    <div id="myPaletteDiv" style="width: 130px; margin-right: 2px; background-color: whitesmoke; border: solid 1px black"></div>
-    <div id="myDiagramDiv" style="flex-grow: 1; height: 500px; border: solid 1px black"></div>
-  </div>
+          <div id="myPaletteDiv"
+            style="width: 130px; margin-right: 2px; background-color: whitesmoke; border: solid 1px black"></div>
+          <div id="myDiagramDiv" style="flex-grow: 1; height: 500px; border: solid 1px black"></div>
+        </div>
 
       </div>
       <div data-options="region:'center'">
@@ -605,19 +606,8 @@
             <table id="act"></table>
           </div>
           <div title="用例生成" style="padding:10px">
-            <p>1. 变量分为输入变量(常量) 和 内部生成变量（'_'符号开头）</p>
-            <p>2. 输入变量（parameter）需要初始化数据，不能被重新赋值，内部生成变量（outputvariable）系统内部赋值</p>
-            <p>3. parameter形式(不能带‘=’)：para ｜ _para </p>
-            <p>para需要初始化，_para由前面的node初始化</p>
-            <p>4. properties形式: prop | _prop == para | _prop1.lenth() > 5</p>
-            <p>prop表示存在或真，这里就是断言表达式</p>
-            <p>5. outputvariable形式(内部变量必须被赋值): varname | _varname=var |_varname=_var2</p>
-            <p>varname 表示输入变量，需要初始化，_varname表示系统生成变量需要赋值，如果没有，则认为'_'之后的为其值</p>
-            <p>6. 所有的可编辑属性都是字符串，标点符号请用英文逗号</p>
-            <p>
-    The slider controls how many nested levels of Groups are expanded. <br>
-    Semantic zoom level: <input id="levelSlider" type="range" min="0" max="5" value="3">
-  </p>
+            <input id="levelSlider" type="range" min="0" max="5" value="3">
+            </p>
           </div>
         </div>
         <div id="m_mod">
