@@ -20,6 +20,7 @@ from utils.mylogger import getlogger
 from utils.parsing import generate_high_light, generate_auto_complete
 from utils.gitit import remote_clone
 
+log = getlogger('Project')
 
 class Project(Resource):
     def __init__(self):
@@ -504,7 +505,7 @@ def get_step_by_case(app, path):
         try:
             data = get_case_data(app, path)
         except Exception as e:
-            app.log.warnning(
+            log.warnning(
                 "Get_case_data of {} Exception :{}".format(path, e))
             return []
 

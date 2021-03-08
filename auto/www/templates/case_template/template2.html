@@ -181,7 +181,66 @@
       slider.addEventListener('input', reexpand);
 
       load();
-    }
+
+      var inspector = new Inspector('elementInspector', myDiagram, {
+        // allows for multiple nodes to be inspected at once
+        multipleSelection: true,
+        // max number of node properties will be shown when multiple selection is true
+        showSize: 4,
+        // when multipleSelection is true, when showAllProperties is true it takes the union of properties
+        // otherwise it takes the intersection of properties
+        showAllProperties: true,
+        // uncomment this line to only inspect the named properties below instead of all properties on each object:
+        // includesOwnProperties: false,
+        properties: {
+          
+          "text": {},
+          "group": {},
+          "loc": {
+            show: false
+          },
+          "points": {
+            show: false
+          },
+          "from": {
+            show: false
+          },
+          "to": {
+            show: false
+          },
+
+        }
+      });
+
+      // Always show the model.modelData:
+      inspector2 = new Inspector('modelInspector', myDiagram, {
+        inspectSelection: false,
+        properties: {
+          "templateName": {
+            readOnly: true
+          },
+          "nodes": {
+            readOnly: true
+          },
+          "links": {
+            readOnly: true
+          },
+          "actions": {
+            readOnly: true
+          },
+          "variables": {
+            readOnly: true
+          },
+          "init_actions": {},
+          "version": {},
+          "variable": {
+            show: false
+          }
+        }
+      });
+      inspector2.inspectObject(myDiagram.model.modelData);
+
+    }  // END OF init()
 
     function reexpand(e) {
       myDiagram.commit(function (diag) {
@@ -217,110 +276,6 @@
     }
     // 保存模型数据到后台文件
     function save() {
-
-      // 遍历模型，生成模型变量信息 myDiagram.model.modelData.variable
-      let vars = new Array(); // 新到变量数组
-
-      // 遍历node.outputvariable
-      let nodes = myDiagram.model.nodeDataArray;
-      for (let i in nodes) {
-        let tmp = nodes[i].outputvariable;
-        if (!tmp || tmp.trim() == "") {
-          continue;
-        }
-        let vs = nodes[i].outputvariable.split(',');
-        // 搜集所有变量并去重
-        for (let v in vs) {
-          if (isInner(vs[v])) { //过滤掉内部变量
-            delete vs[v]
-            continue;
-          }
-          if (vs[v].trim().startsWith('"') || vs[v].trim().startsWith("'") || vs[v].trim().startsWith('[') || vs[v]
-            .trim().startsWith('{')) { // "new"+var1 || 'zhangsan' || [var1,"abc"] || {"abc":123}
-            delete vs[v]
-            continue;
-          }
-          for (let z in vars) {
-            if (vs[v].trim() == vars[z].name.trim()) {
-              vars[z].used.push('n' + nodes[i].text)
-              delete vs[v];
-              break;
-            }
-          }
-        }
-
-        // 添加新增变量
-        for (let v in vs) {
-          if (isInner(vs[v])) {
-            continue;
-          }
-          vars.push({
-            "name": vs[v].trim(),
-            "description": "",
-            "value": "",
-            "rule": "",
-            "used": ['n' + nodes[i].text]
-          })
-        }
-
-      } // END For nodes
-
-      // 遍历link.parameters
-      let links = myDiagram.model.linkDataArray;
-      for (let i in links) {
-        let tmp = links[i].parameters;
-        if (!tmp || tmp.trim() == "") {
-          continue;
-        }
-        let vs = links[i].parameters.split(',');
-        // 搜集所有变量并去重
-        for (let v in vs) {
-          if (isInner(vs[v])) { //过滤掉内部变量
-            delete vs[v];
-            continue;
-          }
-          if (vs[v].trim().startsWith('"')) { // "new"+var1 || "zhangsan"
-            delete vs[v]
-            continue;
-          }
-          for (let z in vars) {
-            if (vs[v].trim() == vars[z].name.trim()) {
-              vars[z].used.push('l' + links[i].text)
-              delete vs[v];
-              break;
-            }
-          }
-        }
-
-        // 添加新增变量
-        for (let v in vs) {
-          if (isInner(vs[v])) {
-            continue;
-          }
-          vars.push({
-            "name": vs[v].trim(),
-            "description": "",
-            "value": "",
-            "rule": "",
-            "used": ['l' + links[i].text]
-          })
-        }
-
-      } // END For Links
-
-      // 与现存变量进行合并
-      let curvars = myDiagram.model.modelData.variable;
-      for (let c in curvars) {
-        for (let v in vars) {
-          if (curvars[c].name.trim() == vars[v].name.trim()) {
-            vars[v].value = curvars[c].value;
-            vars[v].description = curvars[c].description;
-            vars[v].rule = curvars[c].rule;
-          }
-        }
-      }
-
-
       // 导出模型数据
       modjson = myDiagram.model.toJson();
       document.getElementById("mySavedModel").value = modjson;
@@ -586,8 +541,8 @@
       <div data-options="region:'north',split:true" style="height:60%">
         <div style="width: 100%; display: flex; justify-content: space-between">
           <div id="myPaletteDiv"
-            style="width: 130px; margin-right: 2px; background-color: whitesmoke; border: solid 1px black"></div>
-          <div id="myDiagramDiv" style="flex-grow: 1; height: 500px; border: solid 1px black"></div>
+            style="width: 130px; margin-right: 0px; background-color: whitesmoke; border: solid 1px black"></div>
+          <div id="myDiagramDiv" style="flex-grow: 1; height: 800px"></div>
         </div>
 
       </div>
@@ -606,8 +561,15 @@
             <table id="act"></table>
           </div>
           <div title="用例生成" style="padding:10px">
-            <input id="levelSlider" type="range" min="0" max="5" value="3">
-            </p>
+            <p>1. 变量分为输入变量(常量) 和 内部生成变量（'_'符号开头）</p>
+            <p>2. 输入变量（parameter）需要初始化数据，不能被重新赋值，内部生成变量（outputvariable）系统内部赋值</p>
+            <p>3. parameter形式(不能带‘=’)：para ｜ _para </p>
+            <p>para需要初始化，_para由前面的node初始化</p>
+            <p>4. properties形式: prop | _prop == para | _prop1.lenth() > 5</p>
+            <p>prop表示存在或真，这里就是断言表达式</p>
+            <p>5. outputvariable形式(内部变量必须被赋值): varname | _varname=var |_varname=_var2</p>
+            <p>varname 表示输入变量，需要初始化，_varname表示系统生成变量需要赋值，如果没有，则认为'_'之后的为其值</p>
+            <p>6. 所有的可编辑属性都是字符串，标点符号请用英文逗号</p>
           </div>
         </div>
         <div id="m_mod">
@@ -627,10 +589,150 @@
             onclick="save()" style="margin-left: 5px;">保存模型</a>
         </div>
 
+        <script>
+          $(function () {
+
+            var p = $('#tt').tabs().tabs('tabs')[4];
+            var mb = p.panel('options').tab.find('a.tabs-inner');
+            mb.menubutton({
+              menu: '#m_case',
+            }).click(function () {
+              $('#tt').tabs('select', 4);
+            });
+
+            var p = $('#tt').tabs().tabs('tabs')[0];
+            var mb = p.panel('options').tab.find('a.tabs-inner');
+            mb.menubutton({
+              menu: '#m_mod',
+            }).click(function () {
+              $('#tt').tabs('select', 0);
+            });
+
+            var p = $('#tt').tabs().tabs('tabs')[1];
+            var mb = p.panel('options').tab.find('a.tabs-inner');
+            mb.menubutton({
+              menu: '#m_var',
+            }).click(function () {
+              $('#tt').tabs('select', 1);
+            });
+
+          });
+
+          $('#vb').datagrid({
+            singleSelect: true,
+            //fitColumns: true,
+            rownumbers: true,
+            columns: [
+              [{
+                  field: 'name',
+                  title: '变量名(name)',
+                  width: 80
+                },
+                {
+                  field: 'value',
+                  title: '取值(value)',
+                  width: 150
+                },
+                {
+                  field: 'rule',
+                  title: '规则(rule)',
+                  width: 150
+                },
+                {
+                  field: 'used',
+                  title: '使用者(used)',
+                  width: 300
+                },
+                {
+                  field: 'description',
+                  title: '描述(description)',
+                  width: 150
+                },
+              ]
+            ]
+          });
+
+          $('#invb').datagrid({
+            singleSelect: true,
+            //fitColumns: true,
+            rownumbers: true,
+            columns: [
+              [{
+                  field: 'name',
+                  title: '变量名(name)',
+                  width: 100
+                },
+                {
+                  field: 'value',
+                  title: '取值(value)',
+                  width: 200
+                },
+                {
+                  field: 'used',
+                  title: '使用者(used)',
+                  width: 350
+                },
+              ]
+            ]
+          });
+
+          $('#act').datagrid({
+            singleSelect: true,
+            //fitColumns: true,
+            rownumbers: true,
+            columns: [
+              [{
+                  field: 'action',
+                  title: 'Action Name',
+                  width: 100
+                },
+                {
+                  field: 'parameters', // (a, b) (a,b,c)
+                  title: '参数组合情况(parameters)',
+                  width: 200
+                },
+                {
+                  field: 'used',
+                  title: '使用者(used)',
+                  width: 350
+                },
+              ]
+            ]
+          });
+
+          // 切换tab页面同步刷新数据,否则无法显示更新的数据
+          $('#tt').tabs({
+            onSelect: function (title) {
+              if (title == '输入变量') {
+                $('#vb').datagrid('resize');
+              }
+              if (title == '中间变量') {
+                $('#invb').datagrid('resize');
+              }
+              if (title == 'Actions') {
+                $('#act').datagrid('resize');
+              }
+            }
+          });
+
+          function editvar() {
+            var row = $('#vb').datagrid('getSelected');
+            if (row) {
+              $("#edit_var_ff input#varname").textbox("setValue", row.name);
+              $("#edit_var_ff input#vardesc").textbox("setValue", row.description);
+              $("#edit_var_ff input#varvalue").textbox("setValue", row.value);
+              $("#edit_var_ff input#varrule").textbox("setValue", row.rule);
+              open_win('edit_var');
+            } else {
+              show_msg("Alert", "Tip：请先选择一个变量～");
+            }
+          }
+        </script>
+
       </div> //End Center
     </div>
   </div>
-
+  
   <div data-options="region:'east',split:true,hideCollapsedContent:false" title="属性配置"
     style="width:25%;max-width:400px;padding:5px 10px;">
     <div style="margin-bottom:5px">
@@ -639,10 +741,41 @@
         <div id="elementInspector" class="inspector" style="width: 100%;"> </div><br />
         Model.modelData:<br />
         <div id="modelInspector" class="inspector" style="width: 100%;"> </div><br />
+        <p>展开层级控制：</p>
+        <input id="levelSlider" type="range" min="0" max="5" value="3">
       </span>
     </div>
   </div>
 
+  <!-- edit var -->
+  <div id="edit_var" class="easyui-window" title="编辑变量"
+    data-options="modal:true,closed:true,minimizable:false,maximizable:false,collapsible:false"
+    style="width:320px;height:300px;padding:10px;">
+    <form id="edit_var_ff" method="post">
+      <div style="margin-bottom:10px">
+        <input class="easyui-textbox" id="varname" name="name" label="变量名" labelPosition="left" style="width:100%"
+          data-options="required:true" readonly>
+      </div>
+      <div style="margin-bottom:10px">
+        <input class="easyui-textbox" id="vardesc" name="description" label="描述" labelPosition="left" style="width:100%"
+          data-options="required:true">
+      </div>
+      <div style="margin-bottom:10px">
+        <input class="easyui-textbox" id="varvalue" name="value" label="取值" labelPosition="left" style="width:100%"
+          data-options="required:true">
+      </div>
+      <div style="margin-bottom:10px">
+        <input class="easyui-textbox" id="varrule" name="rule" label="规则" labelPosition="left" style="width:100%"
+          data-options="required:true">
+      </div>
+    </form>
+    <div style="text-align:right;padding:5px 0">
+      <a href="javascript:void(0)" class="easyui-linkbutton" onclick="close_win('edit_var')"
+        style="width:60px">Cancle</a>
+      <a href="javascript:void(0)" class="easyui-linkbutton" onclick="edit_var('edit_var', 'edit_var_ff')"
+        style="width:60px">Save</a>
+    </div>
+  </div>
   <!-- end -->
 
 </body>
