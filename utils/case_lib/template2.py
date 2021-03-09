@@ -89,6 +89,7 @@ class template(CaseTemplate):
                 groupkeywords.append(n.get("text"))
             groups_keywords.append(groupkeywords)
 
+        self.log.info("写测试用例文件：{}".format(outputfile))
         i = 1
         for kw in product(*groups_keywords):
             with open(outputfile, 'a') as ff:
