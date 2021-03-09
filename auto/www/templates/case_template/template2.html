@@ -169,11 +169,11 @@
           });
 
       myPalette.model = new go.GraphLinksModel([
-        { text: "lightgreen", color: "#ACE600" },
-        { text: "yellow", color: "#FFDD33" },
-        { text: "lightblue", color: "#33D3E5" },
-        { isGroup: true, text: "H Group", horiz: true, "action":"H", enable: true },
-        { isGroup: true, text: "V Group", horiz: false, "action":"V", enable: true }
+        { text: "lightgreen", color: "#ACE600" , properties: ""},
+        { text: "yellow", color: "#FFDD33" , properties: ""},
+        { text: "lightblue", color: "#33D3E5" , properties: ""},
+        { isGroup: true, text: "H Group", horiz: true, "action":"H", enable: true , nodesum: 0},
+        { isGroup: true, text: "V Group", horiz: false, "action":"V", enable: true, nodesum: 0}
       ]);
 
       var slider = document.getElementById("levelSlider");
