@@ -1,22 +1,4 @@
-{ "class": "go.GraphLinksModel",
-  "nodeDataArray": [
-{"key":1, "isGroup":true, "text":"Main 1", "horiz":true},
-{"key":2, "isGroup":true, "text":"Main 2", "horiz":true},
-{"key":3, "isGroup":true, "text":"Group A", "group":1},
-{"key":4, "isGroup":true, "text":"Group B", "group":1},
-{"key":5, "isGroup":true, "text":"Group C", "group":2},
-{"key":6, "isGroup":true, "text":"Group D", "group":2},
-{"key":7, "isGroup":true, "text":"Group E", "group":6},
-{"text":"first A", "group":3, "key":-7},
-{"text":"second A", "group":3, "key":-8},
-{"text":"first B", "group":4, "key":-9},
-{"text":"second B", "group":4, "key":-10},
-{"text":"third B", "group":4, "key":-11},
-{"text":"first C", "group":5, "key":-12},
-{"text":"second C", "group":5, "key":-13},
-{"text":"first D", "group":6, "key":-14},
-{"text":"first E", "group":7, "key":-15}
- ],
-  "linkDataArray": [  ],
-  "modelData": {"templateName": "template2","version":1, "nodes":4, "links":3, "actions":3, "variables":5, "variable":[], "init_actions":"模块的初始化条件"}
-  }
+{ "class": "GraphLinksModel",
+  "modelData": {"templateName":"template2", "version":1, "nodes":4, "links":3, "actions":3, "variables":5, "variable":[], "init_actions":"环境初始化"},
+  "nodeDataArray": [],
+  "linkDataArray": []}

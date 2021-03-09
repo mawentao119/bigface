@@ -59,21 +59,22 @@ class template(CaseTemplate):
                 self.groups.append(node)
             else:
                 self.nodes.append(node)
+    
+    def get_group_actions(self):
+        # 提取组的action
+        self.log.info("提取组的action")
+        group_actions = {}
+        for g in self.groups:
+            group_actions[g.get("key","none")] = g.get("action","none")
+        
+        return group_actions
 
-    def gen_autocase(self):
+    def get_caselist(self):
 
         self.get_groupsandnodes()
-        outputfile = os.path.splitext(self.tmdfile)[0] + '.robot'
-
-        self.log.info("自动化用例,input：{}, output:{}".format(self.tmdfile,outputfile))
-
-        with open(outputfile, 'w') as ff:
-            ff.write("*** Settings *** \n")
-            ff.write("*** Variables *** \n")
-            ff.write("*** Test Cases *** \n")
 
         groups = {}
-        
+        self.log.info("根据Group进行分组...")
         for node in self.nodes:
             nd = {"group":"unknown","nodes":[]}
             nodegroup = node.get("group")
@@ -82,29 +83,79 @@ class template(CaseTemplate):
             else:
                 groups[nodegroup] = [node]
         
+        # 提取每组关键字， groupnumber::text
+        self.log.info("提取每组关键字 groupkey::nodekey::nodetext")
         groups_keywords = []
         for gs in groups.values():
             groupkeywords=[]
             for n in gs:
-                groupkeywords.append(n.get("text"))
+                kw = "{}::{}::{}".format(str(n.get("group",0)), str(n.get("key",0)), n.get("text")) # groupkey::nodekey::nodetext
+                groupkeywords.append(kw)
             groups_keywords.append(groupkeywords)
 
-        self.log.info("写测试用例文件：{}".format(outputfile))
-        i = 1
-        for kw in product(*groups_keywords):
-            with open(outputfile, 'a') as ff:
-                ff.write("TestCase_{} \n".format(i))
-                ff.write("    [Documentation]  {} \n".format(kw))
-                ff.write("    INPUT  {} \n".format(kw))
-                ff.write("    EXPECT   SUCESS \n")
-            i = i + 1
+        # 生成测试用例列表，作为各种输出模式的数据文件
+        self.log.info("生成测试用例列表，作为各种输出模式的数据文件")
+        caselist = []
+        for case in product(*groups_keywords):
+            caselist.append(case)
+        
+        return caselist
+
+
+    def gen_autocase(self):
+        #################################### 自动化用例 ####################################
+        outputfile = os.path.splitext(self.tmdfile)[0] + '.robot'
+
+        with open(outputfile, mode='w', encoding="utf8") as ff:
+            ff.write("*** Settings ***\n\n\n*** Variables ***\n\n\n*** Test Cases ***\n")
+
+        caselist = self.get_caselist()
+        group_actions = self.get_group_actions()
+        with open(outputfile, mode='a', encoding="utf8") as ff:
+            for case in caselist:
+                casename=""
+                for step in case:
+                    casename += '_'
+                    (gkey, nkey, text) = step.split("::")
+                    casename += "{}x{}".format(gkey,nkey)
+
+                ff.write("T{} \n".format(casename))
+
+                for step in case:
+                    (gkey, nkey, text) = step.split("::")
+                    ff.write("    {}    {} \n".format(group_actions[int(gkey)],text))
+                
+                ff.write("    check    用例返回成功\n")
+                ff.write("  \n")
+        
 
         return {"status": "success", "msg": "生成文件：{}.".format(outputfile)}
     def gen_casetemplate(self):
         self.log.info("生成用例模版")
         return {"status": "success", "msg": "生成文件：{}.".format(self.tmdfile)}
     def gen_mancase(self):
+        #################################### 手工用例 ####################################
+        outputfile = os.path.splitext(self.tmdfile)[0] + '.txt'
+        caselist = self.get_caselist()
+        group_actions = self.get_group_actions()
+        with open(outputfile, 'w') as ff:
+            for case in caselist:
+                casename=""
+                for step in case:
+                    casename += '_'
+                    (gkey, nkey, text) = step.split("::")
+                    casename += "{}x{}".format(gkey,nkey)
 
-        self.log.info("生成手工用例")
-        return {"status": "success", "msg": "生成文件：{}.".format(self.tmdfile)}
+                ff.write("T{} \n".format(casename))
+                ff.write("  输入：\n")
+
+                for step in case:
+                    (gkey, nkey, text) = step.split("::")
+                    ff.write("    {}::{} \n".format(group_actions[int(gkey)],text))
+                
+                ff.write("  输出: \n")
+                ff.write("    用例返回成功\n")
+                ff.write("  \n")
+
+        return {"status": "success", "msg": "生成文件：{}.".format(outputfile)}
 

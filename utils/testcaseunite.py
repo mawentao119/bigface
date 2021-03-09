@@ -40,7 +40,7 @@ def getCaseContent(cpath, cname):
                     if ststr.strip().startswith('#*'):
                         ststr = ststr.replace('#*', '')
 
-                content += ststr + '\n'
+                content += ststr + '\r\n'
     return content
 
 

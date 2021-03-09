@@ -505,8 +505,7 @@ def get_step_by_case(app, path):
         try:
             data = get_case_data(app, path)
         except Exception as e:
-            log.warnning(
-                "Get_case_data of {} Exception :{}".format(path, e))
+            log.warnning("Get_case_data of {} Exception :{}".format(path, e))
             return []
 
     # TODO: dealwith resource file : cannot use suiteBuilder
