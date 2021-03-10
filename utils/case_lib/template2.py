@@ -82,7 +82,15 @@ class template(CaseTemplate):
                 groups[nodegroup].append(node)
             else:
                 groups[nodegroup] = [node]
-        
+
+        # 去除not enable 的Group
+        self.log.info("去除not enable 的Group")
+        for g in self.groups:
+            enabled = g.get("enable",True)
+            if not enabled:
+                self.log.info("从分组中删除非 enable 的Group key:{}, {}".format(g.get("key"),g.get('text')))
+                groups.pop(g.get("key")) 
+      
         # 提取每组关键字， groupnumber::text
         self.log.info("提取每组关键字 groupkey::nodekey::nodetext")
         groups_keywords = []
@@ -98,9 +106,45 @@ class template(CaseTemplate):
         caselist = []
         for case in product(*groups_keywords):
             caselist.append(case)
-        
+
+        self.check_properties(caselist)
+
         return caselist
 
+    # 删除不具共同属性的用例
+    def check_properties(self, caselist):
+        ## caselist:  [(g::n::x,g::n::x,g::n::x)(g::n::x)()]
+        badcases = []
+        for case in caselist:
+            case_property = []
+            for step in case:
+                (gkey, nkey, text) = step.split("::")
+                stet_property = self.get_nodeproperty(nkey)
+                if len(stet_property) > 0 :
+                    case_property.append(stet_property)
+            
+            if len(case_property) < 2 :
+                continue
+            fst = case_property[0]
+            for cp in case_property[1:]:
+                fst &= cp
+            if len(fst) == 0:
+                badcases.append(case)
+        
+        for case in badcases:
+            self.log.info("删除不具共同属性用例:{}".format(case))
+            caselist.remove(case)
+
+    def get_nodeproperty(self, nodekey):
+        node_property = set()
+        for n in self.nodes:
+            if n.get("key") == int(nodekey):
+                ps = n.get("properties")
+                if ps:
+                    for p in ps.split(','):
+                        node_property.add(p.strip())
+        #self.log.info("取得节点{}的属性为:{}".format(nodekey,node_property))
+        return node_property
 
     def gen_autocase(self):
         #################################### 自动化用例 ####################################
@@ -138,6 +182,8 @@ class template(CaseTemplate):
         outputfile = os.path.splitext(self.tmdfile)[0] + '.txt'
         caselist = self.get_caselist()
         group_actions = self.get_group_actions()
+
+        casenum = 0
         with open(outputfile, 'w') as ff:
             for case in caselist:
                 casename=""
@@ -156,6 +202,7 @@ class template(CaseTemplate):
                 ff.write("  输出: \n")
                 ff.write("    用例返回成功\n")
                 ff.write("  \n")
+                casenum += 1
 
-        return {"status": "success", "msg": "生成文件：{}.".format(outputfile)}
+        return {"status": "success", "msg": "用例数:{},文件：{}.".format(casenum,outputfile)}
 
