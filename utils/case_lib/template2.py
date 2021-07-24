@@ -179,6 +179,37 @@ class template(CaseTemplate):
         return {"status": "success", "msg": "生成文件：{}.".format(self.tmdfile)}
     def gen_mancase(self):
         #################################### 手工用例 ####################################
+
+        apis={
+            "SetTimeout": "void SetTimeout(int timeout);",
+            "ModifyColumn": "int ModifyColumn(const std::string &table_name, const std::vector<std::string> &column_vec);",
+"AddColumn": "int AddColumn(const std::string &table_name, const std::vector<std::string> &column_name_vec);",
+"DeleteColumn": "int DeleteColumn(const std::string &table_name, const std::vector<std::string> &column_name_vec);",
+"ClearTable": "int ClearTable(const std::string &table_name);",
+"GetRowColumn": "int GetRowColumn(const std::string &table_name, const std::string &rowkey,const filter::ColumnPrefixFilterPtr &filter, std::vector<std::string> *column_name_vec);",
+"ColumnRead": "int ColumnRead(const std::string &table_name, const std::vector<std::string> &rowkeys,const std::vector<std::string> &column_name_vec, std::vector<KeyColValPair_t> *key_values);",
+"AsyncColumnRead": "int AsyncColumnRead(const std::string &table_name, const std::vector<std::string> &rowkeys,const std::vector<std::string> &column_name_vec, std::vector<KeyColValPair_t> *key_values);",
+"RowRead": "int RowRead(const std::string &table_name,const std::vector<std::string> &rowkeys, std::vector<KeyColNameValPair_t> *key_name_values);",
+"AsyncRowRead": "int AsyncRowRead(const std::string &table_name,const std::vector<std::string> &rowkeys, std::vector<KeyColNameValPair_t> *key_name_values);",
+"ColumnRead": "int ColumnRead(const std::string &table_name, const std::vector<std::string> &rowkeys,const std::vector<std::string> &column_name_vec, const std::vector<filter::FilterBasePtr> &filters,std::vector<KeyColValPair_t> *key_values);",
+"RowRead(Filter)": "int RowRead(const std::string &table_name, const std::vector<std::string> &rowkeys,const std::vector<filter::FilterBasePtr> &filters, std::vector<KeyColNameValPair_t> *key_name_values);",
+"ColumnScan": "int ColumnScan(const std::string &table_name, const std::vector<std::string> &column_name_vec,const std::vector<filter::FilterBasePtr> &filters, int return_num_limit,std::vector<KeyColValPair_t> *key_values, int *flag_done);",
+"ColumnScanNext": "int ColumnScanNext(std::vector<KeyColValPair_t> *key_values, int *flag_done);",
+"RowScan": "int RowScan(const std::string &table_name, const std::vector<filter::FilterBasePtr> &filters,int return_num_limit, std::vector<KeyColNameValPair_t> *key_name_values, int *flag_done);",
+"RowScanNext": "int RowScanNext(std::vector<KeyColNameValPair_t> *key_name_values, int *flag_done);",
+"Write(KCNpair)": "int Write(const std::string &table_name, const std::vector<KeyColNameValPair_t> &key_name_values);",
+"Write(KCVpair)": "int Write(const std::string &table_name, const std::vector<std::string> &column_name_vec,const std::vector<KeyColValPair_t> &key_values);",
+"Append": "int Append(const std::string &table_name, const std::vector<KeyColNameValPair_t> &key_name_values, int list_length);",
+"DeleteRow": "int DeleteRow(const std::string &table_name, const std::vector<std::string> &rowkeys);",
+"DeleteRow(Filter)": "int DeleteRow(const std::string &table_name, const std::vector<filter::FilterBasePtr> &filters);",
+"ConvertColumnValueToRowRecord": "int ConvertColumnValueToRowRecord(const std::string &table_name,const std::vector<KeyColNameValPair_t> &key_name_values, common::RowRecordList *rec_list, uint16_t array_len = 0);",
+"ColumnValueToRowRecord": "int ColumnValueToRowRecord(const std::vector<std::string> &column_name_vec,const std::vector<dollar::KeyColValPair_t> &key_values, common::RowRecordList *rec_list);",
+"AddTable": "void AddTable(const std::string &table_name, int table_id);",
+"SetSetName": "void SetSetName(const std::string &set_name);",
+"SetModelName": "void SetModelName(const std::string &model_name);"
+
+        }
+
         outputfile = os.path.splitext(self.tmdfile)[0] + '.txt'
         caselist = self.get_caselist()
         group_actions = self.get_group_actions()
@@ -191,17 +222,18 @@ class template(CaseTemplate):
                     casename += '_'
                     (gkey, nkey, text) = step.split("::")
                     casename += "{}x{}".format(gkey,nkey)
-
-                ff.write("T{} \n".format(casename))
-                ff.write("  输入：\n")
-
+                ff.write("//##测试用例{}：T{} \n".format(casenum, casename))
                 for step in case:
                     (gkey, nkey, text) = step.split("::")
-                    ff.write("    {}::{} \n".format(group_actions[int(gkey)],text))
-                
-                ff.write("  输出: \n")
-                ff.write("    用例返回成功\n")
-                ff.write("  \n")
+                    ff.write("////{}::{} \n".format(group_actions[int(gkey)],text))
+                    info = apis.get(text)
+                    if info:
+                         ff.write("//API接口：{}\n".format(info))
+                ff.write("//**预期结果:用例返回成功\n")
+                ff.write("TEST_F(DollarTest, systest_{0}) {{\n".format(casenum))
+                ff.write("  ASSERT_EQ(0, 0);\n")
+                ff.write("}\n")
+                ff.write("\n")
                 casenum += 1
 
         return {"status": "success", "msg": "用例数:{},文件：{}.".format(casenum,outputfile)}
