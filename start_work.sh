@@ -2,7 +2,7 @@
 
 echo "*** Source py3env/bin/activate ... "
 
-source ../py3.8/bin/activate
+source ../py3env/bin/activate
 
 here=`pwd`
 
