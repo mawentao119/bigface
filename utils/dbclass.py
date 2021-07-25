@@ -9,6 +9,27 @@ from robot.api import TestData
 
 log = getlogger('TestDB')
 
+class DBcli():
+    def __init__(self, dbfile):
+        self.DBcon = db.connect(
+            dbfile, isolation_level=None, check_same_thread=False)
+        self.DBcor = self.DBcon.cursor()
+
+    def runsql(self, sql):
+        log.info("DBCLI:"+sql)
+        try:
+            res = self.DBcor.execute(sql)
+            self.DBcon.commit()
+        except Exception as e:
+            log.error("异常:{}".format(e))
+            return None
+        return res
+
+    def insert_loginfo(self, user, target, action, key, result=''):
+        sql = ''' INSERT INTO loginfo(user,target,action,key,result) 
+                  VALUES('{}','{}','{}','{}','{}');'''.format(user, target, action, key, result)
+
+        return self.runsql(sql)
 
 class TestDB():
     def __init__(self, confdir):
@@ -183,7 +204,10 @@ class TestDB():
     def get_project_dir(self):
         return self.project_dir
 
-    def get_dbfilename(self):
+    def get_id(self):
+        return self.DBID
+
+    def get_dbfile(self):
         return self.DBFileName
 
     # datetime like: 20190112091212
@@ -659,9 +683,6 @@ class TestDB():
                   VALUES('{}','{}','{}','{}','{}');'''.format(user, target, action, key, result)
 
         return self.runsql(sql)
-
-    def get_id(self):
-        return self.DBID
 
     def delete_suite(self, info_key):
         return self.runsql("Delete from testcase where info_key like '{}%' ;".format(info_key))

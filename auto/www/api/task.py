@@ -71,10 +71,11 @@ class Task(Resource):
                 return {"status": "fail", "msg": "失败：暂不支持运行此类型的文件 :" + fext}
 
         case_name = os.path.basename(cases)
+        user = session["username"]
 
         if not is_run(self.app, case_name):
             p = multiprocessing.Process(target=robot_run,
-                                        args=(self.app, cases, ''))
+                                        args=(cases, '', user))
             p.start()
             self.app.config["AUTO_ROBOT"].append(
                 {"name": "%s" % case_name, "process": p})
@@ -100,14 +101,14 @@ class Task(Resource):
             suites.append(s)
 
         self.log.info("runpassfail: total suites is :{}".format(len(suites)))
-
+        runuser = session["username"]
         for key in suites:
             case_name = os.path.basename(key)
             if is_full(self.app):
                 return {"status": "fail", "msg": "失败：超过最大进程数 MAX_PROCS ,请稍后尝试."}
             if not is_run(self.app, case_name):
                 p = multiprocessing.Process(target=robot_run,
-                                            args=(self.app, key, ''))
+                                            args=(key, '', runuser))
                 p.start()
                 self.app.config["AUTO_ROBOT"].append(
                     {"name": "%s" % case_name, "process": p})
@@ -140,10 +141,10 @@ class Task(Resource):
         exclud_arg = ' -e '+ ' -e '.join(exclud) if len(exclud) > 0 else ''
 
         case_name = os.path.basename(key)
-
+        runuser = session["username"]
         if not is_run(self.app, case_name):
             p = multiprocessing.Process(target=robot_run,
-                                        args=(self.app, key, includ_arg + exclud_arg))
+                                        args=(key, includ_arg + exclud_arg, runuser))
             p.start()
             self.app.config["AUTO_ROBOT"].append(
                 {"name": "%s" % case_name, "process": p})
@@ -169,10 +170,10 @@ class Task(Resource):
             return {"status": "fail", "msg": "无法找到配置文件:{}".format(conffile)}
 
         case_name = os.path.basename(key)
-
+        runuser = session["username"]
         if not is_run(self.app, case_name):
             p = multiprocessing.Process(target=robot_run,
-                                        args=(self.app, key, ' -A '+conffile))
+                                        args=(key, ' -A '+conffile, runuser))
             p.start()
             self.app.config["AUTO_ROBOT"].append(
                 {"name": "%s" % case_name, "process": p})
@@ -216,10 +217,10 @@ class Task(Resource):
         cases = splits[-1]    # driver|robot|args|output=xxx|cases
         args = splits[2]
         case_name = os.path.basename(cases)
-
+        runuser = session["username"]
         if not is_run(self.app, case_name):
             p = multiprocessing.Process(target=robot_run,
-                                        args=(self.app, cases, args))
+                                        args=(cases, args, runuser))
             p.start()
             self.app.config["AUTO_ROBOT"].append(
                 {"name": "%s" % case_name, "process": p})
@@ -258,10 +259,10 @@ class Task(Resource):
         case_name = os.path.basename(cases)
 
         self.log.info("rerunfail_task args:" + args)
-
+        runuser = session["username"]
         if not is_run(self.app, case_name):
             p = multiprocessing.Process(target=robot_run,
-                                        args=(self.app, cases, args))
+                                        args=(cases, args, runuser))
             p.start()
             self.app.config["AUTO_ROBOT"].append(
                 {"name": "%s" % case_name, "process": p})

@@ -24,8 +24,10 @@ from robot.api import TestSuiteBuilder, ResultWriter, ExecutionResult
 
 from utils.file import exists_path, make_nod, write_file, read_file, mk_dirs
 from utils.mylogger import getlogger
+from utils.dbclass import DBcli
 
 log = getlogger('Utils.RUN')
+db_cli = DBcli(os.environ["DB_FILE"])
 
 # This fun is for debug the test case, result is temporliy in /runtime dir
 def robot_debugrun(app, cases):
@@ -42,12 +44,13 @@ def robot_debugrun(app, cases):
     return cp.stdout
 
 # This fun is for standard Run, Result will be recorded in Scheduler output.
-def robot_run(app, case_key, args='', user='', driver='USER'):
+def robot_run(case_key, args='', user='', catigory=''):
 
-    username = user if user != '' else session['username']
+    username = user if user != '' else 'unknown'
+    driver = catigory if catigory != '' else username
 
-    project = get_projectnamefromkey(case_key)
-    output = app.config["AUTO_HOME"] + "/jobs/%s/%s" % (username, project)
+    project = os.environ["PROJECT_NAME"]
+    output = os.environ["AUTO_HOME"] + "/jobs/%s/%s" % (username, project)
 
     if not exists_path(output):
         mk_dirs(output)
@@ -67,7 +70,7 @@ def robot_run(app, case_key, args='', user='', driver='USER'):
     with open(out + "/debug.txt", 'w') as f:
         f.write(cp.stdout)
 
-    app.config['DB'].insert_loginfo(username, 'task', 'run', case_key, 'OK')
+    db_cli.insert_loginfo(username, 'task', 'run', case_key, 'OK')
 
     # Report and xUnit files can be generated based on the result object.
     # ResultWriter(result).write_results(report=out + '/report.html', log=out + '/log.html')
@@ -76,7 +79,7 @@ def robot_run(app, case_key, args='', user='', driver='USER'):
         detail_result = ExecutionResult(out + "/output.xml")
 
     except Exception as e:
-        log.error("Open output.xml Exception:{},\n May robot run fail, console:{}".format(e,cp.stdout))
+        log.error("Open output.xml Exception:{},\n May robot run fail, console:{}".format(e, cp.stdout))
         return
 
     # detail_result.save(out + "/output_new.xml")
@@ -86,7 +89,7 @@ def robot_run(app, case_key, args='', user='', driver='USER'):
     ResultWriter(detail_result).write_results(report=out + '/report.html', log=out + '/log.html')
 
     s = detail_result.suite
-    dealwith_source(app, username, s)
+    dealwith_source(username, s)
 
     #send_robot_report(username, project, index, detail_result, out)
 
@@ -124,16 +127,16 @@ def robot_runOLD(app, username, project, case_key, output):
     ResultWriter(detail_result).write_results(report=out + '/report.html', log=out + '/log.html')
 
     s = detail_result.suite
-    dealwith_source(app, username, s)
+    dealwith_source(username, s)
 
     send_robot_report(username, project, index, detail_result, out)
 
-def dealwith_source(app, username ,s):
+def dealwith_source(username ,s):
 
     source = s.source
     if os.path.isfile(s.source):
 
-        app.config['DB'].insert_loginfo(username,'suite','run',s.source,'OK')
+        db_cli.insert_loginfo(username,'suite','run',s.source,'OK')
 
         for t in s.tests._items:
             if 'HAND' in t.tags or 'Hand' in t.tags or 'hand' in t.tags:
@@ -155,9 +158,9 @@ def dealwith_source(app, username ,s):
                                        rcd_failtimes=rcd_failtimes+{}
                             where info_key='{}' and info_name='{}' ;
             '''.format(t.elapsedtime,t.status,t.starttime,t.endtime,t.doc,tags,username,success,fail,source,t.name)
-            res = app.config['DB'].runsql(sql)
+            res = db_cli.runsql(sql)
 
-            app.config['DB'].insert_loginfo(username, 'case', 'run', source, t.status)
+            db_cli.insert_loginfo(username, 'case', 'run', source, t.status)
 
             if res.rowcount < 1 :
                 log.warning("Cannot find case:{}:{}, Insert it ...".format(source,t.name))
@@ -175,14 +178,14 @@ def dealwith_source(app, username ,s):
                                               info_name) 
                          VALUES({},'{}','{}','{}','{}','{}','{}',{},{},{},'{}','{}');
                             '''.format(t.elapsedtime, t.status, t.starttime, t.endtime, t.doc, tags, username, 1,success,fail, source, t.name)
-                res = app.config['DB'].runsql(sql)
+                res = db_cli.runsql(sql)
                 if res.rowcount < 1 :
                     log.error("Add New Case:{}:{} Failed".format(source,t.name))
 
-                app.config['DB'].insert_loginfo(username,'case','create',source,'robot_run:'+t.name)
+                db_cli.insert_loginfo(username,'case','create',source,'robot_run:'+t.name)
     else:
         for t in s.suites._items:
-            dealwith_source(app, username, t)
+            dealwith_source(username, t)
 
 def reset_next_build_numb(output):
     next_build_number = output + "/nextBuildNumber"

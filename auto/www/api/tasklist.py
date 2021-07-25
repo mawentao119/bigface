@@ -530,16 +530,16 @@ def get_projecttask(app):
     projects = app.config['DB'].get_allproject(session["username"])
     task_list = {"total": len(projects), "rows": []}
     for op in projects:
-        p = op.split(':')[1]     # projects = ["owner:project","o:p"]
+        #p = op.split(':')[1]     # projects = ["owner:project","o:p"]
         task = {
             # "status": status,
-            "project": p,
+            "project": op,
             # "last_success": get_last_pass(job_path + "/lastPassed"),
             # "last_fail": get_last_fail(job_path + "/lastFail"),
             "enable": "Enalble",
-            "next_time": get_next_time(app, p),
+            "next_time": get_next_time(app, op),
             "cron": "* * * * * *",
-            "status": get_last_task(app, session["username"], p)
+            "status": get_last_task(app, session["username"], op)
         }
 
         task_list["rows"].append(task)

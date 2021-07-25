@@ -47,11 +47,14 @@ class Config:
     os.environ["ROBOT_DIR"] = PROJECT_DIR
     os.environ["PROJECT_DIR"] = PROJECT_DIR
     os.environ["PROJECT_NAME"] = PROJECT_NAME
+    os.environ["AUTO_HOME"] = AUTO_HOME
+    os.environ["AUTO_TEMP"] = AUTO_TEMP
+    os.environ["DB_FILE"] = DB.get_dbfile()
 
 
     AUTO_ROBOT = []    # Process list of running tasks, only for hand running ,not for schceduled jobs. MAX: setting:MAX_PROCS
 
-    ##dbfile = DB.get_dbfilename()
+    ##dbfile = DB.get_dbfile()
     ##url = 'sqlite:///' + dbfile
     ##SCHEDULER_JOBSTORES = {
     ##    'default': SQLAlchemyJobStore(url = "sqlite:////Users/tester/PycharmProjects/uniRobotDev/work/DBs/schedule.db")

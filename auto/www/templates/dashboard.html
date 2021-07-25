@@ -28,7 +28,9 @@
             <a href="https://github.com/mawentao119/uniRobot.git" target="_blank" class="easyui-linkbutton"
                 data-options="plain:true"><img src="{{ url_for('static', filename='img/logo_header32.png') }}"
                     alt="davinci" style="margin-top:5px;" /></a>
-            <a href="#" onclick="addTab('任务管理', '/project_task/', 'icon-task_mng')" class="easyui-linkbutton"
+<!--            <a href="#" onclick="addTab('任务管理', '/project_task/', 'icon-task_mng')" class="easyui-linkbutton"-->
+<!--                data-options="iconCls:'icon-task_mng'">任务管理</a>-->
+            <a href="#" onclick="addTab('任务管理', '/task_list/{{project}}', 'icon-task_mng')" class="easyui-linkbutton"
                 data-options="iconCls:'icon-task_mng'">任务管理</a>
             <a href="#" onclick="addTab('调度管理', '/schedule_mng/', 'icon-schedule_mng')" class="easyui-linkbutton"
                 data-options="iconCls:'icon-schedule_mng'">调度管理</a>
@@ -38,11 +40,12 @@
             {% if username == "Admin" %}
             <a href="#" onclick="addTab('项目管理', '/project_mng', 'icon-project_mng')" class="easyui-linkbutton"
                 data-options="iconCls:'icon-project_mng'" style="float:right;margin-top:8px;margin-right:10px;">项目管理</a>
-            {% endif %}
             <a href="#" onclick="addTab('系统配置', '/settings', 'icon-settings')" class="easyui-linkbutton"
                 data-options="iconCls:'icon-settings'" style="float:right;margin-top:8px;margin-right:5px;">系统配置</a>
             <a href="#" onclick="addTab('用户管理', '/user', 'icon-settings')" class="easyui-linkbutton"
                 data-options="iconCls:'icon-user_mng'" style="float:right;margin-top:8px;margin-right:5px;">用户管理</a>
+
+            {% endif %}
 
         </div>
     </div>
@@ -84,6 +87,7 @@
     <div id="project_menu" class="easyui-menu" style="width:160px;">
         <div onclick="manage_suite('create_suite', 'create_suite_ff', 'create')" data-options="iconCls:'icon-suite'">
             创建目录</div>
+        <div onclick="manage_file('create_file', 'create_file_ff', 'create')">创建文件</div>
         <div onclick="manage_suite('create_suitegit', 'create_suite_ffgit', 'gitclone')">Git Clone</div>
         <div onclick="set_main_project()">设置为主项目</div>
         <div class="menu-sep"></div>

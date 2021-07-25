@@ -27,12 +27,14 @@ def dashboard():
     if 'username' in session:
         app = current_app._get_current_object()
         tpltdir = app.config["CASE_TEMPLATE_DIR"]
+        username = session["username"]
+        project_name = os.environ["PROJECT_NAME"]
         options = []
         for root, dirs, files in os.walk(tpltdir, topdown=False):
             for f in files:
                 (n, e) = os.path.splitext(f)
                 options.append(n) if e == '.html' else None
-        return render_template('dashboard.html', username=session['username'], options=options)
+        return render_template('dashboard.html', username=username, project=project_name, options=options)
     else:
         return render_template('login.html')
 
