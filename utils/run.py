@@ -22,7 +22,7 @@ from utils.file import get_projectnamefromkey
 
 from robot.api import TestSuiteBuilder, ResultWriter, ExecutionResult
 
-from utils.file import exists_path, make_nod, write_file, read_file, mk_dirs, get_projectdirfromkey
+from utils.file import exists_path, make_nod, write_file, read_file, mk_dirs
 from utils.mylogger import getlogger
 
 log = getlogger('Utils.RUN')
@@ -435,11 +435,6 @@ class RobotRun(threading.Thread):
         lock.release()
 
 def py_debugrun(app, pyfile):
-    projectdir = get_projectdirfromkey(pyfile)
-
-    os.environ["ROBOT_DIR"] = projectdir
-    os.environ["PROJECT_DIR"] = projectdir
-
     cmd = 'python ' + pyfile
     cp = subRun(cmd, shell=True, stdout=PIPE, stderr=STDOUT, text=True, timeout=120)  # timeout: sec
 
@@ -448,10 +443,6 @@ def py_debugrun(app, pyfile):
     return cp.stdout
 
 def bzt_debugrun(app, yamlfile):
-    projectdir = get_projectdirfromkey(yamlfile)
-
-    os.environ["ROBOT_DIR"] = projectdir
-    os.environ["PROJECT_DIR"] = projectdir
 
     cmd = 'bzt ' + yamlfile
     cp = subRun(cmd, shell=True, stdout=PIPE, stderr=STDOUT, text=True, timeout=180)  # timeout: sec

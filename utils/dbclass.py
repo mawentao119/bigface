@@ -13,14 +13,13 @@ log = getlogger('TestDB')
 class TestDB():
     def __init__(self, confdir):
         # Init system TestDBID with file TestCaseDB.id if exists, Create new if not exists.
-        log.info("初始化数据库，系统目录：{}".format(confdir))
+
         self.DBID = '0'
         self.DBcon = None
         self.DBcor = None
 
         self.confdir = confdir
         self.dbpath = os.path.join(self.confdir, 'DBs')
-        self.exclude_suite = '/work/workspace/Admin/darwen'
         self.refresh_interval = 180  # seconds
         self.refresh_time = self.get_timenow()
         self.DBIDFileName = 'TestCaseDB.id'
@@ -28,6 +27,13 @@ class TestDB():
         self.DBFileName = ''
         self.IsNewDBID = False
 
+        self.project_dir = ""
+        self.project_name = ""
+
+        log.info("检查项目信息是否完备 ...")
+        self.check_project_info(self.confdir)
+
+        log.info("初始化数据库，系统目录：{}".format(confdir))
         log.info("检查DBID文件是否存在:" + self.DBIDFile)
         if os.path.exists(self.DBIDFile):
             with open(self.DBIDFile, 'r') as f:
@@ -72,9 +78,34 @@ class TestDB():
 
             self.createtb_caserecord()
 
-            workspace = os.path.join(self.confdir, 'workspace')
-            self.load_user_and_project(workspace)
+            self.refresh_caseinfo(self.project_dir, mode='force')
+            #workspace = os.path.join(self.confdir, 'workspace')
+            #self.load_user_and_project(workspace)
 
+    def check_project_info(self, workdir):
+        workdir_name = os.path.basename(workdir)
+        project_dir = os.path.dirname(workdir)
+        if not os.path.exists(project_dir):
+            log.error("无法找到目录: {}".format(project_dir))
+            exit(1)
+
+        p_dir_list = os.listdir(project_dir)
+        if len(p_dir_list) != 2:
+            log.error("project目录除了{},只能包含项目目录".format(workdir_name))
+            exit(1)
+
+        for p in p_dir_list:
+            if p != workdir_name:
+                self.project_name = p
+                log.info("取得项目名称：{}".format(self.project_name))
+        if self.project_name == "":
+            log.error("项目目录下缺的项目名称失败")
+            exit(1)
+
+        self.project_dir = os.path.join(project_dir, self.project_name)
+        log.info("取得项目路径:{}".format(self.project_dir))
+
+    # TODO: DELETE
     def load_user_and_project(self, workspace):
         log.info("从workspace加载用户: {}".format(workspace))
         for user in os.listdir(workspace):
@@ -84,6 +115,7 @@ class TestDB():
                 project_path = os.path.join(workspace, user, project)
                 self.load_project_from_path(project_path)
 
+    # TODO: DELETE
     def load_project_from_path(self, project_path):
         log.info("加载项目 path: {}".format(project_path))
 
@@ -133,16 +165,23 @@ class TestDB():
 
         return "加载项目成功"
 
+    # TODO: DELETE
     def load_project_from_name(self, project_name):
         log.info("从项目名称加载项目: {}".format(project_name))
         project_path = self.get_project_path(project_name)
         self.load_project_from_path(project_path)
 
     def get_project_path(self, project):
-        user = self.get_projectowner(project)
-        project_path = os.path.join(self.confdir, 'workspace', user, project)
-        log.info("项目路径 of {} is : {}".format(project, project_path))
-        return project_path
+        # user = self.get_projectowner(project)
+        # project_path = os.path.join(self.confdir, 'workspace', user, project)
+        # log.info("项目路径 of {} is : {}".format(project, project_path))
+        return self.project_dir
+
+    def get_project_name(self):
+        return self.project_name
+
+    def get_project_dir(self):
+        return self.project_dir
 
     def get_dbfilename(self):
         return self.DBFileName
@@ -225,9 +264,6 @@ class TestDB():
     def init_project_settings(self, key):
         log.info("Load Settings from dir: {}".format(key))
 
-        if key.lower().endswith('darwen'):
-            return "Do not allowed config this project."
-
         settings_file = os.path.join(key, 'platforminterface/settings.conf')
         log.info("Read Settings file: {}".format(settings_file))
         if os.path.exists(settings_file):
@@ -281,9 +317,16 @@ class TestDB():
                );''')
 
     def init_user(self):
-        self.runsql('''
-        INSERT INTO user values('Admin','admin',"pbkdf2:sha256:50000$fHCEAiyw$768c4f2ba9cabbc77513b9a25ffea1a19a77c23d8dab86e635d5f62f6fb8be6b",'charisma@tencent.com','Admin','Demo_Project');
-        ''')
+        admin_pass = "pbkdf2:sha256:50000$fHCEAiyw$768c4f2ba9cabbc77513b9a25ffea1a19a77c23d8dab86e635d5f62f6fb8be6b"
+        if os.path.exists( os.path.join(self.project_dir, 'AdminPass')):
+            with open(os.path.join(self.project_dir , 'AdminPass'), 'r') as pf:
+                admin_pass = pf.readline().strip()
+
+        sql = '''
+        INSERT INTO user 
+        values('Admin','admin',"{}",'charisma@tencent.com','Admin','{}');
+        '''.format(admin_pass, self.project_name)
+        self.runsql(sql)
 
     def _case_exists(self, info_key, info_name):
         try:
@@ -355,17 +398,20 @@ class TestDB():
 
         return None
 
+    # TODO: DELETE
     def del_user(self, username):
         if username == 'Admin' or username == 'admin':
             return True
         self.runsql("Delete from user where username = '{}' ;".format(username))
         return True
 
+    # TODO: DELETE
     def set_user_main_project(self, user, project):
         log.info(
             "Set user main_project: user {} ,main_project : {} ".format(user, project))
         return self.runsql("Update user set main_project='{}' where username='{}' ; ".format(project, user))
 
+    # TODO: DELETE
     def get_user_main_project(self, user):
         res = self.runsql(
             "SELECT main_project, username from user where username='{}' ;".format(user))
@@ -375,6 +421,7 @@ class TestDB():
         else:
             return ""
 
+    # TODO: DELETE
     def add_user(self, username, fullname, passwordHash, email, category='User', main_project=''):
         return self.runsql("INSERT INTO user values('{}','{}','{}','{}','{}','{}'); ".format(username, fullname, passwordHash, email, category, main_project))
 
@@ -388,19 +435,22 @@ class TestDB():
                );''')
 
     def init_project(self):
-        # self.runsql(
-        #     '''INSERT INTO project(projectname,owner,users) VALUES('Demo_Project','Admin','Admin');''')
-        self.runsql(
-            '''INSERT INTO project(projectname,owner,users) VALUES('DemoProject','Admin','Admin');''')
+        sql = '''
+        INSERT INTO project(projectname,owner,users) VALUES('{}','Admin','all');
+        '''.format(self.project_name)
+        self.runsql(sql)
 
+    # TODO: DELETE
     def add_project(self, projectname, owner, users):
         return self.runsql("INSERT INTO project(projectname,owner,users) VALUES('{}','{}','{}');".format(
             projectname, owner, users))
 
+    # TODO: DELETE
     def edit_project(self, pname, newname, owner):
         return self.runsql("Update project set projectname = '{}' where projectname = '{}' and owner = '{}' ;".format(
             newname, pname, owner))
 
+    # TODO: DELETE
     def add_projectuser(self, project, newuser):
         users = []
         user = []
@@ -419,6 +469,7 @@ class TestDB():
             user_str, project)
         return self.runsql(sql)
 
+    # TODO: DELETE
     def del_projectuser(self, project, newuser):
         users = []
         user = []
@@ -437,6 +488,7 @@ class TestDB():
             user_str, project)
         return self.runsql(sql)
 
+    # TODO: DELETE
     def get_ownproject(self, username):
 
         res = self.runsql(
@@ -448,6 +500,7 @@ class TestDB():
 
         return projects
 
+    # TODO: DELETE
     def get_projectowner(self, project):
 
         try:
@@ -459,6 +512,7 @@ class TestDB():
 
         return owner
 
+    # TODO: DELETE
     def get_othproject(self, username):
         res = self.runsql("select projectname,users from project;")
         projects = []
@@ -470,25 +524,27 @@ class TestDB():
 
         return projects
 
+    # TODO: DELETE
     def get_allproject(self, username):
-        all = []
-        res = self.runsql("select owner,projectname,users from project ;")
-        for i in res:
-            (o, p, u) = i
-            if username == 'Admin':
-                all.append("{}:{}".format(o, p))
-                continue
-            if o == username:
-                all.append("{}:{}".format(o, p))
-            us = u.split(',')
-            if username in us or 'all' in us:
-                all.append("{}:{}".format(o, p))
-
-        all = list(set(all))    # delete the same values
-        all.sort()              # order , TODO order by category
+        all = [self.project_name]
+        # res = self.runsql("select owner,projectname,users from project ;")
+        # for i in res:
+        #     (o, p, u) = i
+        #     if username == 'Admin':
+        #         all.append("{}:{}".format(o, p))
+        #         continue
+        #     if o == username:
+        #         all.append("{}:{}".format(o, p))
+        #     us = u.split(',')
+        #     if username in us or 'all' in us:
+        #         all.append("{}:{}".format(o, p))
+        #
+        # all = list(set(all))    # delete the same values
+        # all.sort()              # order , TODO order by category
 
         return all
 
+    # TODO: DELETE
     def get_projectusers(self, project):
         all = []
         isforall = False
@@ -514,6 +570,7 @@ class TestDB():
         all.sort()              # order , TODO order by category
         return all
 
+    # TODO: DELETE
     def del_project(self, projectname, owner):
         return self.runsql("Delete from project where projectname = '{}' and owner = '{}' ;".format(projectname, owner))
 
@@ -632,9 +689,6 @@ class TestDB():
     def _refresh_case(self, suite, mode='normal'):
         source = suite.source
 
-        if source.find(self.exclude_suite) != -1:
-            return
-
         suite_cases = []
 
         # update each robot file
@@ -686,9 +740,6 @@ class TestDB():
 
     def get_testdata(self, target):
 
-        if target.find(self.exclude_suite) != -1:
-            return [0, 0, 0, 0, 0]
-
         suites = 0
         cases = 0
         passed = 0
@@ -713,9 +764,6 @@ class TestDB():
         return [suites, cases, passed, failed, cases-(passed + failed)]
 
     def get_testdataOLD(self, target):
-
-        if target.find(self.exclude_suite) != -1:
-            return [0, 0, 0, 0, 0]
 
         try:
             suite = TestData(source=target, extensions='robot')

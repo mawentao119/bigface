@@ -171,7 +171,7 @@ def get_userexcinfo(key, method):
     :return:
     """
     app = current_app._get_current_object()
-    pname = get_projectnamefromkey(key)
+    pname = app.config['PROJECT_NAME']
     users = app.config['DB'].get_projectusers(pname)
 
     excute_list = {"total": 0, "rows": []}

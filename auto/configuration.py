@@ -19,15 +19,15 @@ class Config:
     LOGGING_LEVEL = logging.INFO
     SHOW_DIR_DETAIL = False
 
-    APP_DIR = os.getcwd()
-    CASE_TEMPLATE_DIR = os.path.join(APP_DIR,'auto/www/templates/case_template')
-    # ../os.getcwd()
-    BASE_DIR = os.path.dirname(APP_DIR).replace('\\','/')
-    # BASE_DIR = /data/davinci_env
-    AUTO_HOME = os.path.join(BASE_DIR,"work")
-    DB_DIR    = os.path.join(AUTO_HOME,"DBs")
+    APP_DIR = os.getcwd()    # ...../bigface
+
+    SERVICE_DIR = os.path.join(APP_DIR, "project")
+    AUTO_HOME = os.path.join(SERVICE_DIR, "works")
+    DB_DIR    = os.path.join(AUTO_HOME, "DBs")
     SPACE_DIR = os.path.join(AUTO_HOME, "workspace")
     AUTO_TEMP = os.path.join(AUTO_HOME, "runtime")
+
+    CASE_TEMPLATE_DIR = os.path.join(APP_DIR, 'auto/www/templates/case_template')
 
     os.mkdir(AUTO_HOME) if not os.path.exists(AUTO_HOME) else None
     os.mkdir(DB_DIR) if not os.path.exists(DB_DIR) else None
@@ -40,8 +40,14 @@ class Config:
         os.path.join(SPACE_DIR, 'Admin/DemoProject/templates')) else None
     os.mkdir(AUTO_TEMP) if not os.path.exists(AUTO_TEMP) else None
 
-
     DB = TestDB(AUTO_HOME)
+    PROJECT_DIR = DB.get_project_dir()
+    PROJECT_NAME = DB.get_project_name()
+
+    os.environ["ROBOT_DIR"] = PROJECT_DIR
+    os.environ["PROJECT_DIR"] = PROJECT_DIR
+    os.environ["PROJECT_NAME"] = PROJECT_NAME
+
 
     AUTO_ROBOT = []    # Process list of running tasks, only for hand running ,not for schceduled jobs. MAX: setting:MAX_PROCS
 

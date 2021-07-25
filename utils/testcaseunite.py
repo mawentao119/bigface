@@ -13,7 +13,7 @@ from openpyxl import Workbook, load_workbook
 from robot.api import TestData
 from robot.parsing.model import Step
 
-from utils.file import get_projectdirfromkey, remove_dir
+from utils.file import remove_dir
 from utils.mylogger import getlogger
 
 
@@ -48,7 +48,7 @@ def export_casezip(key, exp_filedir=''):
 
     dir = exp_filedir
     if dir == '':
-        dir = get_projectdirfromkey(key) + '/runtime'
+        dir = os.environ["PROJECT_DIR"] + '/runtime'
 
     zip_name = os.path.basename(key) + '.zip'
     zip_path = os.path.join(dir, zip_name)
@@ -80,7 +80,7 @@ def export_casexlsx(key, db, exp_filedir=''):
 
     dir = exp_filedir
     if dir == '':
-        dir = get_projectdirfromkey(export_dir) + '/runtime'
+        dir = os.environ["PROJECT_DIR"] + '/runtime'
 
     os.mkdir(dir) if not os.path.exists(dir) else None
 

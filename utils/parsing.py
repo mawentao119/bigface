@@ -16,7 +16,7 @@ import codecs
 import xml.etree.ElementTree as ET
 from robot.api import TestSuiteBuilder
 from robot.running.builder import ResourceFileBuilder  # ResourceFileBuilder().build(rs) for i in rsf.imports._items:
-from utils.file import mk_dirs, copy_file, get_projectdirfromkey, get_projectnamefromkey
+from utils.file import mk_dirs, copy_file, get_projectnamefromkey
 from utils.mylogger import getlogger
 from subprocess import run as subRun, PIPE ,STDOUT
 
@@ -51,9 +51,7 @@ def get_robotress_res(resfile):
     ''' if resfile.endswith('.py'):
         return [] '''  # py resource also can work. No need pass.
     project = get_projectnamefromkey(resfile)
-    projectdir = get_projectdirfromkey(resfile)
-    os.environ["ROBOT_DIR"] = projectdir
-    os.environ["PROJECT_DIR"] = projectdir
+    projectdir = os.environ["PROJECT_DIR"]
     cwd = os.getcwd() + "/keyword/" + project
     if not os.path.exists(cwd):
         mk_dirs(cwd)
@@ -100,9 +98,7 @@ def get_robotress_res(resfile):
 
 def get_robotcase_res(casefile):
     project = get_projectnamefromkey(casefile)
-    projectdir = get_projectdirfromkey(casefile)
-    os.environ["ROBOT_DIR"] = projectdir
-    os.environ["PROJECT_DIR"] = projectdir
+    projectdir = os.environ["PROJECT_DIR"]
     cwd = os.getcwd() + "/keyword/" + project
     if not os.path.exists(cwd):
         mk_dirs(cwd)

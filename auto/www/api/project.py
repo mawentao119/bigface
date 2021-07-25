@@ -13,7 +13,7 @@ from werkzeug.security import generate_password_hash
 
 from robot.api import TestSuiteBuilder
 
-from utils.file import list_dir, mk_dirs, exists_path, rename_file, remove_dir, get_splitext, get_projectdirfromkey, get_projectnamefromkey, get_ownerfromkey
+from utils.file import list_dir, mk_dirs, exists_path, rename_file, remove_dir, get_splitext, get_ownerfromkey
 from utils.resource import ICONS
 from utils.clear import clear_projectres
 from utils.mylogger import getlogger
@@ -109,7 +109,7 @@ class Project(Resource):
         (ok, info) = remote_clone(self.app, url)
 
         if ok:
-            projectname = get_projectnamefromkey(info)
+            projectname = self.app.config["PROJECT_NAME"]
             msg = self.app.config['DB'].load_project_from_path(info)
             result = {"status": "success",
                       "msg": "Result: {} project:{}".format(msg, projectname)}
@@ -220,7 +220,7 @@ class Project(Resource):
         user_path = args['key']
         if exists_path(user_path):
             info = self.app.config['DB'].init_project_settings(user_path)
-            projectname = get_projectnamefromkey(user_path)
+            projectname = self.app.config["PROJECT_NAME"]
             self.app.config['DB'].set_user_main_project(
                 session['username'], projectname)
 
@@ -234,7 +234,7 @@ class Project(Resource):
     def __adduser(self, args):
         result = {"status": "success", "msg": "成功：增加项目用户."}
 
-        project = get_projectnamefromkey(args['key'])
+        project = self.app.config["PROJECT_NAME"]
         owner = get_ownerfromkey(args['key'])
         if not session["username"] == owner:
             result["status"] = "fail"
@@ -259,7 +259,7 @@ class Project(Resource):
     def __deluser(self, args):
         result = {"status": "success", "msg": "成功：移除用户."}
 
-        project = get_projectnamefromkey(args['key'])
+        project = self.app.config["PROJECT_NAME"]
         owner = get_ownerfromkey(args['key'])
         if not session["username"] == owner:
             result["status"] = "fail"
@@ -282,18 +282,19 @@ class Project(Resource):
         return result
 
     def __get_projectlist(self, args):
-        project_list = {"total": 0, "rows": []}
-        res = self.app.config['DB'].runsql(
-            "Select projectname,owner,users,cron from project;")
-        for r in res:
-            (projectname, owner, users, cron) = r
-            project_list["rows"].append(
-                {"projectname": projectname, "owner": owner, "users": users, "cron": cron})
-
-        return project_list
+        # project_list = {"total": 0, "rows": []}
+        # res = self.app.config['DB'].runsql(
+        #     "Select projectname,owner,users,cron from project;")
+        # for r in res:
+        #     (projectname, owner, users, cron) = r
+        #     project_list["rows"].append(
+        #         {"projectname": projectname, "owner": owner, "users": users, "cron": cron})
+        #
+        # return project_list
+        return [self.app.config['DB'].get_project_name()]
 
     def save_project(self, project_path):
-        project = get_projectnamefromkey(project_path)
+        project = self.app.config["PROJECT_NAME"]
         projectfile = os.path.join(
             project_path, 'platforminterface/project.conf')
         self.log.info("保存项目信息到文件:{}".format(projectfile))
@@ -308,7 +309,7 @@ class Project(Resource):
                 f.write(line)
 
     def save_user(self, project_path):
-        project = get_projectnamefromkey(project_path)
+        project = self.app.config["PROJECT_NAME"]
         owner = self.app.config['DB'].get_projectowner(project)
         userfile = os.path.join(project_path, 'platforminterface/user.conf')
         self.log.info("保存用户信息到文件:{}".format(userfile))
@@ -323,7 +324,7 @@ class Project(Resource):
                                                      email, category, main_project))
 
     def save_settings(self, project_path):
-        project = get_projectnamefromkey(project_path)
+        project = self.app.config["PROJECT_NAME"]
         owner = self.app.config['DB'].get_projectowner(project)
         settingsfile = os.path.join(
             project_path, 'platforminterface/settings.conf')
@@ -447,26 +448,20 @@ class ProjectList(Resource):
                         })
             return children
 
-
-def get_project_list(app, username):
-    projects = app.config["DB"].get_allproject(username)
-    return projects
+# TODO: DELETE
+# def get_project_list(app, username):
+#     projects = app.config["DB"].get_allproject(username)
+#     return projects
 
 
 def get_projects(app, username):
-    projects = get_project_list(app, username)
+    projects = app.config["DB"].get_allproject(username)
     children = []
     for p in projects:
-        owner = p.split(':')[0]
-        prj = p.split(':')[1]
-        key = app.config["AUTO_HOME"] + "/workspace/" + owner + '/' + prj
+        prj = p
+        key = app.config["DB"].get_project_dir()
         ico = "icon-project_s"
         text_p = prj
-
-        if not owner == username:
-            text_p = owner + ':' + prj
-        if prj == app.config['DB'].get_user_main_project(session['username']):
-            ico = "icon-project_m"
         children.append({
             "text": text_p, "iconCls": ico, "state": "closed",
             "attributes": {
@@ -480,12 +475,10 @@ def get_projects(app, username):
         generate_high_light(key)
         generate_auto_complete(key)
 
-        project_path = app.config['DB'].get_project_path(
-            app.config['DB'].get_user_main_project(session['username']))
-        app.config['DB'].init_project_settings(project_path)
+        app.config['DB'].init_project_settings(key)
 
-        os.environ["ROBOT_DIR"] = project_path      # 用于解析 settings 中的环境变量
-        os.environ["PROJECT_DIR"] = project_path
+        os.environ["ROBOT_DIR"] = key      # 用于解析 settings 中的环境变量
+        os.environ["PROJECT_DIR"] = key
 
     return [{
         "text": session['username'], "iconCls": "icon-workspace",
@@ -494,8 +487,6 @@ def get_projects(app, username):
             "key": "root",
         },
         "children": children}]
-
-# charis  modified
 
 
 def get_step_by_case(app, path):
@@ -517,9 +508,7 @@ def get_step_by_case(app, path):
 
 def get_case_data(app, path):
 
-    projectdir = get_projectdirfromkey(path)
-    os.environ["ROBOT_DIR"] = projectdir
-    os.environ["PROJECT_DIR"] = projectdir
+    projectdir = os.environ["PROJECT_DIR"]
 
     suite = TestSuiteBuilder().build(path)
     children = []
@@ -597,9 +586,7 @@ def get_case_data(app, path):
 
 
 def get_resource_data(app, path):
-    projectdir = get_projectdirfromkey(path)
-    os.environ["ROBOT_DIR"] = projectdir
-    os.environ["PROJECT_DIR"] = projectdir
+    projectdir = os.environ["PROJECT_DIR"]
 
     suite = TestSuiteBuilder().build(path)
     children = []

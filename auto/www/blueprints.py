@@ -8,7 +8,7 @@ __author__ = "苦叶子"
 import os
 import markdown
 from flask import Blueprint, render_template, session, redirect, url_for, current_app, send_file, request
-from utils.file import get_splitext, exists_path, get_projectnamefromkey, read_file
+from utils.file import get_splitext, exists_path, read_file
 from utils.model_design import show_ui
 from utils.do_report import get_distinct_suites, rpt_caseratio, rpt_runprogress, rpt_moduleprogress, rpt_moduleinfo
 from utils.mylogger import getlogger
@@ -300,22 +300,16 @@ def welcome():
 def project_readme():
     app = current_app._get_current_object()
 
-    try:
-        readmefile = app.config['DB'].get_setting('project_readme')
-        main_project = app.config['DB'].get_user_main_project(
-            session['username'])
-        project_path = app.config['DB'].get_project_path(main_project)
-        project_ownreadme = os.path.join(project_path, 'ReadMe.md')
-        project_darwenreadme = os.path.join(project_path, 'darwen/ReadMe.md')
-    except Exception as e:
-        log.error("取得项目配置信息异常：{}".format(e))
+    readmefile = app.config['DB'].get_setting('project_readme')
+    project_path = app.config['DB'].get_project_dir()
+    project_ownreadme = os.path.join(project_path, 'ReadMe.md')
 
     if os.path.exists(readmefile):
         p_file = readmefile
     elif os.path.exists(project_ownreadme):
         p_file = project_ownreadme
     else:
-        p_file = project_darwenreadme
+        p_file = "readme_file_not_exists"
 
     body = "<p>说明文件："+p_file+"</p> \n"
     if os.path.exists(p_file):
@@ -323,6 +317,6 @@ def project_readme():
             for l in f:
                 body += markdown.markdown(l) + '\n'
     else:
-        log.error("找不到ReadMe文件:{}".format(p_file))
-        return render_template("welcome.html")
+        body += markdown.markdown("#### 找不到ReadMe文件{}".format(project_ownreadme)) + '\n'
+        log.error("找不到ReadMe文件:{}".format(project_ownreadme))
     return render_template("project_readme.html", body=body)

@@ -9,7 +9,6 @@ __modifier__ = "mawentao119@gmail.com"
 
 from flask import current_app, session
 from flask_restful import Resource, reqparse
-from utils.file import get_projectdirfromkey
 import os
 import time
 
@@ -157,7 +156,7 @@ class Task(Resource):
         conffile = args['conffile'].strip()
         key = args['key']
 
-        projectdir = get_projectdirfromkey(key)
+        projectdir = os.environ["PROJECT_DIR"]
         conffile = conffile.replace('${ROBOT_DIR}',projectdir)
         conffile = conffile.replace('${PROJECT_DIR}', projectdir)
         conffile = conffile.replace('%{ROBOT_DIR}', projectdir)

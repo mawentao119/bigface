@@ -15,7 +15,7 @@ import werkzeug
 from robot.api import ExecutionResult
 
 from urllib.parse import quote
-from utils.file import exists_path, get_projectnamefromkey
+from utils.file import exists_path
 from utils.testcaseunite import export_casexlsx, export_casezip, do_importfromxlsx ,do_importfromzip, do_uploadcaserecord, do_unzip_project
 from utils.mylogger import getlogger
 
@@ -88,7 +88,7 @@ class ManageFile(Resource):
             (status, info) = do_unzip_project(temp_file, path)
 
             if status == 'success':
-                projectname = get_projectnamefromkey(info)
+                projectname = self.app.config['PROJECT_NAME']
                 msg = self.app.config['DB'].load_project_from_path(info)
                 result = {"status": "success", "msg": "Result: {} project:{}".format(msg, projectname)}
                 self.app.config['DB'].insert_loginfo(session['username'], 'project', 'upload_project', info,
@@ -213,7 +213,7 @@ class ManageFile(Resource):
     def __downruninfo(self, args):
         # charis added :
         user_path = args["key"]
-        project = get_projectnamefromkey(user_path)
+        project = self.app.config["PROJECT_NAME"]
         self.log.info("下载请求 runinfo:"+user_path)
 
         jobpath = self.app.config["AUTO_HOME"] + "/jobs"

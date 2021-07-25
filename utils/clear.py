@@ -1,7 +1,7 @@
 # logging_example.py
 
 import os
-from utils.file import remove_dir, copy_file, get_projectdirfromkey, get_projectnamefromkey
+from utils.file import remove_dir, copy_file, get_projectnamefromkey
 from utils.mylogger import getlogger
 
 log = getlogger("Clear")

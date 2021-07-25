@@ -119,19 +119,11 @@ def read_file(path, mode="r", encoding="utf-8"):
 
 def get_projectnamefromkey(key):
     # "//a/b/c/workspace/user/project/dir1/dir2/abc.robot --> project"
-    return key.split("workspace")[1].split('/')[2]
-
-
-def get_projectdirfromkey(key):
-    splitkey = key.split('workspace')
-    basedir = splitkey[0]
-    project = splitkey[1].split('/')[2]
-    user = splitkey[1].split('/')[1]
-    return os.path.join(basedir,'workspace',user,project)
-
+    # return key.split("workspace")[1].split('/')[2]
+    return os.environ["PROJECT_NAME"]
 
 def get_ownerfromkey(key):
-    return key.split("workspace")[1].split('/')[1]
+    return 'Admin'
 
 
 
