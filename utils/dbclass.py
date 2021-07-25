@@ -353,6 +353,8 @@ class TestDB():
             (name, passwd) = r
             return passwd
 
+        return None
+
     def del_user(self, username):
         if username == 'Admin' or username == 'admin':
             return True

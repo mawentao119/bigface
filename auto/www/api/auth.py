@@ -7,12 +7,9 @@ __author__ = "苦叶子"
 modified: use DB not json.
 
 """
-from flask import current_app, url_for, redirect, session
+from flask import current_app, url_for, session
 from flask_restful import Resource, reqparse
-from werkzeug.security import generate_password_hash, check_password_hash
-import json
-import os
-import codecs
+from werkzeug.security import check_password_hash
 from utils.mylogger import getlogger
 
 class Auth(Resource):
@@ -39,16 +36,18 @@ class Auth(Resource):
         app = current_app._get_current_object()
 
         passwordHash = app.config["DB"].get_password(username)
-
+        session['username'] = username
         self.log.info("登录请求: user: {} password xxx".format(username))
 
-        if passwordHash:
-            if check_password_hash(passwordHash, password):
-                session['username'] = username
-                return {"status": "success", "msg": "登录成功", "url": url_for('routes.dashboard')}, 201
+        if username == "Admin":
+            if passwordHash and check_password_hash(passwordHash, password):
+                app.config['DB'].insert_loginfo(username, 'login', username, 'x', 'success')
+                return {"status": "success", "msg": "Admin登录成功", "url": url_for('routes.dashboard')}, 201
+            else:
+                app.config['DB'].insert_loginfo(username, 'login', username, password, 'fail')
+                self.log.warning("登录失败: Admin:{}".format(password))
+                return {"status": "Fail", "msg": "Admin登录失败", "url": url_for('routes.index')}, 201
+        else:
+            app.config['DB'].insert_loginfo(username, 'login', username, password, 'success')
+            return {"status": "success", "msg": "登录成功", "url": url_for('routes.dashboard')}, 201
 
-        self.log.warning("登录失败: user: {} password ******".format(username))
-
-        app.config['DB'].insert_loginfo(username, 'login', username, password)
-
-        return {"status": "fail", "msg": "login fail", "url": url_for('routes.index')}, 201

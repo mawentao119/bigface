@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Darwen - System Test</title>
+        <title>BigFace - System Test</title>
 
         <meta name="keywords" content="uniRobot"/>
         <meta name="description" content="A Web-based test excuting system. Auto test and Human test ."/>
@@ -23,9 +23,9 @@
         <div class="content">
             <div class="wrapper fn-clear">
                 <div class="fn-left">
-                    <h2>Darwen 测试系统</h2>
-                    <h3>见证物种的起源与进化历程.</h3>
-                    <h5 style="color:#FFFFFF;">用户: Admin 123456 | tester 123 </h5>
+                    <h2>BigFace 测试系统</h2>
+                    <h3>Testing is coding, I just want to help a bit.</h3>
+                    <h5 style="color:#FFFFFF;">Admin用户需要秘密，其它只需要用户名～</h5>
                 </div>
                 <div class="form fn-right">
                     <div id="msg" class="fn-none"></div>
@@ -52,7 +52,7 @@
                         if($("#username").val() == ""){
                             $("#username").focus();
                         }
-                        else if($("#password").val() == ""){
+                        else if($("#password").val() == "" && $("#username").val() == "Admin"){
                             $("#password").focus();
                         }
                         else{
