@@ -348,8 +348,10 @@ class TestDB():
             "select username,passwordHash from user where username='{}'; ".format(username))
         if not res:
             return None
-        (name, passwd) = res.fetchone()
-        return passwd
+
+        for r in res:
+            (name, passwd) = r
+            return passwd
 
     def del_user(self, username):
         if username == 'Admin' or username == 'admin':
