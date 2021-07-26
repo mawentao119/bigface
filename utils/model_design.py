@@ -43,7 +43,7 @@ def create_model(args):
     tplname = args['category']
     tmdfile = args["key"] + '/' + args['name'] + '.tmd'
 
-    des = 'utils.case_lib.' + tplname
+    des = 'utils.case_template.' + tplname
     t = importlib.import_module(des)
     tmp = t.template(tplname, tmdfile, {})
 
@@ -62,7 +62,7 @@ def save_model(args):
     log.info("模版名：{} 文件：{}".format(tplname,user_path))
 
     if tplname:
-        des = 'utils.case_lib.'+tplname
+        des = 'utils.case_template.'+tplname
         t = importlib.import_module(des)
         tmp = t.template(tplname, user_path, data)
         result = tmp.save_data()
@@ -81,7 +81,7 @@ def gen_casefile(args):
 
     tplname = mod.get("modelData").get("templateName")
 
-    des = 'utils.case_lib.'+tplname
+    des = 'utils.case_template.'+tplname
     t = importlib.import_module(des)
     tmp = t.template(tplname, tmdfile, {})
 

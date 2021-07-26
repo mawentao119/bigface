@@ -32,12 +32,6 @@ class Config:
     os.mkdir(AUTO_HOME) if not os.path.exists(AUTO_HOME) else None
     os.mkdir(DB_DIR) if not os.path.exists(DB_DIR) else None
     os.mkdir(SPACE_DIR) if not os.path.exists(SPACE_DIR) else None
-    os.mkdir(os.path.join(SPACE_DIR, 'Admin')) if not os.path.exists(
-        os.path.join(SPACE_DIR, 'Admin')) else None
-    os.mkdir(os.path.join(SPACE_DIR,'Admin/DemoProject')) if not \
-        os.path.exists(os.path.join(SPACE_DIR,'Admin/DemoProject')) else None
-    os.mkdir(os.path.join(SPACE_DIR, 'Admin/DemoProject/templates')) if not os.path.exists(
-        os.path.join(SPACE_DIR, 'Admin/DemoProject/templates')) else None
     os.mkdir(AUTO_TEMP) if not os.path.exists(AUTO_TEMP) else None
 
     DB = TestDB(AUTO_HOME)
@@ -51,19 +45,16 @@ class Config:
     os.environ["AUTO_TEMP"] = AUTO_TEMP
     os.environ["DB_FILE"] = DB.get_dbfile()
 
+    os.environ["BF_RESOURCE"]  = os.path.join(APP_DIR, 'utils/case_resource')
+    os.environ["BF_RESOURCES"] = os.path.join(APP_DIR, 'utils/case_resource')
+    os.environ["BF_LIB"] = os.path.join(APP_DIR, 'utils/case_lib')
+    os.environ["BF_BIN"] = os.path.join(APP_DIR, 'utils/case_bin')
+    os.environ["BF_TEMPLATE"]  = os.path.join(APP_DIR, 'utils/case_template')
+    os.environ["BF_TEMPLATES"] = os.path.join(APP_DIR, 'utils/case_template')
 
-    AUTO_ROBOT = []    # Process list of running tasks, only for hand running ,not for schceduled jobs. MAX: setting:MAX_PROCS
 
-    ##dbfile = DB.get_dbfile()
-    ##url = 'sqlite:///' + dbfile
-    ##SCHEDULER_JOBSTORES = {
-    ##    'default': SQLAlchemyJobStore(url = "sqlite:////Users/tester/PycharmProjects/uniRobotDev/work/DBs/schedule.db")
-    ##}
-    ##print("*************url:{}".format('sqlite:///' + dbfile))
-    #SCHEDULER_EXECUTORS = {
-    #    'default': {'type': 'threadpool', 'class': 'apscheduler.executors.pool:ThreadPoolExecutor', 'max_workers': 20},
-    #    'processpool': ProcessPoolExecutor(max_workers=5)
-    #}
+    AUTO_ROBOT = [] # Process list of running tasks, only for hand running ,not for schceduled jobs. MAX: setting:MAX_PROCS
+
     SCHEDULER_JOB_DEFAULTS = {
         'coalesce': False,
         'max_instances': 3
@@ -78,7 +69,7 @@ class Config:
 
 
 class DevelopmentConfig(Config):
-    DEBUG = True
+    DEBUG = False
 
 
 class ProductionConfig(Config):
