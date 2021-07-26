@@ -2,6 +2,8 @@
 
 __author__ = "mawentao119@gmail.com"
 
+import shutil
+
 """
 Init the App
 init Admin and DemoProject
@@ -49,8 +51,9 @@ class Config:
     os.environ["BF_RESOURCES"] = os.path.join(APP_DIR, 'utils/case_resource')
     os.environ["BF_LIB"] = os.path.join(APP_DIR, 'utils/case_lib')
     os.environ["BF_BIN"] = os.path.join(APP_DIR, 'utils/case_bin')
-    os.environ["BF_TEMPLATE"]  = os.path.join(APP_DIR, 'utils/case_template')
-    os.environ["BF_TEMPLATES"] = os.path.join(APP_DIR, 'utils/case_template')
+    os.environ["PY_TEMPLATE"]  = os.path.join(APP_DIR, 'utils/case_template')
+    os.environ["PY_TEMPLATES"] = os.path.join(APP_DIR, 'utils/case_template')
+    os.environ["CS_TEMPLATES"] = os.path.join(APP_DIR, 'auto/www/templates/case_template')
 
 
     AUTO_ROBOT = [] # Process list of running tasks, only for hand running ,not for schceduled jobs. MAX: setting:MAX_PROCS
@@ -69,7 +72,7 @@ class Config:
 
 
 class DevelopmentConfig(Config):
-    DEBUG = False
+    DEBUG = True
 
 
 class ProductionConfig(Config):

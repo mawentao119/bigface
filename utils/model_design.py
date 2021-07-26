@@ -32,6 +32,7 @@ def show_ui(tmdfile):
     if tplname:
         html = "case_template/" + tplname + '.html'
     else:
+        log.error("在模型中没有找到 templateName ,无法渲染:{}".format(tmdfile))
         html = "default.html"
 
     log.info("Html 模版文件：{}".format(html))

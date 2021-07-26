@@ -1,6 +1,7 @@
 # -*- utf-8 -*-
 import sqlite3 as db
 import os
+import shutil
 from utils.mylogger import getlogger
 from datetime import datetime, date
 
@@ -53,6 +54,8 @@ class TestDB():
 
         log.info("检查项目信息是否完备 ...")
         self.check_project_info(self.confdir)
+        log.info("将项目的模版拷贝到平台 ...")
+        self.copy_project_templates()
 
         log.info("初始化数据库，系统目录：{}".format(confdir))
         log.info("检查DBID文件是否存在:" + self.DBIDFile)
@@ -125,6 +128,29 @@ class TestDB():
 
         self.project_dir = os.path.join(project_dir, self.project_name)
         log.info("取得项目路径:{}".format(self.project_dir))
+
+    def copy_project_templates(self):
+        '''Copy templates to Platform dirs ...'''
+        user_templates_dir = os.path.join(self.project_dir, "TEMPLATES")
+        log.info("查找模版目录：{}".format(user_templates_dir))
+        if os.path.exists(user_templates_dir):
+            app_dir = os.path.join(user_templates_dir, '../../../')
+            for t in os.listdir(user_templates_dir):
+                if not os.path.isdir(os.path.join(user_templates_dir, t)):
+                    continue
+
+                log.info(">>> 发现模版，开始拷贝 {}".format(t))
+                for tf in os.listdir(os.path.join(user_templates_dir, t)):
+                    if os.path.splitext(tf)[1] == '.html' or os.path.splitext(tf)[1] == '.tplt':
+                        src = os.path.join(user_templates_dir, t, tf)
+                        des = os.path.join(app_dir, 'auto/www/templates/case_template', tf)
+                        shutil.copy(src, des)
+                    if os.path.splitext(tf)[1] == '.py':
+                        src = os.path.join(user_templates_dir, t, tf)
+                        des = os.path.join(app_dir, 'utils/case_template', tf)
+                        shutil.copy(src, des)
+        else:
+            log.info(">>> 没有发现模版目录：{}".format(user_templates_dir))
 
     # TODO: DELETE
     def load_user_and_project(self, workspace):
