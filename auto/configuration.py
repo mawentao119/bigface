@@ -31,7 +31,7 @@ class Config:
 
     CASE_TEMPLATE_DIR = os.path.join(APP_DIR, 'auto/www/templates/case_template')
 
-    os.mkdir(AUTO_HOME) if not os.path.exists(AUTO_HOME) else None
+    os.makedirs(AUTO_HOME) if not os.path.exists(AUTO_HOME) else None
     os.mkdir(DB_DIR) if not os.path.exists(DB_DIR) else None
     os.mkdir(SPACE_DIR) if not os.path.exists(SPACE_DIR) else None
     os.mkdir(AUTO_TEMP) if not os.path.exists(AUTO_TEMP) else None
