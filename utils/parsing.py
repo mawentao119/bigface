@@ -150,7 +150,7 @@ def parser_robot_keyword_list(key):
     project = get_projectnamefromkey(key)
     cwd = os.getcwd() + "/keyword/" + project
 
-    resources = ["BuiltIn"] + get_resource_list(key)
+    resources = ["BuiltIn", "Collections", "DateTime", "OperatingSystem", "Process", "String"] + get_resource_list(key)
     resources = list(set(resources))
     resources.sort()
 
