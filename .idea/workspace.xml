@@ -1,30 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ab43467d-ad90-46a2-99ca-651bd4d7e6ad" name="Default" comment="add new template by hand">
+    <list default="true" id="ab43467d-ad90-46a2-99ca-651bd4d7e6ad" name="Default" comment="Add ansible run interface">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/AutoLink.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/AutoLink.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/case_lib/template2.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/case_lib/template2.py" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="ChangesViewManager" show_ignored="true" />
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/utils/case_lib/template2.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="138">
-              <caret line="92" column="44" selection-start-line="92" selection-start-column="44" selection-end-line="92" selection-end-column="44" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
-  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -89,6 +76,17 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/utils/case_lib/ansible_run.py" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
@@ -151,7 +149,10 @@
     <option name="width" value="1440" />
     <option name="height" value="877" />
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectId" id="1vnVIRR5sCcDwnCinqHpebFFwsc" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -212,37 +213,31 @@
       <pane id="Scope" />
     </panes>
   </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/project/Aproject/TEMPLATES/TEST_ENV" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/project/Aproject/TEMPLATES/TEST_ENV" />
+      <recent name="$PROJECT_DIR$/project/Aproject/TEMPLATES" />
+      <recent name="$PROJECT_DIR$/project/Aproject/TEST_ENV" />
+      <recent name="$PROJECT_DIR$/auto/www/templates/case_template" />
+      <recent name="$PROJECT_DIR$/utils/case_lib" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/project/Aproject/TEMPLATES/TEST_ENV" />
       <recent name="$PROJECT_DIR$/auto/www/templates/case_template" />
       <recent name="$PROJECT_DIR$/utils/case_lib" />
       <recent name="$PROJECT_DIR$/auto/www/templates/case_template/template1" />
       <recent name="$PROJECT_DIR$/auto/www/templates/user_template/user1/project1" />
-      <recent name="$PROJECT_DIR$/auto/www/templates/user_template/user1" />
     </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/auto/www/templates/case_template" />
-      <recent name="$PROJECT_DIR$/utils/case_lib" />
-      <recent name="$PROJECT_DIR$/utils" />
-      <recent name="$PROJECT_DIR$/auto/www/templates/user1" />
-      <recent name="$PROJECT_DIR$/auto/www/templates" />
-    </key>
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
   </component>
   <component name="RunManager" selected="Python.temp">
     <configuration name="model_design" type="PythonConfigurationType" factoryName="Python" temporary="true">
@@ -338,6 +333,7 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -348,76 +344,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1534349381434</updated>
-    </task>
-    <task id="LOCAL-00054" summary="modify method query--&gt;get_projecttask">
-      <created>1595077154262</created>
-      <option name="number" value="00054" />
-      <option name="presentableId" value="LOCAL-00054" />
-      <option name="project" value="LOCAL" />
-      <updated>1595077154262</updated>
-    </task>
-    <task id="LOCAL-00055" summary="bug fix">
-      <created>1595080138969</created>
-      <option name="number" value="00055" />
-      <option name="presentableId" value="LOCAL-00055" />
-      <option name="project" value="LOCAL" />
-      <updated>1595080138970</updated>
-    </task>
-    <task id="LOCAL-00056" summary="add &quot;触发&quot;">
-      <created>1595081224040</created>
-      <option name="number" value="00056" />
-      <option name="presentableId" value="LOCAL-00056" />
-      <option name="project" value="LOCAL" />
-      <updated>1595081224040</updated>
-    </task>
-    <task id="LOCAL-00057" summary="add add_scheduljob">
-      <created>1595172865170</created>
-      <option name="number" value="00057" />
-      <option name="presentableId" value="LOCAL-00057" />
-      <option name="project" value="LOCAL" />
-      <updated>1595172865170</updated>
-    </task>
-    <task id="LOCAL-00058" summary="split schedule.py">
-      <created>1595212250739</created>
-      <option name="number" value="00058" />
-      <option name="presentableId" value="LOCAL-00058" />
-      <option name="project" value="LOCAL" />
-      <updated>1595212250740</updated>
-    </task>
-    <task id="LOCAL-00059" summary="add schedule_job table">
-      <created>1595217394873</created>
-      <option name="number" value="00059" />
-      <option name="presentableId" value="LOCAL-00059" />
-      <option name="project" value="LOCAL" />
-      <updated>1595217394873</updated>
-    </task>
-    <task id="LOCAL-00060" summary="add schedule_job web table">
-      <created>1595228774635</created>
-      <option name="number" value="00060" />
-      <option name="presentableId" value="LOCAL-00060" />
-      <option name="project" value="LOCAL" />
-      <updated>1595228774635</updated>
-    </task>
-    <task id="LOCAL-00061" summary="add status">
-      <created>1595230376133</created>
-      <option name="number" value="00061" />
-      <option name="presentableId" value="LOCAL-00061" />
-      <option name="project" value="LOCAL" />
-      <updated>1595230376133</updated>
-    </task>
-    <task id="LOCAL-00062" summary="bug fix">
-      <created>1595231780044</created>
-      <option name="number" value="00062" />
-      <option name="presentableId" value="LOCAL-00062" />
-      <option name="project" value="LOCAL" />
-      <updated>1595231780044</updated>
-    </task>
-    <task id="LOCAL-00063" summary="change to darwen">
-      <created>1595574524263</created>
-      <option name="number" value="00063" />
-      <option name="presentableId" value="LOCAL-00063" />
-      <option name="project" value="LOCAL" />
-      <updated>1595574524264</updated>
     </task>
     <task id="LOCAL-00064" summary="bug fix">
       <created>1595583108733</created>
@@ -692,7 +618,77 @@
       <option name="project" value="LOCAL" />
       <updated>1615173048433</updated>
     </task>
-    <option name="localTasksCounter" value="103" />
+    <task id="LOCAL-00103" summary="add new template by hand">
+      <created>1627198618933</created>
+      <option name="number" value="00103" />
+      <option name="presentableId" value="LOCAL-00103" />
+      <option name="project" value="LOCAL" />
+      <updated>1627198618933</updated>
+    </task>
+    <task id="LOCAL-00104" summary="delete user">
+      <created>1627204409981</created>
+      <option name="number" value="00104" />
+      <option name="presentableId" value="LOCAL-00104" />
+      <option name="project" value="LOCAL" />
+      <updated>1627204409981</updated>
+    </task>
+    <task id="LOCAL-00105" summary="modify code for no need user rights.">
+      <created>1627218904735</created>
+      <option name="number" value="00105" />
+      <option name="presentableId" value="LOCAL-00105" />
+      <option name="project" value="LOCAL" />
+      <updated>1627218904735</updated>
+    </task>
+    <task id="LOCAL-00106" summary="fix many bugs">
+      <created>1627233282042</created>
+      <option name="number" value="00106" />
+      <option name="presentableId" value="LOCAL-00106" />
+      <option name="project" value="LOCAL" />
+      <updated>1627233282042</updated>
+    </task>
+    <task id="LOCAL-00107" summary="improve templates">
+      <created>1627280773925</created>
+      <option name="number" value="00107" />
+      <option name="presentableId" value="LOCAL-00107" />
+      <option name="project" value="LOCAL" />
+      <updated>1627280773926</updated>
+    </task>
+    <task id="LOCAL-00108" summary="improve templates">
+      <created>1627287605920</created>
+      <option name="number" value="00108" />
+      <option name="presentableId" value="LOCAL-00108" />
+      <option name="project" value="LOCAL" />
+      <updated>1627287605920</updated>
+    </task>
+    <task id="LOCAL-00109" summary="mkdir to makedirs to mkdir">
+      <created>1627380853688</created>
+      <option name="number" value="00109" />
+      <option name="presentableId" value="LOCAL-00109" />
+      <option name="project" value="LOCAL" />
+      <updated>1627380853688</updated>
+    </task>
+    <task id="LOCAL-00110" summary="Delete useless files.">
+      <created>1627456146798</created>
+      <option name="number" value="00110" />
+      <option name="presentableId" value="LOCAL-00110" />
+      <option name="project" value="LOCAL" />
+      <updated>1627456146798</updated>
+    </task>
+    <task id="LOCAL-00111" summary="Add RF default lib Keywords">
+      <created>1627550615042</created>
+      <option name="number" value="00111" />
+      <option name="presentableId" value="LOCAL-00111" />
+      <option name="project" value="LOCAL" />
+      <updated>1627550615043</updated>
+    </task>
+    <task id="LOCAL-00112" summary="Add ansible run interface">
+      <created>1627906132753</created>
+      <option name="number" value="00112" />
+      <option name="presentableId" value="LOCAL-00112" />
+      <option name="project" value="LOCAL" />
+      <updated>1627906132754</updated>
+    </task>
+    <option name="localTasksCounter" value="113" />
     <servers />
   </component>
   <component name="TodoView">
@@ -735,22 +731,7 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="RECENTLY_FILTERED_USER_GROUPS">
-                <collection />
-              </option>
-              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
-                <collection />
-              </option>
-              <option name="COLUMN_ORDER">
-                <list>
-                  <option value="0" />
-                  <option value="1" />
-                  <option value="2" />
-                  <option value="3" />
-                </list>
-              </option>
-            </State>
+            <State />
           </value>
         </entry>
       </map>
@@ -769,17 +750,10 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="modify dbclass and split tasklist" />
-    <MESSAGE value="fix bug" />
-    <MESSAGE value="modify dbclass" />
-    <MESSAGE value="optimise UI" />
-    <MESSAGE value="modify method query--&gt;get_projecttask" />
-    <MESSAGE value="add &quot;触发&quot;" />
-    <MESSAGE value="add add_scheduljob" />
-    <MESSAGE value="split schedule.py" />
     <MESSAGE value="add schedule_job table" />
     <MESSAGE value="add schedule_job web table" />
     <MESSAGE value="add status" />
@@ -797,7 +771,15 @@
     <MESSAGE value="init" />
     <MESSAGE value="add template dir" />
     <MESSAGE value="add new template by hand" />
-    <option name="LAST_COMMIT_MESSAGE" value="add new template by hand" />
+    <MESSAGE value="delete user" />
+    <MESSAGE value="modify code for no need user rights." />
+    <MESSAGE value="fix many bugs" />
+    <MESSAGE value="improve templates" />
+    <MESSAGE value="mkdir to makedirs to mkdir" />
+    <MESSAGE value="Delete useless files." />
+    <MESSAGE value="Add RF default lib Keywords" />
+    <MESSAGE value="Add ansible run interface" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add ansible run interface" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/auto/www/templates/task_list.html">
