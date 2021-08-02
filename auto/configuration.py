@@ -3,6 +3,7 @@
 __author__ = "mawentao119@gmail.com"
 
 import shutil
+import sys
 
 """
 Init the App
@@ -54,6 +55,9 @@ class Config:
     os.environ["PY_TEMPLATE"]  = os.path.join(APP_DIR, 'utils/case_template')
     os.environ["PY_TEMPLATES"] = os.path.join(APP_DIR, 'utils/case_template')
     os.environ["CS_TEMPLATES"] = os.path.join(APP_DIR, 'auto/www/templates/case_template')
+
+    sys.path.append(os.environ["BF_LIB"])
+    sys.path.append(os.path.join(APP_DIR, 'utils/case_resource'))
 
 
     AUTO_ROBOT = [] # Process list of running tasks, only for hand running ,not for schceduled jobs. MAX: setting:MAX_PROCS
