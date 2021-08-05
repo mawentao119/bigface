@@ -27,7 +27,10 @@ def get_inventory_json(inventory=os.path.join(AN_DIR, 'inventory/hosts')):
 
 
 def run_play(desc="", **kwargs):         # "desc" is just for comment in testcase ,useless here.
-    vargs = _prepare_parameters(kwargs)
+    res, vargs = _prepare_parameters(kwargs)
+    if not res == 0:
+        return res
+
     res = None
     try:
         res = ansible_runner.run(**vargs)
@@ -51,9 +54,14 @@ def _prepare_parameters(vargs):
     if not vargs.get('rotate_artifacts'):
         vargs['rotate_artifacts'] = RESERVE_ARTIFACTS
 
+    if vargs.get('inventory'):
+        logger.error("参数错误：禁止使用inventory参数，会改重写原有inventory")
+        return -998, {}
+
     if vargs.get('role'):
         if vargs.get('playbook'):
             logger.error("参数错误：role 和 playbook 不可以同时使用")
+            return -997, {}
 
         role = {'name': vargs.get('role')}
         if vargs.get('role_vars'):
@@ -99,7 +107,7 @@ def _prepare_parameters(vargs):
         envvars['ANSIBLE_ROLES_PATH'] = roles_path
         vargs["envvars"] = envvars
 
-    return vargs
+    return 0, vargs
 
 
 if __name__ == '__main__':

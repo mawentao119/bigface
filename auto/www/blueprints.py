@@ -66,10 +66,10 @@ def editor(key):
             default = rpkey
         return send_file(default)
 
-    if t[1] in (".txt", ".robot", ".resource", ".py", ".js", ".yaml", ".conf", ".ini", ".sh", ".md", ".tplt", ""):
+    if t[1] in (".txt", ".robot", ".resource", ".py", ".js", ".yaml", ".conf", ".ini", ".sh", ".md", ".tplt", ".json", ""):
         default = "editor.html"
 
-        if t[1] == ".yaml":
+        if t[1] == ".yaml" or t[1] == ".json":
             mode = 'yaml'
         elif t[1] == '.py':
             mode = 'python'
