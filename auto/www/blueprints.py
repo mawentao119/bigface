@@ -66,7 +66,7 @@ def editor(key):
             default = rpkey
         return send_file(default)
 
-    if t[1] in (".txt", ".robot", ".resource", ".py", ".js", ".yaml", ".conf", ".ini", ".sh", ".md", ".tplt"):
+    if t[1] in (".txt", ".robot", ".resource", ".py", ".js", ".yaml", ".conf", ".ini", ".sh", ".md", ".tplt", ""):
         default = "editor.html"
 
         if t[1] == ".yaml":
@@ -85,8 +85,8 @@ def editor(key):
 
     if t[1] in (".tmd"):
         res = show_ui(rpkey)
-
         return render_template(res["html"], key=rpkey, value=res["data"])
+
     return render_template(default)
 
 

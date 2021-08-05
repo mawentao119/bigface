@@ -8,18 +8,21 @@ import ast
 from uuid import uuid4
 from yaml import safe_load
 
-import ansible_run
-from ansible_run.utils import dump_artifact
-from ansible_run.exceptions import AnsibleRunnerException
+import ansible_runner
+from ansible_runner.utils import dump_artifact
+from ansible_runner.exceptions import AnsibleRunnerException
 
 from robot.api import logger
 
 AN_DIR = os.path.join(os.environ["PROJECT_DIR"], 'ansible')
+SPACE_DIR = os.environ["SPACE_DIR"]
+RESERVE_ARTIFACTS = 10
+TEMP_DIR = os.environ["AUTO_TEMP"]
 
 
 def get_inventory_json(inventory=os.path.join(AN_DIR, 'inventory/hosts')):
     inventorys = [inventory]
-    json_res, error = ansible_run.get_inventory('list', inventorys, 'json')
+    json_res, error = ansible_runner.get_inventory('list', inventorys, 'json')
     return json_res
 
 
@@ -27,7 +30,7 @@ def run_play(desc="", **kwargs):         # "desc" is just for comment in testcas
     vargs = _prepare_parameters(kwargs)
     res = None
     try:
-        res = ansible_run.run(**vargs)
+        res = ansible_runner.run(**vargs)
         logger.info("结果目录：{}".format(res.config.artifact_dir))
     except Exception as e:
         logger.error("执行异常：{}".format(e))
@@ -40,6 +43,14 @@ def _prepare_parameters(vargs):
     if not vargs.get('private_data_dir'):
         vargs['private_data_dir'] = AN_DIR
     logger.info("运行HOME: {}".format(vargs.get('private_data_dir')))
+
+    if not vargs.get('artifact_dir'):
+        vargs['artifact_dir'] = SPACE_DIR
+    logger.info("artifacts目录: {}".format(vargs.get('artifact_dir')))
+
+    if not vargs.get('rotate_artifacts'):
+        vargs['rotate_artifacts'] = RESERVE_ARTIFACTS
+
     if vargs.get('role'):
         if vargs.get('playbook'):
             logger.error("参数错误：role 和 playbook 不可以同时使用")
@@ -55,8 +66,6 @@ def _prepare_parameters(vargs):
                     role_vars[key] = value
             role['vars'] = role_vars
 
-        project_path = os.path.join(vargs.get('private_data_dir'), 'project')
-
         envvars_path = os.path.join(vargs.get('private_data_dir'), 'env/envvars')
         envvars_exists = os.path.exists(envvars_path)
 
@@ -65,7 +74,7 @@ def _prepare_parameters(vargs):
                  'roles': [role]}]
 
         filename = str(uuid4().hex)
-        playbook = dump_artifact(json.dumps(play), project_path, filename)
+        playbook = dump_artifact(json.dumps(play), TEMP_DIR, "play_" + filename)
         vargs["playbook"] = playbook
         logger.info('使用playbook: %s' % playbook)
 

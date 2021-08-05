@@ -34,7 +34,7 @@ class Project(Resource):
         self.parser.add_argument('cron', type=str, default="* * * * * *")
         self.parser.add_argument('boolean', type=str, default="ON")
         self.log = getlogger("Project")
-        self.reserved_names = ["workspace", "project", "darwen"]
+        self.reserved_names = ["works"]
         self.app = current_app._get_current_object()
 
     def get(self):
@@ -479,6 +479,16 @@ def get_projects(app, username):
 
         os.environ["ROBOT_DIR"] = key      # 用于解析 settings 中的环境变量
         os.environ["PROJECT_DIR"] = key
+    # 增加 works 目录，展示运行信息
+    children.append({
+        "text": "works", "iconCls": ico, "state": "closed",
+        "attributes": {
+            "name": "works",
+            "category": "project",
+            "key": os.environ["AUTO_HOME"]
+        },
+        "children": []
+    })
 
     return [{
         "text": session['username'], "iconCls": "icon-workspace",

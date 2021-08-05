@@ -45,6 +45,7 @@ class Config:
     os.environ["PROJECT_DIR"] = PROJECT_DIR
     os.environ["PROJECT_NAME"] = PROJECT_NAME
     os.environ["AUTO_HOME"] = AUTO_HOME
+    os.environ["SPACE_DIR"] = SPACE_DIR
     os.environ["AUTO_TEMP"] = AUTO_TEMP
     os.environ["DB_FILE"] = DB.get_dbfile()
 
