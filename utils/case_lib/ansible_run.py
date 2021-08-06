@@ -27,6 +27,7 @@ def get_inventory_json(inventory=os.path.join(AN_DIR, 'inventory/hosts')):
 
 
 def run_play(desc="", **kwargs):         # "desc" is just for comment in testcase ,useless here.
+    """:return res.rc , result_dir"""
     res, vargs = _prepare_parameters(kwargs)
     if not res == 0:
         return res
@@ -39,7 +40,7 @@ def run_play(desc="", **kwargs):         # "desc" is just for comment in testcas
         logger.error("执行异常：{}".format(e))
     if res.rc != 0:
         logger.info("执行失败：{}".format(res.stderr.name))
-    return res.rc
+    return res.rc, res.config.artifact_dir
 
 
 def _prepare_parameters(vargs):
