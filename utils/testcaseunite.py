@@ -10,8 +10,9 @@ from os.path import join, getsize
 
 from flask import current_app, session
 from openpyxl import Workbook, load_workbook
-from robot.api import TestData
-from robot.parsing.model import Step
+# from robot.api import TestData
+from robot.api import TestSuiteBuilder
+# from robot.parsing.model import Step
 
 from utils.file import remove_dir
 from utils.mylogger import getlogger
@@ -26,14 +27,14 @@ def getCaseContent(cpath, cname):
         return "Can not find case file:"+cpath
 
     content = ''
-    suite = TestData(source=cpath)
-    for t in suite.testcase_table.tests:
+    suite = TestSuiteBuilder().build(cpath)
+    for t in suite.tests:
         if t.name == cname:
             isHand = False
             if t.tags.value and 'Hand' in t.tags.value:
                 isHand = True
-            for s in t.steps:
-                ststr = (' ' * 4).join(s.as_list())
+            for s in t.body:
+                ststr = (' ' * 4).join(s)
                 if ststr.strip() == 'No Operation':
                     continue
                 if isHand:
@@ -422,8 +423,8 @@ def _update_onecase(dest_dir, sheetname, fields):
             with open(robotfile, 'w') as f:
                 f.write(brandnew)
 
-            suite = TestData(source=robotfile)
-            t = suite.testcase_table.tests[0]
+            suite = TestSuiteBuilder().build(robotfile)
+            t = suite.tests[0]
             t.name = name
             t.tags.value = tags
             t.doc.value = doc.replace('\n', '\\n')
@@ -432,27 +433,28 @@ def _update_onecase(dest_dir, sheetname, fields):
             if isHand:
                 lines = content.split('\n')
                 for l in lines:
-                    step = Step([], comment="#*"+l.strip())
+                    step = "    ".join("", "#*"+l.strip())
                     steps.append(step)
-                steps.append(Step(["No Operation"]))
+                steps.append("    No Operation")
             else:
                 lines = content.split('\n')
                 for l in lines:
-                    step = Step(space_splitter.split(l.strip()))
+                    # step = Step(space_splitter.split(l.strip()))
+                    step = "    ".join(space_splitter.split(l.strip()))
                     steps.append(step)
 
             t.steps = steps  # 如果用例不存在，则所有内容都更新:New test Case , Update all.
 
-            suite.save(txt_separating_spaces=4)
+            suite.save(txt_separating_spaces=4)  # TODO suite do not have save function in new RF
 
             DONE = True
 
             return (DONE, robotfile)
 
         # 如果文件存在： 1 用例存在 ，2 用例不存在 :If file exits: 1 case exists ,2 Case doesnt exists.
-        suite = TestData(source=robotfile)
+        suite = TestSuiteBuilder().build(robotfile)
 
-        for t in suite.testcase_table.tests:
+        for t in suite.tests:
             if t.name == name:      # 2用例存在:Case exists
                 log.info("用例文件存在，且用例存在，更新: "+name)
                 t.tags.value = tags
@@ -462,9 +464,9 @@ def _update_onecase(dest_dir, sheetname, fields):
                     steps = []
                     lines = content.split('\n')
                     for l in lines:
-                        step = Step([], comment="#*" + l.strip())
+                        step = "    ".join("", "#*" + l.strip())
                         steps.append(step)
-                    steps.append(Step(["No Operation"]))
+                    steps.append("    No Operation")
                     t.steps = steps
                 DONE = True
                 break
@@ -474,9 +476,9 @@ def _update_onecase(dest_dir, sheetname, fields):
             return (DONE, robotfile)
 
         # 1用例不存在， 需要新增用例: Case doesnt exists， Add new one
-        suite = TestData(source=robotfile)
+        suite = TestSuiteBuilder().build(robotfile)
 
-        if len(suite.testcase_table.tests) > 0:
+        if len(suite.tests) > 0:
             log.info("用例文件存在且非空 ,复制并修改成新的用例.")
             t = copy.deepcopy(suite.testcase_table.tests[-1])
             t.name = name
@@ -487,13 +489,13 @@ def _update_onecase(dest_dir, sheetname, fields):
             if isHand:
                 lines = content.split('\n')
                 for l in lines:
-                    step = Step([], comment="#*" + l.strip())
+                    step = "    ".join("", "#*" + l.strip())
                     steps.append(step)
-                steps.append(Step(["No Operation"]))
+                steps.append("    No Operation")
             else:
                 lines = content.split('\n')
                 for l in lines:
-                    step = Step(space_splitter.split(l.strip()))
+                    step = "    ".join(space_splitter.split(l.strip()))
                     steps.append(step)
 
             t.steps = steps
@@ -513,8 +515,8 @@ def _update_onecase(dest_dir, sheetname, fields):
             with open(robotfile, 'w') as f:
                 f.write(brandnew)
 
-            suite = TestData(source=robotfile)
-            t = suite.testcase_table.tests[0]
+            suite = TestSuiteBuilder().build(robotfile)
+            t = suite.tests[0]
             t.name = name
             t.tags.value = tags
             t.doc.value = doc.replace('\n', '\\n')
@@ -523,13 +525,13 @@ def _update_onecase(dest_dir, sheetname, fields):
             if isHand:
                 lines = content.split('\n')
                 for l in lines:
-                    step = Step([], comment="#*"+l.strip())
+                    step = "    ".join("", "#*"+l.strip())
                     steps.append(step)
-                steps.append(Step(["No Operation"]))
+                steps.append("    No Operation")
             else:
                 lines = content.split('\n')
                 for l in lines:
-                    step = Step(space_splitter.split(l.strip()))
+                    step = "    ".join(space_splitter.split(l.strip()))
                     steps.append(step)
 
             t.steps = steps

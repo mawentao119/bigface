@@ -20,7 +20,7 @@ from email.header import Header
 import json
 from utils.file import get_projectnamefromkey
 
-from robot.api import TestSuiteBuilder, ResultWriter, ExecutionResult
+from robot.api import TestSuiteBuilder, ResultWriter, ExecutionResult    # done
 
 from utils.file import exists_path, make_nod, write_file, read_file, mk_dirs
 from utils.mylogger import getlogger
@@ -107,9 +107,9 @@ def robot_runOLD(app, username, project, case_key, output):
                        loglevel="TRACE")
 
     try:
-        totalcases = result.statistics.total.all.total
-        passed = result.statistics.total.all.passed
-        failed = result.statistics.total.all.failed
+        totalcases = result.statistics.total.total
+        passed = result.statistics.total.passed
+        failed = result.statistics.total.failed
         elapsedtime = result.suite.elapsedtime
         logres = "total:{},pass:{},fail:{},elapsedtime:{}".format(totalcases,passed,failed,elapsedtime)
         app.config['DB'].insert_loginfo(username,'task','run', case_key, logres)
@@ -207,7 +207,7 @@ def reset_next_build_numb(output):
 
 def reset_last_status(result, output, index):
     stats = result.statistics
-    fail = stats.total.critical.failed
+    fail = stats.total.failed
 
     last_fail = output + "/lastFail"
     last_passed = output + "/lastPassed"
@@ -292,7 +292,7 @@ def is_full(app):
 def send_robot_report(username, name, task_no, result, output):
     app = current_app._get_current_object()
     build_msg = "<font color='green'>Success</font>"
-    if result.statistics.total.critical.failed != 0:
+    if result.statistics.total.failed != 0:
         build_msg = "<font color='red'>Failure</font>"
 
     report_url = url_for("routes.q_view_report",
@@ -325,7 +325,7 @@ def send_robot_report(username, name, task_no, result, output):
         user_conf = json.load(codecs.open(user_path, 'r', 'utf-8'))
         for p in user_conf["data"]:
             if p["name"] == name:
-                if result.statistics.total.critical.failed != 0:
+                if result.statistics.total.failed != 0:
                     msg["To"] = p["fail_list"]
                 else:
                     msg["To"] = p["success_list"]
@@ -416,7 +416,7 @@ class RobotRun(threading.Thread):
 
     def reset_last_status(self, index):
         stats = self.result.statistics
-        fail = stats.total.critical.failed
+        fail = stats.total.failed
 
         lock = threading.Lock()
 
