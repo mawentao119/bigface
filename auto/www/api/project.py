@@ -11,7 +11,7 @@ from flask import current_app, session
 from flask_restful import Resource, reqparse
 from werkzeug.security import generate_password_hash
 
-from robot.api import TestSuiteBuilder
+from robot.api import TestSuiteBuilder   # done
 
 from utils.file import list_dir, mk_dirs, exists_path, rename_file, remove_dir, get_splitext, get_ownerfromkey
 from utils.resource import ICONS
@@ -524,13 +524,17 @@ def get_case_data(app, path):
     children = []
     if suite:
         # add library , make it can be open if it is a file.
-        for i in suite.resource.imports:
+        for i in suite.resource.imports._items:
 
             rsfile = i.name
             if rsfile.find("%{ROBOT_DIR}") != -1:
-                rsfile = rsfile.replace("%{ROBOT_DIR}", projectdir)
+                rsfile = rsfile.replace("%{ROBOT_DIR}", os.environ["ROBOT_DIR"])
             if rsfile.find("%{PROJECT_DIR}") != -1:
-                rsfile = rsfile.replace("%{PROJECT_DIR}", projectdir)
+                rsfile = rsfile.replace("%{PROJECT_DIR}", os.environ["PROJECT_DIR"])
+            if rsfile.find("%{BF_LIB}") != -1:
+                rsfile = rsfile.replace("%{BF_LIB}", os.environ["BF_LIB"])
+            if rsfile.find("%{BF_RESOURCE}") != -1:
+                rsfile = rsfile.replace("%{BF_RESOURCE}", os.environ["BF_RESOURCE"])
 
             # do not show System Library or rs file cannot be found.
             if not os.path.exists(rsfile):
@@ -602,13 +606,17 @@ def get_resource_data(app, path):
     children = []
     if suite:
         # add library , make it can be open if it is a file.
-        for i in suite.resource.imports:
+        for i in suite.resource.imports._items:
 
             rsfile = i.name
             if rsfile.find("%{ROBOT_DIR}") != -1:
-                rsfile = rsfile.replace("%{ROBOT_DIR}", projectdir)
+                rsfile = rsfile.replace("%{ROBOT_DIR}", os.environ["ROBOT_DIR"])
             if rsfile.find("%{PROJECT_DIR}") != -1:
-                rsfile = rsfile.replace("%{PROJECT_DIR}", projectdir)
+                rsfile = rsfile.replace("%{PROJECT_DIR}", os.environ["PROJECT_DIR"])
+            if rsfile.find("%{BF_LIB}") != -1:
+                rsfile = rsfile.replace("%{BF_LIB}", os.environ["BF_LIB"])
+            if rsfile.find("%{BF_RESOURCE}") != -1:
+                rsfile = rsfile.replace("%{BF_RESOURCE}", os.environ["BF_RESOURCE"])
 
             # do not show System Library or rs file cannot be found.
             if not os.path.exists(rsfile):
@@ -622,21 +630,5 @@ def get_resource_data(app, path):
                         "name": fname, "category": "resource", "key": rsfile,
                     }
                 })
-
-        for v in suite.resource.variables:
-            children.append({
-                "text": v.name, "iconCls": "icon-variable", "state": "open",
-                "attributes": {
-                    "name": v.name, "category": "variable", "key": path,
-                }
-            })
-
-        for v in suite.resource.keywords:
-            children.append({
-                "text": v.name, "iconCls": "icon-user-keyword", "state": "open",
-                "attributes": {
-                    "name": v.name, "category": "user_keyword", "key": path,
-                }
-            })
 
     return children

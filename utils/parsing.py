@@ -14,7 +14,7 @@ Generate Keywords of resource file which imported in robot case file.
 import os
 import codecs
 import xml.etree.ElementTree as ET
-from robot.api import TestSuiteBuilder
+from robot.api import TestSuiteBuilder  # done
 from robot.running.builder import ResourceFileBuilder  # ResourceFileBuilder().build(rs) for i in rsf.imports._items:
 from utils.file import mk_dirs, copy_file, get_projectnamefromkey
 from utils.mylogger import getlogger
@@ -113,13 +113,17 @@ def get_robotcase_res(casefile):
         return []
 
     resources = []
-    for i in suite.resource.imports:
+    for i in suite.resource.imports._items:
         rsfile = i.name                    # Full path of file
 
         if rsfile.find("%{ROBOT_DIR}") != -1:
-            rsfile = rsfile.replace("%{ROBOT_DIR}", projectdir)
+            rsfile = rsfile.replace("%{ROBOT_DIR}", os.environ["ROBOT_DIR"])
         if rsfile.find("%{PROJECT_DIR}") != -1:
-            rsfile = rsfile.replace("%{PROJECT_DIR}", projectdir)
+            rsfile = rsfile.replace("%{PROJECT_DIR}", os.environ["PROJECT_DIR"])
+        if rsfile.find("%{BF_LIB}") != -1:
+            rsfile = rsfile.replace("%{BF_LIB}", os.environ["BF_LIB"])
+        if rsfile.find("%{BF_RESOURCE}") != -1:
+            rsfile = rsfile.replace("%{BF_RESOURCE}", os.environ["BF_RESOURCE"])
         if rsfile.startswith('.'):
             dir = os.path.dirname(casefile)
             rsfile = os.path.join(dir, rsfile)

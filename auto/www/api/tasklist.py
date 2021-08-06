@@ -15,7 +15,7 @@ import codecs
 import threading
 from dateutil import tz
 
-from robot.api import ExecutionResult
+from robot.api import ExecutionResult   # done
 
 from utils.file import exists_path
 from utils.run import remove_robot
@@ -384,7 +384,7 @@ def get_task_list(app, username, project):
                     try:
                         driver = get_taskdriver(job_path + "/%s/cmd.txt" % i)
                         suite = ExecutionResult(job_path + "/%s/output.xml" % i).suite
-                        stat = suite.statistics.critical
+                        stat = suite.statistics
                         name = suite.name
                         if stat.failed != 0:
                             status = icons["fail"]
@@ -511,7 +511,7 @@ def get_last_task(app, username, project):
         if exists_path(job_path + "/%s" % last_job):
             try:
                 suite = ExecutionResult(job_path + "/%s/output.xml" % last_job).suite
-                stat = suite.statistics.critical
+                stat = suite.statistics
                 if stat.failed != 0:
                     status = icons["fail"]
                 else:

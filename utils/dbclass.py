@@ -5,7 +5,8 @@ import shutil
 from utils.mylogger import getlogger
 from datetime import datetime, date
 
-from robot.api import TestData
+# TODO DELETE from robot.api import TestData
+from robot.api import TestSuiteBuilder     # done
 
 
 log = getlogger('TestDB')
@@ -725,7 +726,7 @@ class TestDB():
 
         log.info("Start refresh cases:"+target)
 
-        suite = TestData(source=target, extensions='robot')
+        suite = TestSuiteBuilder().build(target)
         self._refresh_case(suite, mode)
 
         if os.path.isdir(target):
@@ -748,8 +749,8 @@ class TestDB():
             suite_cases.append([k, n])
 
         # add new case
-        for test in suite.testcase_table:
-            info_key = source
+        for test in suite.tests:
+            info_key = test.source
             info_name = test.name
 
             tags = ",".join(test.tags)
@@ -782,7 +783,7 @@ class TestDB():
             if not mode == 'start':
                 self.insert_loginfo('unknown', 'case', 'delete', i[0], i[1])
 
-        for child in suite.children:
+        for child in suite.suites:
             self._refresh_case(child, mode)
 
     def get_testdata(self, target):
