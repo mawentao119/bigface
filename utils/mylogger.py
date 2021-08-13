@@ -2,7 +2,7 @@
 
 import logging
 import os
-from datetime import datetime,date
+from datetime import datetime, date
 
 """Log Module of Project"""
 def getlogger(name=__name__,dir=''):
@@ -24,10 +24,10 @@ def getlogger(name=__name__,dir=''):
     f_handler.setLevel(logging.INFO)
 
     # Create formatters and add it to handlers
-    c_format = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
-    f_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    c_handler.setFormatter(c_format)
-    f_handler.setFormatter(f_format)
+    #c_format = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
+    #f_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    #c_handler.setFormatter(c_format)
+    #f_handler.setFormatter(f_format)
 
     logger.addHandler(c_handler)
     logger.addHandler(f_handler)
