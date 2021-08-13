@@ -5,7 +5,7 @@ import os
 from datetime import datetime,date
 
 """Log Module of Project"""
-def getlogger(name='loggerself',dir=''):
+def getlogger(name=__name__,dir=''):
  
     starttime = date.strftime(datetime.now(),'%Y%m%d%H')
 
