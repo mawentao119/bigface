@@ -7,8 +7,6 @@ __modifier__ = 'charisma 2020-01-20'
 All Start Here!
 """
 
-#from flask_script import Manager
-
 from auto.www.app import create_app
 from auto.settings import HEADER
 from utils.help import check_version
@@ -16,12 +14,10 @@ from utils.help import check_version
 print(HEADER)
 
 app = create_app('default')
-#manager = Manager(app)
 
 
 if __name__ == '__main__':
 
     check_version()
 
-    #manager.run()
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=int("8080"), debug=True)
