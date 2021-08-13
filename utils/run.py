@@ -9,7 +9,7 @@ import sys
 import os
 import codecs
 from flask import current_app, session, url_for
-from flask_mail import Mail, Message
+# from flask_mail import Mail, Message
 import threading
 from subprocess import run as subRun, PIPE ,STDOUT
 import multiprocessing
