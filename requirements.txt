@@ -9,3 +9,6 @@ openpyxl
 jmespath
 ansible>=4.3.0
 ansible-runner>=2.0.1
+
+eventlet>=0.31.1
+flask-socketio>=5.1.1

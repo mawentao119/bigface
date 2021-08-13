@@ -20,7 +20,7 @@ from utils.file import mk_dirs, copy_file, get_projectnamefromkey
 from utils.mylogger import getlogger
 from subprocess import run as subRun, PIPE ,STDOUT
 
-log = getlogger("parsing")
+log = getlogger(__name__)
 
 USER_KEYS = {
     "web": ["BuiltIn", "Collections", "DateTime", "String", "Screenshot", "SeleniumLibrary"],

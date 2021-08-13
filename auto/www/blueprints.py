@@ -115,6 +115,12 @@ def test_env():
     res = show_ui(tmd_file)
     return render_template(res["html"], key=tmd_file, value=res["data"])
 
+
+@routes.route("/web_shell/")
+def web_shell():
+    return render_template("web_shell.html")
+
+
 @routes.route("/schedule_mng/")
 def schedule_mng():
     return render_template('schedule_mng.html')
