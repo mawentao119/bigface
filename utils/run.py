@@ -5,28 +5,23 @@ __author__ = "mawentao119@gmail.com"
 """
 
 """
-import sys
 import os
 import codecs
+import logging
 from flask import current_app, session, url_for
-# from flask_mail import Mail, Message
 import threading
 from subprocess import run as subRun, PIPE ,STDOUT
-import multiprocessing
 import time
 import smtplib
 from email.mime.text import MIMEText
 from email.header import Header
 import json
-from utils.file import get_projectnamefromkey
 
 from robot.api import TestSuiteBuilder, ResultWriter, ExecutionResult    # done
-
 from utils.file import exists_path, make_nod, write_file, read_file, mk_dirs
-from utils.mylogger import getlogger
 from utils.dbclass import DBcli
 
-log = getlogger('Utils.RUN')
+log = logging.getLogger('Utils.RUN')
 db_cli = DBcli(os.environ["DB_FILE"])
 
 # This fun is for debug the test case, result is temporliy in /runtime dir

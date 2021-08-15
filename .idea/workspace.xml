@@ -1,10 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ab43467d-ad90-46a2-99ca-651bd4d7e6ad" name="Default" comment="add works dir to the ui.">
+    <list default="true" id="ab43467d-ad90-46a2-99ca-651bd4d7e6ad" name="Default" comment="Add web shell function, bug fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auto/www/api/auth.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/auth.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auto/www/api/case.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/case.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auto/www/api/keyword.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/keyword.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auto/www/api/manage_file.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/manage_file.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auto/www/api/project.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/project.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auto/www/api/report.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/report.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auto/www/api/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auto/www/api/settings_ORG.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/settings_ORG.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auto/www/api/suite.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/suite.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auto/www/api/task.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/task.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auto/www/api/tasklist.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/tasklist.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auto/www/api/test_design.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/test_design.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auto/www/api/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/user.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/auto/www/blueprints.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/blueprints.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/case_lib/ansible_run.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/case_lib/ansible_run.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auto/www/templates/web_shell.html" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/templates/web_shell.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/clear.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/clear.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/dbclass.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/dbclass.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/do_report.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/do_report.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/gitit.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/gitit.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/model_base.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/model_base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/model_design.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/model_design.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/mylogger.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/parsing.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/parsing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/run.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/schedule.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/schedule.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/testcaseunite.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/testcaseunite.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,6 +98,11 @@
       <list>
         <option value="charis &lt;mawentao119@gmail.com&gt;" />
       </list>
+    </option>
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="rf_newest" />
+      </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -220,16 +250,16 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/project/Aproject/TEMPLATES/TEST_ENV" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/auto/www/templates" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/auto/www/templates" />
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/project/Aproject/TEMPLATES/TEST_ENV" />
       <recent name="$PROJECT_DIR$/project/Aproject/TEMPLATES" />
       <recent name="$PROJECT_DIR$/project/Aproject/TEST_ENV" />
-      <recent name="$PROJECT_DIR$/auto/www/templates/case_template" />
-      <recent name="$PROJECT_DIR$/utils/case_lib" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/project/Aproject/TEMPLATES/TEST_ENV" />
@@ -326,10 +356,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.temp" />
         <item itemvalue="Python.template1" />
-        <item itemvalue="Python.model_design" />
+        <item itemvalue="Python.temp" />
         <item itemvalue="Python.model_design1" />
+        <item itemvalue="Python.model_design" />
+        <item itemvalue="Python.template1" />
       </list>
     </recent_temporary>
   </component>
@@ -344,69 +375,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1534349381434</updated>
-    </task>
-    <task id="LOCAL-00066" summary="bug fix">
-      <created>1595817332884</created>
-      <option name="number" value="00066" />
-      <option name="presentableId" value="LOCAL-00066" />
-      <option name="project" value="LOCAL" />
-      <updated>1595817332884</updated>
-    </task>
-    <task id="LOCAL-00067" summary="finished split 1">
-      <created>1595829866000</created>
-      <option name="number" value="00067" />
-      <option name="presentableId" value="LOCAL-00067" />
-      <option name="project" value="LOCAL" />
-      <updated>1595829866000</updated>
-    </task>
-    <task id="LOCAL-00068" summary="bug fix">
-      <created>1595835759318</created>
-      <option name="number" value="00068" />
-      <option name="presentableId" value="LOCAL-00068" />
-      <option name="project" value="LOCAL" />
-      <updated>1595835759318</updated>
-    </task>
-    <task id="LOCAL-00069" summary="bug fix">
-      <created>1595838834767</created>
-      <option name="number" value="00069" />
-      <option name="presentableId" value="LOCAL-00069" />
-      <option name="project" value="LOCAL" />
-      <updated>1595838834767</updated>
-    </task>
-    <task id="LOCAL-00070" summary="bug fix">
-      <created>1595839588198</created>
-      <option name="number" value="00070" />
-      <option name="presentableId" value="LOCAL-00070" />
-      <option name="project" value="LOCAL" />
-      <updated>1595839588199</updated>
-    </task>
-    <task id="LOCAL-00071" summary="set main project finished">
-      <created>1595856510403</created>
-      <option name="number" value="00071" />
-      <option name="presentableId" value="LOCAL-00071" />
-      <option name="project" value="LOCAL" />
-      <updated>1595856510403</updated>
-    </task>
-    <task id="LOCAL-00072" summary="set main project finished">
-      <created>1595950346848</created>
-      <option name="number" value="00072" />
-      <option name="presentableId" value="LOCAL-00072" />
-      <option name="project" value="LOCAL" />
-      <updated>1595950346848</updated>
-    </task>
-    <task id="LOCAL-00073" summary="set main project finished">
-      <created>1595957543979</created>
-      <option name="number" value="00073" />
-      <option name="presentableId" value="LOCAL-00073" />
-      <option name="project" value="LOCAL" />
-      <updated>1595957543979</updated>
-    </task>
-    <task id="LOCAL-00074" summary="add git clone project">
-      <created>1595962442026</created>
-      <option name="number" value="00074" />
-      <option name="presentableId" value="LOCAL-00074" />
-      <option name="project" value="LOCAL" />
-      <updated>1595962442026</updated>
     </task>
     <task id="LOCAL-00075" summary="bug fix">
       <created>1595995905777</created>
@@ -688,7 +656,70 @@
       <option name="project" value="LOCAL" />
       <updated>1628135858737</updated>
     </task>
-    <option name="localTasksCounter" value="115" />
+    <task id="LOCAL-00115" summary="ansible_run lib">
+      <created>1628139855812</created>
+      <option name="number" value="00115" />
+      <option name="presentableId" value="LOCAL-00115" />
+      <option name="project" value="LOCAL" />
+      <updated>1628139855812</updated>
+    </task>
+    <task id="LOCAL-00116" summary="ansible_run lib">
+      <created>1628241778817</created>
+      <option name="number" value="00116" />
+      <option name="presentableId" value="LOCAL-00116" />
+      <option name="project" value="LOCAL" />
+      <updated>1628241778817</updated>
+    </task>
+    <task id="LOCAL-00117" summary="UPdate to RF 4.1">
+      <created>1628257949779</created>
+      <option name="number" value="00117" />
+      <option name="presentableId" value="LOCAL-00117" />
+      <option name="project" value="LOCAL" />
+      <updated>1628257949779</updated>
+    </task>
+    <task id="LOCAL-00118" summary="UPdate to Flask new">
+      <created>1628844301013</created>
+      <option name="number" value="00118" />
+      <option name="presentableId" value="LOCAL-00118" />
+      <option name="project" value="LOCAL" />
+      <updated>1628844301013</updated>
+    </task>
+    <task id="LOCAL-00119" summary="UPdate to Flask, Other module to new version.">
+      <created>1628849571146</created>
+      <option name="number" value="00119" />
+      <option name="presentableId" value="LOCAL-00119" />
+      <option name="project" value="LOCAL" />
+      <updated>1628849571146</updated>
+    </task>
+    <task id="LOCAL-00120" summary="add locust module">
+      <created>1628851042233</created>
+      <option name="number" value="00120" />
+      <option name="presentableId" value="LOCAL-00120" />
+      <option name="project" value="LOCAL" />
+      <updated>1628851042233</updated>
+    </task>
+    <task id="LOCAL-00121" summary="update settings">
+      <created>1628857322143</created>
+      <option name="number" value="00121" />
+      <option name="presentableId" value="LOCAL-00121" />
+      <option name="project" value="LOCAL" />
+      <updated>1628857322144</updated>
+    </task>
+    <task id="LOCAL-00122" summary="Add web shell function">
+      <created>1628862754227</created>
+      <option name="number" value="00122" />
+      <option name="presentableId" value="LOCAL-00122" />
+      <option name="project" value="LOCAL" />
+      <updated>1628862754227</updated>
+    </task>
+    <task id="LOCAL-00123" summary="Add web shell function, bug fix">
+      <created>1628863629990</created>
+      <option name="number" value="00123" />
+      <option name="presentableId" value="LOCAL-00123" />
+      <option name="project" value="LOCAL" />
+      <updated>1628863629990</updated>
+    </task>
+    <option name="localTasksCounter" value="124" />
     <servers />
   </component>
   <component name="TodoView">
@@ -754,14 +785,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="add schedule_job web table" />
-    <MESSAGE value="add status" />
-    <MESSAGE value="change to darwen" />
-    <MESSAGE value="change png" />
-    <MESSAGE value="finished split 1" />
-    <MESSAGE value="add git clone project" />
-    <MESSAGE value="set main project finished" />
-    <MESSAGE value="增加导入项目功能" />
     <MESSAGE value="bug fix" />
     <MESSAGE value="汉化" />
     <MESSAGE value="bug fix and test git" />
@@ -779,7 +802,15 @@
     <MESSAGE value="Add RF default lib Keywords" />
     <MESSAGE value="Add ansible run interface" />
     <MESSAGE value="add works dir to the ui." />
-    <option name="LAST_COMMIT_MESSAGE" value="add works dir to the ui." />
+    <MESSAGE value="ansible_run lib" />
+    <MESSAGE value="UPdate to RF 4.1" />
+    <MESSAGE value="UPdate to Flask new" />
+    <MESSAGE value="UPdate to Flask, Other module to new version." />
+    <MESSAGE value="add locust module" />
+    <MESSAGE value="update settings" />
+    <MESSAGE value="Add web shell function" />
+    <MESSAGE value="Add web shell function, bug fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add web shell function, bug fix" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/auto/www/templates/task_list.html">

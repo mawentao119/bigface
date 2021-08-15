@@ -17,10 +17,11 @@ import xml.etree.ElementTree as ET
 from robot.api import TestSuiteBuilder  # done
 from robot.running.builder import ResourceFileBuilder  # ResourceFileBuilder().build(rs) for i in rsf.imports._items:
 from utils.file import mk_dirs, copy_file, get_projectnamefromkey
-from utils.mylogger import getlogger
 from subprocess import run as subRun, PIPE ,STDOUT
 
-log = getlogger(__name__)
+import logging
+
+log = logging.getLogger(__name__)
 
 USER_KEYS = {
     "web": ["BuiltIn", "Collections", "DateTime", "String", "Screenshot", "SeleniumLibrary"],

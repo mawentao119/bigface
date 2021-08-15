@@ -2,14 +2,14 @@
 import sqlite3 as db
 import os
 import shutil
-from utils.mylogger import getlogger
+import logging
 from datetime import datetime, date
 
 # TODO DELETE from robot.api import TestData
 from robot.api import TestSuiteBuilder     # done
 
 
-log = getlogger('TestDB')
+log = logging.getLogger('TestDB')
 
 class DBcli():
     def __init__(self, dbfile):

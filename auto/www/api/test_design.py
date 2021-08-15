@@ -6,13 +6,9 @@ __author__ = "mawentao119@gmail.com"
 
 """
 
-import os
+import logging
 from flask import current_app, session, request
 from flask_restful import Resource, reqparse
-
-from utils.parsing import update_resource
-from utils.file import exists_path, rename_file, make_nod, remove_file, mk_dirs, remove_dir, write_file, read_file, copy_file, get_splitext
-from utils.mylogger import getlogger
 from utils.model_design import gen_casefile, save_model, create_model
 
 
@@ -28,7 +24,7 @@ class TestDesign(Resource):
         self.parser.add_argument('data', type=str)
 
         self.app = current_app._get_current_object()
-        self.log = getlogger("TestDesign")
+        self.log = logging.getLogger("TestDesign")
 
     def get(self):
         # TODO

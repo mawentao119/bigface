@@ -16,11 +16,11 @@ from robot.api import TestSuiteBuilder   # done
 from utils.file import list_dir, mk_dirs, exists_path, rename_file, remove_dir, get_splitext, get_ownerfromkey
 from utils.resource import ICONS
 from utils.clear import clear_projectres
-from utils.mylogger import getlogger
 from utils.parsing import generate_high_light, generate_auto_complete
 from utils.gitit import remote_clone
+import logging
 
-log = getlogger('Project')
+log = logging.getLogger('Project')
 
 class Project(Resource):
     def __init__(self):
@@ -33,7 +33,7 @@ class Project(Resource):
         self.parser.add_argument('manager', type=str, default="")
         self.parser.add_argument('cron', type=str, default="* * * * * *")
         self.parser.add_argument('boolean', type=str, default="ON")
-        self.log = getlogger("Project")
+        self.log = logging.getLogger("Project")
         self.reserved_names = ["works"]
         self.app = current_app._get_current_object()
 
@@ -345,7 +345,7 @@ class ProjectList(Resource):
         self.parser.add_argument('project', type=str)
         self.parser.add_argument('suite', type=str)
         self.parser.add_argument('splitext', type=str)
-        self.log = getlogger("ProjectList")
+        self.log = logging.getLogger("ProjectList")
         self.app = current_app._get_current_object()
 
     def get(self):
@@ -506,7 +506,7 @@ def get_step_by_case(app, path):
         try:
             data = get_case_data(app, path)
         except Exception as e:
-            log.warnning("Get_case_data of {} Exception :{}".format(path, e))
+            log.warning("Get_case_data of {} Exception :{}".format(path, e))
             return []
 
     # TODO: dealwith resource file : cannot use suiteBuilder

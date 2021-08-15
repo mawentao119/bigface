@@ -7,10 +7,10 @@ __author__ = "苦叶子"
 """
 import json
 import codecs
+import logging
 from flask import current_app, session, request, send_file
 from flask_restful import Resource, reqparse
 from utils.file import exists_path, make_nod
-from utils.mylogger import getlogger
 
 class Settings(Resource):
     def __init__(self):
@@ -24,7 +24,7 @@ class Settings(Resource):
         self.parser.add_argument('project', type=str)
         self.parser.add_argument('success_list', type=str)
         self.parser.add_argument('fail_list', type=str)
-        self.log = getlogger("Settings")
+        self.log = logging.getLogger("Settings")
         self.app = current_app._get_current_object()
 
     def get(self):

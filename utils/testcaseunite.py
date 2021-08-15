@@ -1,24 +1,20 @@
 # -*- coding:utf-8 -*-
 import os
-import stat
+import logging
 import copy
 import re
 
 import shutil
 import zipfile
-from os.path import join, getsize
 
 from flask import current_app, session
 from openpyxl import Workbook, load_workbook
-# from robot.api import TestData
 from robot.api import TestSuiteBuilder
-# from robot.parsing.model import Step
 
 from utils.file import remove_dir
-from utils.mylogger import getlogger
 
 
-log = getlogger("TestCaseUnite")
+log = logging.getLogger("TestCaseUnite")
 
 
 def getCaseContent(cpath, cname):

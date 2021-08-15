@@ -11,12 +11,11 @@ from flask import current_app, session
 from flask_restful import Resource, reqparse
 import os
 import time
-
+import logging
 import multiprocessing
 
 from utils.file import remove_dir, get_splitext
 from utils.run import robot_run, is_run, is_full, stop_robot, robot_debugrun, py_debugrun,bzt_debugrun
-from utils.mylogger import getlogger
 
 class Task(Resource):
     def __init__(self):
@@ -30,7 +29,7 @@ class Task(Resource):
         self.parser.add_argument('conffile', type=str)
         self.parser.add_argument('key', type=str)
         self.parser.add_argument('task_no', type=str)
-        self.log = getlogger("Task")
+        self.log = logging.getLogger("Task")
         self.app = current_app._get_current_object()
 
     def post(self):

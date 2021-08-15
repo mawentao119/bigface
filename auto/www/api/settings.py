@@ -6,9 +6,9 @@ __author__ = "charisma"
 这里用来进行系统层面的配置管理，原有的settings 见ORG备份
 """
 import os
+import logging
 from flask import current_app, session, request, send_file
 from flask_restful import Resource, reqparse
-from utils.mylogger import getlogger
 
 
 class Settings(Resource):
@@ -20,7 +20,7 @@ class Settings(Resource):
         self.parser.add_argument('value', type=str, default="")
         self.parser.add_argument('demo', type=str)
         self.parser.add_argument('category', type=str)
-        self.log = getlogger("Settings")
+        self.log = logging.getLogger("Settings")
         self.app = current_app._get_current_object()
 
     def get(self):

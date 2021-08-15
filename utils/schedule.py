@@ -10,9 +10,9 @@ import os
 import threading
 from datetime import datetime
 from utils.run import robot_run
-from utils.mylogger import getlogger
+import logging
 
-log = getlogger('Utils.RUN')
+log = logging.getLogger('Utils.RUN')
 
 
 def add_schedulejob(app, scheduler, args):

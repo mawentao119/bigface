@@ -13,8 +13,8 @@ import os
 from flask import current_app, session, request, send_file
 from flask_restful import Resource, reqparse
 from werkzeug.security import generate_password_hash, check_password_hash
-from utils.mylogger import getlogger
 from utils.file import remove_dir
+import logging
 
 
 class User(Resource):
@@ -26,7 +26,7 @@ class User(Resource):
         self.parser.add_argument('new_password', type=str, default="")
         self.parser.add_argument('email', type=str)
         self.parser.add_argument('fullname', type=str)
-        self.log = getlogger("User")
+        self.log = logging.getLogger('User')
         self.app = current_app._get_current_object()
 
     def get(self):

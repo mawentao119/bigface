@@ -7,13 +7,13 @@ __author__ = "苦叶子"
 """
 import os
 import markdown
+import logging
 from flask import Blueprint, render_template, session, redirect, url_for, current_app, send_file, request
 from utils.file import get_splitext, exists_path, read_file
 from utils.model_design import show_ui
 from utils.do_report import get_distinct_suites, rpt_caseratio, rpt_runprogress, rpt_moduleprogress, rpt_moduleinfo
-from utils.mylogger import getlogger
 
-log = getlogger("blueprints")
+log = logging.getLogger("blueprints")
 routes = Blueprint('routes', __name__)
 
 

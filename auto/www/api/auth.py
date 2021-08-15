@@ -10,14 +10,14 @@ modified: use DB not json.
 from flask import current_app, url_for, session
 from flask_restful import Resource, reqparse
 from werkzeug.security import check_password_hash
-from utils.mylogger import getlogger
+import logging
 
 class Auth(Resource):
     def __init__(self):
         self.parser = reqparse.RequestParser()
         self.parser.add_argument('username', type=str)
         self.parser.add_argument('password', type=str)
-        self.log = getlogger("auth")
+        self.log = logging.getLogger("auth")
 
     def get(self):
         args = self.parser.parse_args()

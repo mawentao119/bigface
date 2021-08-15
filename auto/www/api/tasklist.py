@@ -11,6 +11,7 @@ from flask import current_app, session, url_for
 from flask_restful import Resource, reqparse
 import json
 import os
+import logging
 import codecs
 import threading
 from dateutil import tz
@@ -20,7 +21,6 @@ from robot.api import ExecutionResult   # done
 from utils.file import exists_path
 from utils.run import remove_robot
 from ..app import scheduler
-from utils.mylogger import getlogger
 from utils.schedule import add_schedulejob
 
 class TaskList(Resource):
@@ -41,7 +41,7 @@ class TaskList(Resource):
         self.parser.add_argument('day_of_week', type=str)
         self.parser.add_argument('start_date', type=str)
         self.parser.add_argument('end_date', type=str)
-        self.log = getlogger("TaskList")
+        self.log = logging.getLogger("TaskList")
         self.app = current_app._get_current_object()
 
     def get(self):

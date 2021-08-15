@@ -6,13 +6,9 @@ __author__ = "mawentao119@gmail.com"
 
 """
 
-import json
-import codecs
+import logging
 from flask import current_app, session, request, send_file
 from flask_restful import Resource, reqparse
-from werkzeug.security import generate_password_hash, check_password_hash
-
-from utils.mylogger import getlogger
 from utils.do_report import get_caseinfo, get_excuteinfo, get_userexcinfo, get_caselist, get_comparedata
 
 class Report(Resource):
@@ -23,7 +19,7 @@ class Report(Resource):
         self.parser.add_argument('username', type=str)
         self.parser.add_argument('dir', type=str)
         self.parser.add_argument('request', type=str)
-        self.log = getlogger("Report")
+        self.log = logging.getLogger("Report")
         self.app = current_app._get_current_object()
 
 

@@ -150,17 +150,6 @@ def main():
 
 
 if __name__ == "__main__":
+    check_version()
     main()
 
-
-
-
-
-
-
-
-if __name__ == '__main__':
-
-    check_version()
-
-    app.run(host="0.0.0.0", port=int("8080"), debug=False)
