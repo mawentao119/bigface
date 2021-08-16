@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ab43467d-ad90-46a2-99ca-651bd4d7e6ad" name="Default" comment="log modify">
+    <list default="true" id="ab43467d-ad90-46a2-99ca-651bd4d7e6ad" name="Default" comment="bug fix to webterm and production env problems.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auto/www/api/manage_file.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/manage_file.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auto/www/static/lib/auto.js" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/static/lib/auto.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auto/www/templates/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/templates/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/testcaseunite.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/testcaseunite.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/start_work.sh" beforeDir="false" afterPath="$PROJECT_DIR$/start_work.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -353,27 +350,6 @@
       <option name="presentableId" value="Default" />
       <updated>1534349381434</updated>
     </task>
-    <task id="LOCAL-00076" summary="set main project finished">
-      <created>1595997110816</created>
-      <option name="number" value="00076" />
-      <option name="presentableId" value="LOCAL-00076" />
-      <option name="project" value="LOCAL" />
-      <updated>1595997110816</updated>
-    </task>
-    <task id="LOCAL-00077" summary="汉化">
-      <created>1596005641736</created>
-      <option name="number" value="00077" />
-      <option name="presentableId" value="LOCAL-00077" />
-      <option name="project" value="LOCAL" />
-      <updated>1596005641736</updated>
-    </task>
-    <task id="LOCAL-00078" summary="汉化">
-      <created>1596008159261</created>
-      <option name="number" value="00078" />
-      <option name="presentableId" value="LOCAL-00078" />
-      <option name="project" value="LOCAL" />
-      <updated>1596008159261</updated>
-    </task>
     <task id="LOCAL-00079" summary="汉化">
       <created>1596009106926</created>
       <option name="number" value="00079" />
@@ -696,7 +672,28 @@
       <option name="project" value="LOCAL" />
       <updated>1629015822249</updated>
     </task>
-    <option name="localTasksCounter" value="125" />
+    <task id="LOCAL-00125" summary="add download cases to zhiyan.com">
+      <created>1629103381282</created>
+      <option name="number" value="00125" />
+      <option name="presentableId" value="LOCAL-00125" />
+      <option name="project" value="LOCAL" />
+      <updated>1629103381282</updated>
+    </task>
+    <task id="LOCAL-00126" summary="bug fix to webterm and production env problems.">
+      <created>1629120692836</created>
+      <option name="number" value="00126" />
+      <option name="presentableId" value="LOCAL-00126" />
+      <option name="project" value="LOCAL" />
+      <updated>1629120692836</updated>
+    </task>
+    <task id="LOCAL-00127" summary="bug fix to webterm and production env problems.">
+      <created>1629126045436</created>
+      <option name="number" value="00127" />
+      <option name="presentableId" value="LOCAL-00127" />
+      <option name="project" value="LOCAL" />
+      <updated>1629126045436</updated>
+    </task>
+    <option name="localTasksCounter" value="128" />
     <servers />
   </component>
   <component name="TodoView">
@@ -762,8 +759,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="汉化" />
-    <MESSAGE value="bug fix and test git" />
     <MESSAGE value="add test_design" />
     <MESSAGE value="add markdown" />
     <MESSAGE value="init" />
@@ -787,7 +782,9 @@
     <MESSAGE value="Add web shell function" />
     <MESSAGE value="Add web shell function, bug fix" />
     <MESSAGE value="log modify" />
-    <option name="LAST_COMMIT_MESSAGE" value="log modify" />
+    <MESSAGE value="add download cases to zhiyan.com" />
+    <MESSAGE value="bug fix to webterm and production env problems." />
+    <option name="LAST_COMMIT_MESSAGE" value="bug fix to webterm and production env problems." />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/auto/www/templates/task_list.html">
