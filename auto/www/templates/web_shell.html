@@ -39,15 +39,13 @@ ch.js"></script>
       term.resize(15, 50);
       console.log(`size: ${term.cols} columns, ${term.rows} rows`);
       fit.fit();
-      term.writeln("If no prompt show up , try ENTER key!");
-      term.writeln("Bigface give big thanks to https://github.com/cs01/pyxterm.js");
+      term.writeln(">> Starting ... If no prompt , try ENTER ...");
       term.onData((data) => {
         console.log("key pressed in browser:", data);
         socket.emit("pty-input", { input: data });
       });
 
       const socket = io.connect("/pty");
-      const status = document.getElementById("status");
 
       socket.on("pty-output", function (data) {
         console.log("new output received from server:", data.output);
@@ -56,13 +54,11 @@ ch.js"></script>
 
       socket.on("connect", () => {
         fitToscreen();
-        status.innerHTML =
-          '<span style="background-color: lightgreen;">connected</span>';
+        term.writeln(" >> Connected to background OK ! ");
       });
 
       socket.on("disconnect", () => {
-        status.innerHTML =
-          '<span style="background-color: #ff8383;">disconnected</span>';
+        term.writeln(" >> Disconnected ... ");
       });
 
       function fitToscreen() {
