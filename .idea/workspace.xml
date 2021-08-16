@@ -1,34 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ab43467d-ad90-46a2-99ca-651bd4d7e6ad" name="Default" comment="Add web shell function, bug fix">
+    <list default="true" id="ab43467d-ad90-46a2-99ca-651bd4d7e6ad" name="Default" comment="log modify">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auto/www/api/auth.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/auth.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auto/www/api/case.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/case.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auto/www/api/keyword.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/keyword.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/auto/www/api/manage_file.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/manage_file.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auto/www/api/project.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/project.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auto/www/api/report.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/report.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auto/www/api/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auto/www/api/settings_ORG.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/settings_ORG.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auto/www/api/suite.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/suite.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auto/www/api/task.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/task.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auto/www/api/tasklist.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/tasklist.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auto/www/api/test_design.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/test_design.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auto/www/api/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/user.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auto/www/blueprints.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/blueprints.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auto/www/templates/web_shell.html" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/templates/web_shell.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/clear.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/clear.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/dbclass.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/dbclass.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/do_report.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/do_report.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/gitit.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/gitit.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/model_base.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/model_base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/model_design.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/model_design.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/mylogger.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/parsing.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/parsing.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/run.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/schedule.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/schedule.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auto/www/static/lib/auto.js" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/static/lib/auto.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auto/www/templates/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/templates/dashboard.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/testcaseunite.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/testcaseunite.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -376,13 +353,6 @@
       <option name="presentableId" value="Default" />
       <updated>1534349381434</updated>
     </task>
-    <task id="LOCAL-00075" summary="bug fix">
-      <created>1595995905777</created>
-      <option name="number" value="00075" />
-      <option name="presentableId" value="LOCAL-00075" />
-      <option name="project" value="LOCAL" />
-      <updated>1595995905778</updated>
-    </task>
     <task id="LOCAL-00076" summary="set main project finished">
       <created>1595997110816</created>
       <option name="number" value="00076" />
@@ -719,7 +689,14 @@
       <option name="project" value="LOCAL" />
       <updated>1628863629990</updated>
     </task>
-    <option name="localTasksCounter" value="124" />
+    <task id="LOCAL-00124" summary="log modify">
+      <created>1629015822249</created>
+      <option name="number" value="00124" />
+      <option name="presentableId" value="LOCAL-00124" />
+      <option name="project" value="LOCAL" />
+      <updated>1629015822249</updated>
+    </task>
+    <option name="localTasksCounter" value="125" />
     <servers />
   </component>
   <component name="TodoView">
@@ -785,7 +762,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="bug fix" />
     <MESSAGE value="汉化" />
     <MESSAGE value="bug fix and test git" />
     <MESSAGE value="add test_design" />
@@ -810,7 +786,8 @@
     <MESSAGE value="update settings" />
     <MESSAGE value="Add web shell function" />
     <MESSAGE value="Add web shell function, bug fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add web shell function, bug fix" />
+    <MESSAGE value="log modify" />
+    <option name="LAST_COMMIT_MESSAGE" value="log modify" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/auto/www/templates/task_list.html">

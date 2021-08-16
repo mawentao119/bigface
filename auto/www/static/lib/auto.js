@@ -1067,6 +1067,19 @@ function do_downcaseinfox(ff_id) {
     });
 }
 
+function do_downcaseinfoy(ff_id) {
+    var node = $('#project_tree').tree('getSelected');
+    var key = node.attributes['key']
+    var method = "downcaseinfoy"
+    $("#{0} input#key".lym_format(ff_id)).val("{0}".lym_format(key));
+    $("#{0} input#method".lym_format(ff_id)).val("{0}".lym_format(method));
+    $("#{0}".lym_format(ff_id)).form('submit', {
+        success: function (result) {
+
+        }
+    });
+}
+
 function do_downcaseinfoz(ff_id) {
     var node = $('#project_tree').tree('getSelected');
     var key = node.attributes['key']

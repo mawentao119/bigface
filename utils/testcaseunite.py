@@ -18,28 +18,35 @@ log = logging.getLogger("TestCaseUnite")
 
 
 def getCaseContent(cpath, cname):
-    '''反写：自动化结果反写中，取得测试用例内容 '''
+    """
+    直接通过文本格式进行字符串的处理， 基于RF的用例文件格式
+    :param cpath: 文件名
+    :param cname: 用例名
+    :return: 用例内容
+    """
     if not os.path.exists(cpath):
         return "Can not find case file:"+cpath
 
     content = ''
-    suite = TestSuiteBuilder().build(cpath)
-    for t in suite.tests:
-        if t.name == cname:
-            isHand = False
-            if t.tags.value and 'Hand' in t.tags.value:
-                isHand = True
-            for s in t.body:
-                ststr = (' ' * 4).join(s)
-                if ststr.strip() == 'No Operation':
-                    continue
-                if isHand:
-                    if ststr.strip().startswith('#*'):
-                        ststr = ststr.replace('#*', '')
-
-                content += ststr + '\r\n'
-    return content
-
+    case_name = cname.strip()
+    case_start = False
+    content_start = False
+    with open(cpath, 'r') as cf:
+        for line in cf.readlines():
+            if line.startswith("*** Test"):
+                case_start = True
+                continue
+            if case_start and line.strip() == case_name:
+                content_start = True
+                continue
+            if case_start and content_start and line.startswith(' '*4):
+                content += line.strip() + "\r\n"
+                continue
+            if case_start and content_start and line.strip() == "":
+                content += line.strip() + "\r\n"
+                continue
+            if case_start and content_start and (not line.startswith(' '*4)):
+                return content
 
 def export_casezip(key, exp_filedir=''):
 
@@ -67,6 +74,13 @@ def export_casezip(key, exp_filedir=''):
 
 
 def export_casexlsx(key, db, exp_filedir=''):
+    """
+    Download Readable test case
+    :param key: Dir of the case
+    :param db: case info db
+    :param exp_filedir: output file dir
+    :return: result, file
+    """
 
     export_dir = key
     if not os.path.isdir(export_dir):
@@ -77,7 +91,7 @@ def export_casexlsx(key, db, exp_filedir=''):
 
     dir = exp_filedir
     if dir == '':
-        dir = os.environ["PROJECT_DIR"] + '/runtime'
+        dir = os.environ["AUTO_TEMP"]
 
     os.mkdir(dir) if not os.path.exists(dir) else None
 
@@ -154,6 +168,101 @@ def export_casexlsx(key, db, exp_filedir=''):
     log.info("生成测试用例文件 {} 到目录 {}".format(export_dir, export_file))
 
     return (True, export_file)
+
+
+def export_casexlsy(key, db, exp_filedir=''):
+    """
+    Download ZHIYAN.com xls Format case , do zhiyan.com loading.
+    :param key: dir
+    :param db: case info db
+    :param exp_filedir: output dir
+    :return: result, file_name
+    """
+
+    export_dir = key
+    if not os.path.isdir(export_dir):
+        log.error("不支持导出一个文件中的用例:" + export_dir)
+        return (False, "不支持导出一个文件中的用例:" + export_dir)
+
+    basename = os.path.basename(export_dir)
+
+    dir = exp_filedir
+    if dir == '':
+        dir = os.environ["AUTO_TEMP"]
+
+    os.mkdir(dir) if not os.path.exists(dir) else None
+
+    export_file = os.path.join(dir, basename + '_ZHIYAN.xlsx')
+
+    db.refresh_caseinfo(export_dir, "Force")
+
+    cases = []
+    sql = "SELECT info_key,info_name,info_doc,info_tags FROM testcase WHERE info_key like '{}%' ;".format(
+        key)
+    res = db.runsql(sql)
+    for i in res:
+        (info_key, info_name, info_doc, info_tag) = i
+        cases.append([info_key, info_name, info_doc, info_tag])
+
+    log.info(f"导出智研用例，目录：{key}, 导出文件:{export_file}")
+
+    wb = Workbook()
+    ws = wb.active
+    ws.append(["用例标题",
+               "所属目录",
+               "用例场景",
+               "前置条件",
+               "操作步骤",
+               "预期结果",
+               "备注",
+               "用例标签",
+               "关联TAPD",
+               "用例级别",
+               "是否模板",
+               "执行平台",
+               "代码库地址",
+               "代码路径",
+               "执行命令"])
+    for c in cases:
+        case_path = c[0]
+        case_name = c[1]                                                                           # 用例标题 required
+        case_doc  = c[2]
+        case_tags = c[3]
+        if not os.path.exists(case_path):
+            continue
+        case_content = getCaseContent(case_path, case_name)
+        dir_name = os.path.splitext(case_path)[0].replace(os.environ["PROJECT_DIR"]+'/', '')        # 所属目录 required
+        case_scenario = os.path.basename(case_path)
+        case_pre_action = "准备测试环境"
+        case_exp_result = "执行成功，断言通过"
+        case_tapd = os.environ.get("PROJECT_NAME", "")
+        case_level = "P0"
+        case_is_template = "No"
+        case_platform = "tcase"
+        case_code_base = "https://git.woa.com/Dollar/DollarPS.git"                                   # 代码库地址 required
+        case_code_src = dir_name + ".robot:" + case_name
+        case_run_command = "cd $HOME; sh run_zhiyan_robot.sh " + case_path + " --test " + case_name  # 执行命令 required
+
+        ws.append([case_name,
+                   dir_name,
+                   case_scenario,
+                   case_pre_action,
+                   case_content,
+                   case_exp_result,
+                   case_doc,
+                   case_tags,
+                   case_tapd,
+                   case_level,
+                   case_is_template,
+                   case_platform,
+                   case_code_base,
+                   case_code_src,
+                   case_run_command])
+
+    os.remove(export_file) if os.path.exists(export_file) else None
+    wb.save(export_file)
+    log.info("生成测试用例文件 {} 到目录 {}".format(export_dir, export_file))
+    return True, export_file
 
 
 def _get_ws(export_dir, suite_key):
