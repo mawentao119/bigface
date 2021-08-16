@@ -53,7 +53,7 @@ def read_and_forward_pty_output():
             timeout_sec = 0
             (data_ready, _, _) = select.select([app.config["fd"]], [], [], timeout_sec)
             if data_ready:
-                output = os.read(app.config["fd"], max_read_bytes).decode(encoding="ISO-8859-1")
+                output = os.read(app.config["fd"], max_read_bytes).decode()
                 socketio.emit("pty-output", {"output": output}, namespace="/pty")
 
 
@@ -146,7 +146,7 @@ def main():
         level=logging.DEBUG if args.debug else logging.INFO,
     )
     logging.info(f"serving on http://127.0.0.1:{args.port}")
-    socketio.run(app, debug=args.debug, port=int(args.port), host=args.host)
+    socketio.run(app, debug=args.debug, port=args.port, host=args.host)
 
 
 if __name__ == "__main__":
