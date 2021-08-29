@@ -436,6 +436,16 @@ class ProjectList(Resource):
                                 "splitext": text[1]
                             }
                         })
+                    elif text[1] in (".py"):
+                        children.append({
+                            "text": d, "iconCls": icons, "state": "closed",
+                            "attributes": {
+                                "name": d,
+                                "category": "case",
+                                "key": ff,
+                                "splitext": text[1]
+                            }
+                        })
                     else:
                         children.append({
                             "text": d, "iconCls": icons, "state": "open",
@@ -500,54 +510,66 @@ def get_projects(app, username):
 
 
 def get_step_by_case(app, path):
+    """
+    Find cases from file support pytest and RF
+    :param app: self app
+    :param path: file path
+    :return: json data of test cases
+    """
     fext = os.path.splitext(path)[1]
     data = []
-    if fext == ".robot":
+    if fext == ".robot":    # robot-framework
         try:
-            data = get_case_data(app, path)
+            log.info("生成RF用例:{}".format(path))
+            data = get_rfcase_data(app, path)
         except Exception as e:
             log.warning("Get_case_data of {} Exception :{}".format(path, e))
             return []
 
-    # TODO: dealwith resource file : cannot use suiteBuilder
-    '''if fext == ".resource":
-        data = get_resource_data(app,path)'''
+    if fext == ".py":      # pytest
+        log.info("生成pytest用例:{}".format(path))
+        data = get_pytest_data(app, path)
 
     return data
 
 
-def get_case_data(app, path):
-
+def get_rfcase_data(app, path):
+    """
+    RobotFramework testcases finder
+    :param app: app
+    :param path: robot file path
+    :return: json data
+    """
     projectdir = os.environ["PROJECT_DIR"]
 
     suite = TestSuiteBuilder().build(path)
     children = []
     if suite:
-        # add library , make it can be open if it is a file.
-        for i in suite.resource.imports._items:
-
-            rsfile = i.name
-            if rsfile.find("%{ROBOT_DIR}") != -1:
-                rsfile = rsfile.replace("%{ROBOT_DIR}", os.environ["ROBOT_DIR"])
-            if rsfile.find("%{PROJECT_DIR}") != -1:
-                rsfile = rsfile.replace("%{PROJECT_DIR}", os.environ["PROJECT_DIR"])
-            if rsfile.find("%{BF_LIB}") != -1:
-                rsfile = rsfile.replace("%{BF_LIB}", os.environ["BF_LIB"])
-            if rsfile.find("%{BF_RESOURCE}") != -1:
-                rsfile = rsfile.replace("%{BF_RESOURCE}", os.environ["BF_RESOURCE"])
-
-            # do not show System Library or rs file cannot be found.
-            if not os.path.exists(rsfile):
-                continue
-
-            if os.path.isfile(rsfile):
-                fname = os.path.basename(rsfile)
-                children.append({
-                    "text": fname, "iconCls": "icon-library", "state": "open",
-                    "attributes": {
-                        "name": fname, "category": "case", "key": rsfile,
-                    }
-                })
+        # add library , make it can be open if it is a file. Omited.
+        # for i in suite.resource.imports._items:
+        #
+        #     rsfile = i.name
+        #     if rsfile.find("%{ROBOT_DIR}") != -1:
+        #         rsfile = rsfile.replace("%{ROBOT_DIR}", os.environ["ROBOT_DIR"])
+        #     if rsfile.find("%{PROJECT_DIR}") != -1:
+        #         rsfile = rsfile.replace("%{PROJECT_DIR}", os.environ["PROJECT_DIR"])
+        #     if rsfile.find("%{BF_LIB}") != -1:
+        #         rsfile = rsfile.replace("%{BF_LIB}", os.environ["BF_LIB"])
+        #     if rsfile.find("%{BF_RESOURCE}") != -1:
+        #         rsfile = rsfile.replace("%{BF_RESOURCE}", os.environ["BF_RESOURCE"])
+        #
+        #     # do not show System Library or rs file cannot be found.
+        #     if not os.path.exists(rsfile):
+        #         continue
+        #
+        #     if os.path.isfile(rsfile):
+        #         fname = os.path.basename(rsfile)
+        #         children.append({
+        #             "text": fname, "iconCls": "icon-library", "state": "open",
+        #             "attributes": {
+        #                 "name": fname, "category": "case", "key": rsfile,
+        #             }
+        #         })
         for t in suite.tests:
             status = app.config['DB'].get_casestatus(path, t.name)
             icons = 'icon-step'
@@ -599,36 +621,40 @@ def get_case_data(app, path):
     return children
 
 
-def get_resource_data(app, path):
-    projectdir = os.environ["PROJECT_DIR"]
+def get_pytest_data(app, path):
+    """
+    pytest testcase finder
+    :param app: app
+    :param path: pytest '.py' file
+    :return:
+    """
 
-    suite = TestSuiteBuilder().build(path)
     children = []
-    if suite:
-        # add library , make it can be open if it is a file.
-        for i in suite.resource.imports._items:
+    from _pytest import config
+    from _pytest import main
+    conf = config.get_config(os.path.dirname(path))
+    pm = conf.pluginmanager
+    args = ["--co", path]
+    conf = pm.hook.pytest_cmdline_parse(pluginmanager=pm, args=args)
+    s = main.Session.from_config(conf)
 
-            rsfile = i.name
-            if rsfile.find("%{ROBOT_DIR}") != -1:
-                rsfile = rsfile.replace("%{ROBOT_DIR}", os.environ["ROBOT_DIR"])
-            if rsfile.find("%{PROJECT_DIR}") != -1:
-                rsfile = rsfile.replace("%{PROJECT_DIR}", os.environ["PROJECT_DIR"])
-            if rsfile.find("%{BF_LIB}") != -1:
-                rsfile = rsfile.replace("%{BF_LIB}", os.environ["BF_LIB"])
-            if rsfile.find("%{BF_RESOURCE}") != -1:
-                rsfile = rsfile.replace("%{BF_RESOURCE}", os.environ["BF_RESOURCE"])
+    # conf._do_configure() :May be needed
+    conf.hook.pytest_sessionstart(session=s)
+    conf.hook.pytest_collection(session=s)
 
-            # do not show System Library or rs file cannot be found.
-            if not os.path.exists(rsfile):
-                continue
-
-            if os.path.isfile(rsfile):
-                fname = os.path.basename(rsfile)
-                children.append({
-                    "text": fname, "iconCls": "icon-library", "state": "open",
-                    "attributes": {
-                        "name": fname, "category": "resource", "key": rsfile,
-                    }
-                })
-
+    for it in s.items:
+        case_name = it.nodeid.split("::",maxsplit=1)[1]
+        icons = 'icon-step'
+        # TODO: Database status
+        # if status == 'FAIL':
+        #     icons = 'icon-step_fail'
+        # if status == 'PASS':
+        #     icons = 'icon-step_pass'
+        children.append({
+            "text": case_name, "iconCls": icons, "state": "open",
+            "attributes": {
+                "name": case_name, "category": "step", "key": path,
+            },
+            "children": []
+        })
     return children

@@ -12,3 +12,5 @@ ansible-runner>=2.0.1
 
 eventlet>=0.31.1
 flask-socketio>=5.1.1
+
+pytest>=6.2.4

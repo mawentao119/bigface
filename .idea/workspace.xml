@@ -3,7 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="ab43467d-ad90-46a2-99ca-651bd4d7e6ad" name="Default" comment="bug fix to webterm and production env problems.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/start_work.sh" beforeDir="false" afterPath="$PROJECT_DIR$/start_work.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auto/www/api/project.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/project.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -350,13 +351,6 @@
       <option name="presentableId" value="Default" />
       <updated>1534349381434</updated>
     </task>
-    <task id="LOCAL-00079" summary="汉化">
-      <created>1596009106926</created>
-      <option name="number" value="00079" />
-      <option name="presentableId" value="LOCAL-00079" />
-      <option name="project" value="LOCAL" />
-      <updated>1596009106926</updated>
-    </task>
     <task id="LOCAL-00080" summary="增加导入项目功能">
       <created>1596021300867</created>
       <option name="number" value="00080" />
@@ -693,7 +687,14 @@
       <option name="project" value="LOCAL" />
       <updated>1629126045436</updated>
     </task>
-    <option name="localTasksCounter" value="128" />
+    <task id="LOCAL-00128" summary="bug fix to webterm and production env problems.">
+      <created>1629126853938</created>
+      <option name="number" value="00128" />
+      <option name="presentableId" value="LOCAL-00128" />
+      <option name="project" value="LOCAL" />
+      <updated>1629126853938</updated>
+    </task>
+    <option name="localTasksCounter" value="129" />
     <servers />
   </component>
   <component name="TodoView">
