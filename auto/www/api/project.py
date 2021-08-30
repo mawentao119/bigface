@@ -18,6 +18,7 @@ from utils.resource import ICONS
 from utils.clear import clear_projectres
 from utils.parsing import generate_high_light, generate_auto_complete
 from utils.gitit import remote_clone
+from utils.pytester import get_pytest_data
 import logging
 
 log = logging.getLogger('Project')
@@ -528,7 +529,7 @@ def get_step_by_case(app, path):
 
     if fext == ".py":      # pytest
         log.info("生成pytest用例:{}".format(path))
-        data = get_pytest_data(app, path)
+        data = get_pytest_data(path)
 
     return data
 
@@ -620,41 +621,3 @@ def get_rfcase_data(app, path):
 
     return children
 
-
-def get_pytest_data(app, path):
-    """
-    pytest testcase finder
-    :param app: app
-    :param path: pytest '.py' file
-    :return:
-    """
-
-    children = []
-    from _pytest import config
-    from _pytest import main
-    conf = config.get_config(os.path.dirname(path))
-    pm = conf.pluginmanager
-    args = ["--co", path]
-    conf = pm.hook.pytest_cmdline_parse(pluginmanager=pm, args=args)
-    s = main.Session.from_config(conf)
-
-    # conf._do_configure() :May be needed
-    conf.hook.pytest_sessionstart(session=s)
-    conf.hook.pytest_collection(session=s)
-
-    for it in s.items:
-        case_name = it.nodeid.split("::",maxsplit=1)[1]
-        icons = 'icon-step'
-        # TODO: Database status
-        # if status == 'FAIL':
-        #     icons = 'icon-step_fail'
-        # if status == 'PASS':
-        #     icons = 'icon-step_pass'
-        children.append({
-            "text": case_name, "iconCls": icons, "state": "open",
-            "attributes": {
-                "name": case_name, "category": "step", "key": path,
-            },
-            "children": []
-        })
-    return children

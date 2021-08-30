@@ -727,14 +727,16 @@ class TestDB():
         log.info("Start refresh cases:"+target)
 
         suite = TestSuiteBuilder().build(target)
-        self._refresh_case(suite, mode)
+        self._refresh_rfcase(suite, mode)
+
+        self._refresh_pycase(target, mode)
 
         if os.path.isdir(target):
             self._reset_refreshtime()
 
         return True
 
-    def _refresh_case(self, suite, mode='normal'):
+    def _refresh_rfcase(self, suite, mode='normal'):
         source = suite.source
 
         suite_cases = []
@@ -774,17 +776,79 @@ class TestDB():
                     self.insert_loginfo('unknown', 'case',
                                         'create', info_key, info_name)
 
+
+
         # deleted cases and renamed cases should be deleted
         for i in suite_cases:
-            sql = "delete from testcase where info_key ='{}' and info_name='{}';".format(
-                i[0], i[1])
-            self.runsql(sql)
+            if i[0].endswith('.robot'):
+                sql = "delete from testcase where info_key ='{}' and info_name='{}';".format(
+                  i[0], i[1])
+                self.runsql(sql)
 
-            if not mode == 'start':
-                self.insert_loginfo('unknown', 'case', 'delete', i[0], i[1])
+                if not mode == 'start':
+                    self.insert_loginfo('unknown', 'case', 'delete', i[0], i[1])
 
         for child in suite.suites:
-            self._refresh_case(child, mode)
+            self._refresh_rfcase(child, mode)
+
+    def _refresh_pycase(self, target, mode):
+
+        suite_cases = []
+
+        # update each robot file
+
+        sql = "select info_key,info_name from testcase where info_key like '{}%'; ".format(
+            target)
+        res = self.runsql(sql)
+        for i in res:
+            (k, n) = i
+            suite_cases.append([k, n])
+
+        from _pytest import config
+        from _pytest import main
+        conf = config.get_config(os.path.dirname(target))
+        pm = conf.pluginmanager
+        args = ["--co", target]
+        conf = pm.hook.pytest_cmdline_parse(pluginmanager=pm, args=args)
+        s = main.Session.from_config(conf)
+
+        # conf._do_configure() :May be needed
+        conf.hook.pytest_sessionstart(session=s)
+        conf.hook.pytest_collection(session=s)
+
+        for it in s.items:
+            info_key = it.fspath.strpath
+            info_name = it.nodeid.split("::", maxsplit=1)[1]
+            tags = ""
+            doc = "TODO"
+
+            if [info_key, info_name] in suite_cases:
+                suite_cases.remove([info_key, info_name])  # delete the inserted cases.
+                sql = '''UPDATE testcase set info_tags='{}', 
+                                             info_doc='{}' 
+                         WHERE info_key='{}' and info_name='{}';'''.format(tags, doc, info_key, info_name)
+                self.runsql(sql)
+            else:
+                sql = "insert into testcase(info_key,info_name,info_tags, info_doc) \
+                values('{}','{}','{}','{}');".format(info_key, info_name, tags, doc)
+                res = self.runsql(sql)
+                if not res:
+                    log.error("Insert testcase Fail:{}".format(e))
+
+                if not mode == 'start':
+                    self.insert_loginfo('unknown', 'case',
+                                        'create', info_key, info_name)
+
+            # deleted cases and renamed cases should be deleted
+            for i in suite_cases:
+                if i[0].endswith(".py"):         # Only delete pytest cases
+                    sql = "delete from testcase where info_key ='{}' and info_name='{}';".format(
+                        i[0], i[1])
+                    self.runsql(sql)
+
+                    if not mode == 'start':
+                        self.insert_loginfo('unknown', 'case', 'delete', i[0], i[1])
+
 
     def get_testdata(self, target):
 

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ab43467d-ad90-46a2-99ca-651bd4d7e6ad" name="Default" comment="bug fix to webterm and production env problems.">
+    <list default="true" id="ab43467d-ad90-46a2-99ca-651bd4d7e6ad" name="Default" comment="Add pytest case show to left frame.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/auto/www/api/project.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/project.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/dbclass.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/dbclass.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/run.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -351,13 +352,6 @@
       <option name="presentableId" value="Default" />
       <updated>1534349381434</updated>
     </task>
-    <task id="LOCAL-00080" summary="增加导入项目功能">
-      <created>1596021300867</created>
-      <option name="number" value="00080" />
-      <option name="presentableId" value="LOCAL-00080" />
-      <option name="project" value="LOCAL" />
-      <updated>1596021300867</updated>
-    </task>
     <task id="LOCAL-00081" summary="bug fix">
       <created>1596024148496</created>
       <option name="number" value="00081" />
@@ -694,7 +688,14 @@
       <option name="project" value="LOCAL" />
       <updated>1629126853938</updated>
     </task>
-    <option name="localTasksCounter" value="129" />
+    <task id="LOCAL-00129" summary="Add pytest case show to left frame.">
+      <created>1630255117852</created>
+      <option name="number" value="00129" />
+      <option name="presentableId" value="LOCAL-00129" />
+      <option name="project" value="LOCAL" />
+      <updated>1630255117852</updated>
+    </task>
+    <option name="localTasksCounter" value="130" />
     <servers />
   </component>
   <component name="TodoView">
@@ -760,7 +761,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="add test_design" />
     <MESSAGE value="add markdown" />
     <MESSAGE value="init" />
     <MESSAGE value="add template dir" />
@@ -785,7 +785,8 @@
     <MESSAGE value="log modify" />
     <MESSAGE value="add download cases to zhiyan.com" />
     <MESSAGE value="bug fix to webterm and production env problems." />
-    <option name="LAST_COMMIT_MESSAGE" value="bug fix to webterm and production env problems." />
+    <MESSAGE value="Add pytest case show to left frame." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add pytest case show to left frame." />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/auto/www/templates/task_list.html">
