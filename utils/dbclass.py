@@ -820,7 +820,7 @@ class TestDB():
             info_key = it.fspath.strpath
             info_name = it.nodeid.split("::", maxsplit=1)[1]
             tags = ""
-            doc = "TODO"
+            doc = "未提供"
 
             if [info_key, info_name] in suite_cases:
                 suite_cases.remove([info_key, info_name])  # delete the inserted cases.

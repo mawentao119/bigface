@@ -25,9 +25,10 @@
 
         <div id="case_toolbar" class="easyui-panel" style="padding:0">
             <a href="#" id="btn_save" onclick="save_file()" class="easyui-linkbutton"
-                data-options="iconCls:'icon-save',disabled:true">保存</a>
+                data-options="iconCls:'icon-save',disabled:true">保存文件</a>
             <a href="#" onclick="debug_run()" class="easyui-linkbutton" data-options="iconCls:'icon-debugrun'">调试运行</a>
-            <a href="#" onclick="editor_run()" class="easyui-linkbutton" data-options="iconCls:'icon-run'">运行</a>
+            <a href="#" onclick="debug_pytest()" class="easyui-linkbutton" data-options="iconCls:'icon-debugrun'">pytest运行</a>
+            <a href="#" onclick="editor_run()" class="easyui-linkbutton" data-options="iconCls:'icon-run'">后台运行</a>
         </div>
 
         <div id="keyword_help" style="padding:5px;background-color: #F5F5DC;"></div>
@@ -160,6 +161,16 @@
             var key = "{{ key }}"
             var data = {
                 "method": "debug_run",
+                "category": "case",
+                "key": key
+            };
+            do_ajax('post', '/api/v1/task/', data, show_resmsg);
+        }
+
+        function debug_pytest() {
+            var key = "{{ key }}"
+            var data = {
+                "method": "debug_pytest",
                 "category": "case",
                 "key": key
             };

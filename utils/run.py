@@ -218,7 +218,6 @@ def reset_last_status(result, output, index):
             make_nod(last_passed)
         write_file(last_passed, data)
 
-
 def remove_robot(app):
     lock = threading.Lock()
     lock.acquire()

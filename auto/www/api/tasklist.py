@@ -364,6 +364,7 @@ def get_task_list(app, username, project):
             remove_robot(app)
             for p in app.config["AUTO_ROBOT"]:
                 if p["name"] == project:
+                    app.log.info("P name == project :{}".format(project))
                     running = True
                     break
             lock.release()
@@ -379,38 +380,86 @@ def get_task_list(app, username, project):
             last = 1
             if running:
                 last = 2
+
             for i in range(next_build-last, -1, -1):
-                if exists_path(job_path + "/%s" % i):
-                    try:
+                output_path = job_path + "/%s" % i
+                if exists_path(output_path):
+                    if exists_path(output_path + "/output.xml"):   # robot 的标志性输出
+                        try:
+                            driver = get_taskdriver(job_path + "/%s/cmd.txt" % i)
+                            suite = ExecutionResult(job_path + "/%s/output.xml" % i).suite
+                            stat = suite.statistics
+                            name = suite.name
+                            if stat.failed != 0:
+                                status = icons["fail"]
+                            else:
+                                status = icons['success']
+                            task.append({
+                                "task_no": i,
+                                "status": status,
+                                "name": "<a href='/view_report/%s/%s_log' target='_blank'>%s_#%s_log</a>" % (project, i, name, i),
+                                "driver": driver,
+                                "success": stat.passed,
+                                "fail": stat.failed,
+                                "starttime": suite.starttime,
+                                "endtime": suite.endtime,
+                                "elapsedtime": suite.elapsedtime,
+                                "note": "<a href='/view_report/%s/%s_report' target='_blank'>%s_#%s_report</a>" % (project, i, name, i)
+                            })
+                        except:
+                            status = icons["exception"]
+                            if i == next_build-last:
+                                status = icons["running"]
+                            task.append({
+                                "task_no": i,
+                                "status": status,
+                                "name": "%s_#%s" % (project, i),
+                                "driver":driver,
+                                "success": "-",
+                                "fail": "-",
+                                "starttime": "-",
+                                "endtime": "-",
+                                "elapsedtime": "-",
+                                "note": "Abnormal"
+                            })
+                    if exists_path(output_path + "/pytest_res.txt"):    # pytest 的输出是 pytest_res.txt
                         driver = get_taskdriver(job_path + "/%s/cmd.txt" % i)
-                        suite = ExecutionResult(job_path + "/%s/output.xml" % i).suite
-                        stat = suite.statistics
-                        name = suite.name
-                        if stat.failed != 0:
+                        result = {}
+                        with open(output_path + "/pytest_res.txt", 'r') as rf:
+                            result = json.load(rf)
+                        success = result["success"]
+                        fail = result["fail"]
+                        elapsedtime = result["duration"]
+                        source = result["source"]
+                        name = os.path.basename(source)
+
+                        if result["fail"] > 0:
                             status = icons["fail"]
                         else:
-                            status = icons['success']
+                            status = icons["success"]
                         task.append({
                             "task_no": i,
                             "status": status,
-                            "name": "<a href='/view_report/%s/%s_log' target='_blank'>%s_#%s_log</a>" % (project, i, name, i),
+                            "name": "<a href='/view_report/%s/%s_log' target='_blank'>%s_#%s_log</a>" % (
+                            project, i, name, i),
                             "driver": driver,
-                            "success": stat.passed,
-                            "fail": stat.failed,
-                            "starttime": suite.starttime,
-                            "endtime": suite.endtime,
-                            "elapsedtime": suite.elapsedtime,
-                            "note": "<a href='/view_report/%s/%s_report' target='_blank'>%s_#%s_report</a>" % (project, i, name, i)
+                            "success": success,
+                            "fail": fail,
+                            "starttime": "unknown",
+                            "endtime": "unknown",
+                            "elapsedtime": elapsedtime,
+                            "note": "<a href='/view_report/%s/%s_report' target='_blank'>%s_#%s_report</a>" % (
+                            project, i, source, i)
                         })
-                    except:
+                    else:
                         status = icons["exception"]
-                        if i == next_build-last:
+                        if i == next_build - last:
                             status = icons["running"]
                         task.append({
                             "task_no": i,
                             "status": status,
                             "name": "%s_#%s" % (project, i),
-                            "driver":driver,
+                            "driver": driver,
                             "success": "-",
                             "fail": "-",
                             "starttime": "-",

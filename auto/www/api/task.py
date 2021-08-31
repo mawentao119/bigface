@@ -16,6 +16,7 @@ import multiprocessing
 
 from utils.file import remove_dir, get_splitext
 from utils.run import robot_run, is_run, is_full, stop_robot, robot_debugrun, py_debugrun,bzt_debugrun
+from utils.pytester import debug_pytest_run, pytest_run
 
 class Task(Resource):
     def __init__(self):
@@ -39,6 +40,8 @@ class Task(Resource):
             return self.runall(args)
         elif args["method"] == "debug_run":
             return self.debug_run(args)
+        elif args["method"] == "debug_pytest":
+            return self.debug_pytest(args)
         elif args["method"] == "runpass":
             return self.runpassfail(args,True)
         elif args["method"] == "runfail":
@@ -66,15 +69,19 @@ class Task(Resource):
         cases = args['key']
         if not os.path.isdir(cases):
             fext = get_splitext(cases)[1]
-            if not fext in (".robot"):
+            if not fext in (".robot", ".py"):
                 return {"status": "fail", "msg": "失败：暂不支持运行此类型的文件 :" + fext}
 
+        fext = get_splitext(cases)[1]
         case_name = os.path.basename(cases)
         user = session["username"]
 
         if not is_run(self.app, case_name):
-            p = multiprocessing.Process(target=robot_run,
-                                        args=(cases, '', user))
+            if fext == ".robot":
+                p = multiprocessing.Process(target=robot_run, args=(cases, '', user))
+            else:
+                p = multiprocessing.Process(target=pytest_run, args=(cases, '', user))
+
             p.start()
             self.app.config["AUTO_ROBOT"].append(
                 {"name": "%s" % case_name, "process": p})
@@ -194,6 +201,13 @@ class Task(Resource):
             return {"data": decorate_pyout(result)}
         return {"data": "暂不支持运行此类文件 <{}> .".format(fext)}
 
+    def debug_pytest(self, args):
+        fext = os.path.splitext(args['key'])[1]
+        if not fext == ".py":
+            return {"data": "pytest不支持运行此类文件:{}.".format(fext)}
+        result = debug_pytest_run(args['key'])
+        return {"data": decorate_pytestout(result)}
+
     def rerun_task(self, args):
         project = args['project']
         task_no = args['task_no']
@@ -278,6 +292,7 @@ def delete_task_record(app, args):
     if os.path.exists(task_path):
         remove_dir(task_path)
 
+
 # For debug out, it is shown as html ,so we can decorate it for more readable.
 def decorate_robotout(out):
     o = out.replace(' PASS ', '<b><font color="#00FF00">PASS</font></b>')
@@ -285,7 +300,16 @@ def decorate_robotout(out):
     o = o.replace(' FAIL ', '<b><font color="#FF0000">FAIL</font></b>')
     o = o.replace('\n', '<BR>')
     return o
+
+
 def decorate_pyout(out):
     o = out.replace('TypeError', '<b><font color="#FF0000">TypeError</font></b>')
     o = o.replace('\n', '<BR>')
+    return o
+
+
+def decorate_pytestout(out):
+    o = out.replace('<td>passed</td>', '<td><font color="#00FF00">passed</font></td>')
+    o = o.replace('<td>failed</td>', '<td><font color="#FF0000">failed</font></td>')
+    o = o.replace('<td>skipped</td>', '<td><font color="#0000FF">skipped</font></td>')
     return o
