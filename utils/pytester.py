@@ -5,9 +5,9 @@ from _pytest import main
 from _pytest import runner
 from utils.dbclass import DBcli
 from utils.file import exists_path, make_nod, write_file, read_file, mk_dirs
-import logging
+from utils.mylogger import getlogger
 
-log = logging.getLogger(__name__)
+log = getlogger(__name__)
 db_cli = DBcli(os.environ["DB_FILE"])
 
 def get_pytest_data(path):

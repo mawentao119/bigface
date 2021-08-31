@@ -1,10 +1,11 @@
 # logging_example.py
 
 import os
-import logging
 from utils.file import remove_dir, copy_file, get_projectnamefromkey
 
-log = logging.getLogger("Clear")
+from utils.mylogger import getlogger
+
+log = getlogger(__name__)
 
 def clear_projectres(project, key=''):
 

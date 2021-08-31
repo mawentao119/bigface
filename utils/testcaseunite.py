@@ -1,6 +1,5 @@
 # -*- coding:utf-8 -*-
 import os
-import logging
 import copy
 import re
 
@@ -14,8 +13,9 @@ from robot.api import TestSuiteBuilder
 
 from utils.file import remove_dir
 
+from utils.mylogger import getlogger
 
-log = logging.getLogger("TestCaseUnite")
+log = getlogger(__name__)
 
 def getCaseDoc_pytest(cpath, cname):
     """

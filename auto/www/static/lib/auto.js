@@ -91,7 +91,58 @@ function do_logout(username) {
     do_ajax('get', '/api/v1/auth/', '', do_refresh)
 }
 
-function do_run() {
+function do_run_file() {
+    var node = $('#project_tree').tree('getSelected');
+    if (node) {
+        var category = node.attributes["category"];
+        var key = node.attributes["key"];
+        var data = {
+            "method": "runcasefile",
+            "category": category,
+            "key": key
+        };
+        do_ajax('post',
+            '/api/v1/task/',
+            data,
+            do_msg);
+    }
+}
+
+function do_run_pydir() {
+    var node = $('#project_tree').tree('getSelected');
+    if (node) {
+        var category = node.attributes["category"];
+        var key = node.attributes["key"];
+        var data = {
+            "method": "runpydir",
+            "category": category,
+            "key": key
+        };
+        do_ajax('post',
+            '/api/v1/task/',
+            data,
+            do_msg);
+    }
+}
+
+function do_run_rfdir() {
+    var node = $('#project_tree').tree('getSelected');
+    if (node) {
+        var category = node.attributes["category"];
+        var key = node.attributes["key"];
+        var data = {
+            "method": "runrfdir",
+            "category": category,
+            "key": key
+        };
+        do_ajax('post',
+            '/api/v1/task/',
+            data,
+            do_msg);
+    }
+}
+
+function do_run_old() {
     var node = $('#project_tree').tree('getSelected');
     if (node) {
         var category = node.attributes["category"];

@@ -11,14 +11,15 @@ Make KeyWords content link with the editor's content.
 import os
 from flask_restful import Resource, reqparse
 from utils.parsing import parser_robot_keyword_list
-import logging
+from utils.mylogger import getlogger
+
 
 class Keyword(Resource):
     def __init__(self):
         self.parser = reqparse.RequestParser()
         self.parser.add_argument('category', type=str)  # Do not use category now ,maybe latter.
         self.parser.add_argument('key', type=str)  # This is the editor's file path.
-        self.log = logging.getLogger("keyword")
+        self.log = getlogger(__name__)
 
     def get(self):
         args = self.parser.parse_args()

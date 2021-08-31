@@ -6,10 +6,10 @@ __author__ = "mawentao119@gmail.com"
 
 """
 
-import logging
 from flask import current_app, session, request, send_file
 from flask_restful import Resource, reqparse
 from utils.do_report import get_caseinfo, get_excuteinfo, get_userexcinfo, get_caselist, get_comparedata
+from utils.mylogger import getlogger
 
 class Report(Resource):
     def __init__(self):
@@ -19,7 +19,7 @@ class Report(Resource):
         self.parser.add_argument('username', type=str)
         self.parser.add_argument('dir', type=str)
         self.parser.add_argument('request', type=str)
-        self.log = logging.getLogger("Report")
+        self.log = getlogger(__name__)
         self.app = current_app._get_current_object()
 
 

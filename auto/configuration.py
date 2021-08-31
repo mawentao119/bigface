@@ -12,14 +12,15 @@ init Admin and DemoProject
 import logging
 import os
 from utils.dbclass import TestDB
+from utils.mylogger import getlogger
+
+log = getlogger(__name__)
 
 class Config:
 
     SSL_REDIRECT = False
 
     SECRET_KEY = 'QWERTYUIOPASDFGHJ'
-    # logging level
-    LOGGING_LEVEL = logging.INFO
     SHOW_DIR_DETAIL = False
 
     APP_DIR = os.getcwd()    # ...../bigface
@@ -37,6 +38,7 @@ class Config:
     os.mkdir(SPACE_DIR) if not os.path.exists(SPACE_DIR) else None
     os.mkdir(AUTO_TEMP) if not os.path.exists(AUTO_TEMP) else None
 
+    log.info("初始化数据库...")
     DB = TestDB(AUTO_HOME)
     PROJECT_DIR = DB.get_project_dir()
     PROJECT_NAME = DB.get_project_name()
@@ -56,6 +58,9 @@ class Config:
     os.environ["PY_TEMPLATE"]  = os.path.join(APP_DIR, 'utils/case_template')
     os.environ["PY_TEMPLATES"] = os.path.join(APP_DIR, 'utils/case_template')
     os.environ["CS_TEMPLATES"] = os.path.join(APP_DIR, 'auto/www/templates/case_template')
+
+    log.info("设置环境变量：")
+    log.info("PROJECT_DIR:{}\nAUTO_HOME:{}".format(PROJECT_DIR, AUTO_HOME))
 
     sys.path.append(os.environ["BF_LIB"])
     sys.path.append(os.path.join(APP_DIR, 'utils/case_resource'))

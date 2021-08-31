@@ -7,7 +7,6 @@ __author__ = "mawentao119@gmail.com"
 """
 import os
 import codecs
-import logging
 from flask import current_app, session, url_for
 import threading
 from subprocess import run as subRun, PIPE ,STDOUT
@@ -21,7 +20,9 @@ from robot.api import TestSuiteBuilder, ResultWriter, ExecutionResult    # done
 from utils.file import exists_path, make_nod, write_file, read_file, mk_dirs
 from utils.dbclass import DBcli
 
-log = logging.getLogger(__name__)
+from utils.mylogger import getlogger
+
+log = getlogger(__name__)
 db_cli = DBcli(os.environ["DB_FILE"])
 
 # This fun is for debug the test case, result is temporliy in /runtime dir

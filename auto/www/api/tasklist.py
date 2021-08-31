@@ -11,7 +11,6 @@ from flask import current_app, session, url_for
 from flask_restful import Resource, reqparse
 import json
 import os
-import logging
 import codecs
 import threading
 from dateutil import tz
@@ -22,6 +21,8 @@ from utils.file import exists_path
 from utils.run import remove_robot
 from ..app import scheduler
 from utils.schedule import add_schedulejob
+from utils.mylogger import getlogger
+
 
 class TaskList(Resource):
     def __init__(self):
@@ -41,7 +42,7 @@ class TaskList(Resource):
         self.parser.add_argument('day_of_week', type=str)
         self.parser.add_argument('start_date', type=str)
         self.parser.add_argument('end_date', type=str)
-        self.log = logging.getLogger("TaskList")
+        self.log = getlogger(__name__)
         self.app = current_app._get_current_object()
 
     def get(self):
@@ -343,6 +344,7 @@ class TaskList(Resource):
 
 
 def get_task_list(app, username, project):
+    log = getlogger(__name__)
     job_path = app.config["AUTO_HOME"] + "/jobs/%s/%s" % (username, project)
     next_build = 0
     task = []
@@ -386,8 +388,8 @@ def get_task_list(app, username, project):
                 if exists_path(output_path):
                     if exists_path(output_path + "/output.xml"):   # robot 的标志性输出
                         try:
-                            driver = get_taskdriver(job_path + "/%s/cmd.txt" % i)
-                            suite = ExecutionResult(job_path + "/%s/output.xml" % i).suite
+                            driver = get_taskdriver(output_path + "/cmd.txt")
+                            suite = ExecutionResult(output_path + "/output.xml").suite
                             stat = suite.statistics
                             name = suite.name
                             if stat.failed != 0:
@@ -422,6 +424,9 @@ def get_task_list(app, username, project):
                                 "elapsedtime": "-",
                                 "note": "Abnormal"
                             })
+
+                        continue
+
                     if exists_path(output_path + "/pytest_res.txt"):    # pytest 的输出是 pytest_res.txt
                         driver = get_taskdriver(job_path + "/%s/cmd.txt" % i)
                         result = {}
@@ -459,7 +464,7 @@ def get_task_list(app, username, project):
                             "task_no": i,
                             "status": status,
                             "name": "%s_#%s" % (project, i),
-                            "driver": driver,
+                            "driver": "unknown",
                             "success": "-",
                             "fail": "-",
                             "starttime": "-",
@@ -468,7 +473,7 @@ def get_task_list(app, username, project):
                             "note": "Abnormal"
                         })
 
-    return {"total": next_build-1, "rows": task}
+            return {"total": next_build-1, "rows": task}
 
 def get_schedulejob_list(app, args):
 

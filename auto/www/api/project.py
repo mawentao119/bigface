@@ -19,9 +19,10 @@ from utils.clear import clear_projectres
 from utils.parsing import generate_high_light, generate_auto_complete
 from utils.gitit import remote_clone
 from utils.pytester import get_pytest_data
-import logging
+from utils.mylogger import getlogger
 
-log = logging.getLogger('Project')
+log = getlogger(__name__)
+
 
 class Project(Resource):
     def __init__(self):
@@ -34,7 +35,7 @@ class Project(Resource):
         self.parser.add_argument('manager', type=str, default="")
         self.parser.add_argument('cron', type=str, default="* * * * * *")
         self.parser.add_argument('boolean', type=str, default="ON")
-        self.log = logging.getLogger("Project")
+        self.log = getlogger(__name__)
         self.reserved_names = ["works"]
         self.app = current_app._get_current_object()
 
@@ -346,7 +347,7 @@ class ProjectList(Resource):
         self.parser.add_argument('project', type=str)
         self.parser.add_argument('suite', type=str)
         self.parser.add_argument('splitext', type=str)
-        self.log = logging.getLogger("ProjectList")
+        self.log = getlogger(__name__)
         self.app = current_app._get_current_object()
 
     def get(self):

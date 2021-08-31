@@ -19,9 +19,9 @@ from robot.running.builder import ResourceFileBuilder  # ResourceFileBuilder().b
 from utils.file import mk_dirs, copy_file, get_projectnamefromkey
 from subprocess import run as subRun, PIPE ,STDOUT
 
-import logging
+from utils.mylogger import getlogger
 
-log = logging.getLogger(__name__)
+log = getlogger(__name__)
 
 USER_KEYS = {
     "web": ["BuiltIn", "Collections", "DateTime", "String", "Screenshot", "SeleniumLibrary"],

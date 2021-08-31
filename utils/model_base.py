@@ -1,7 +1,8 @@
 import json
 from flask import current_app
 from utils.file import write_file
-import logging
+
+from utils.mylogger import getlogger
 
 class CaseTemplate(object):
 
@@ -23,7 +24,7 @@ class CaseTemplate(object):
         # else:
         #     self.data = {}
 
-        self.log = logging.getLogger(self.tplname)
+        self.log = getlogger(self.tplname)
 
     def set_desc(self, desc):
         self.desc = desc

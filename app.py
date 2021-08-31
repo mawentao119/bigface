@@ -10,6 +10,7 @@ All Start Here!
 from auto.www.app import create_app
 from auto.settings import HEADER
 from utils.help import check_version
+from utils.mylogger import getlogger
 
 print(HEADER)
 
@@ -28,7 +29,7 @@ import shlex
 import logging
 import sys
 
-logging.getLogger("werkzeug").setLevel(logging.ERROR)
+logging = getlogger(__name__)
 
 __version__ = "0.5.0.0"
 
@@ -136,14 +137,14 @@ def main():
         print(__version__)
         exit(0)
     app.config["cmd"] = [args.command] + shlex.split(args.cmd_args)
-    green = "\033[92m"
-    end = "\033[0m"
-    log_format = green + "%(name)s" + end + " %(levelname)s (%(funcName)s:%(lineno)s) %(message)s"
-    logging.basicConfig(
-        format=log_format,
-        stream=sys.stdout,
-        level=logging.DEBUG if args.debug else logging.INFO,
-    )
+    # green = "\033[92m"
+    # end = "\033[0m"
+    # log_format = green + "%(name)s" + end + " %(levelname)s (%(funcName)s:%(lineno)s) %(message)s"
+    # logging.basicConfig(
+    #     format=log_format,
+    #     stream=sys.stdout,
+    #     level=logging.DEBUG if args.debug else logging.INFO,
+    # )
     logging.info(f"serving on http://127.0.0.1:{args.port}")
     socketio.run(app, debug=args.debug, port=args.port, host=args.host)
 

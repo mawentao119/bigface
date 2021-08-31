@@ -95,7 +95,8 @@
         <div onclick="manage_suite('create_suitegit', 'create_suite_ffgit', 'gitclone')">Git Clone</div>
         <div onclick="set_main_project()">设置为主项目</div>
         <div class="menu-sep"></div>
-        <div onclick="do_run();" data-options="iconCls:'icon-run'">运行全部用例</div>
+        <div onclick="do_run_pydir();" data-options="iconCls:'icon-run'">pytest执行</div>
+        <div onclick="do_run_rfdir();" data-options="iconCls:'icon-run'">robot执行</div>
         <div>
             <span>运行部分用例</span>
             <div style="width:160px;">
@@ -118,7 +119,7 @@
         </div>
         <div>
             <span>导入 & 导出</span>
-            <div style="width:160px;">
+            <div style="width:180px;">
                 <div onclick="open_win('uploadcase_win');">导入测试用例</div>
                 <div class="menu-sep"></div>
                 <div onclick="do_downcaseinfox('downcaseinfo_ff');">导出测试用例(多tab页xlsx)</div>
@@ -163,7 +164,7 @@
         </div>
         <div>
             <span>导入 & 导出</span>
-            <div style="width:150px;">
+            <div style="width:180px;">
                 <div onclick="open_win('uploadcase_win');">导入用例</div>
                 <div class="menu-sep"></div>
                 <div onclick="do_downcaseinfox('downcaseinfo_ff');">导出测试用例(多tab页xlsx)</div>
@@ -178,7 +179,8 @@
             </div>
         </div>
         <div class="menu-sep"></div>
-        <div onclick="do_run();" data-options="iconCls:'icon-run'">运行全部</div>
+        <div onclick="do_run_pydir();" data-options="iconCls:'icon-run'">pytest执行</div>
+        <div onclick="do_run_rfdir();" data-options="iconCls:'icon-run'">robot执行</div>
         <div>
             <span>运行部分</span>
             <div style="width:150px;">
@@ -196,7 +198,7 @@
         <div onclick="do_open_editor();">打开</div>
         <div onclick="do_download('download_ff');">下载</div>
         <div class="menu-sep"></div>
-        <div onclick="do_run();" data-options="iconCls:'icon-run'">运行</div>
+        <div onclick="do_run_file();" data-options="iconCls:'icon-run'">运行</div>
         <div>
             <span>标记用例</span>
             <div style="width:150px;">

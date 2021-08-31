@@ -7,9 +7,9 @@ Model based test design
 """
 import os, codecs, importlib
 import json
-import logging
+from utils.mylogger import getlogger
 
-log = logging.getLogger('Utils.Model_Design')
+log = getlogger(__name__)
 
 def show_ui(tmdfile):
     "找到 模版的 html ，解析出 tmd 文件的数据内容"

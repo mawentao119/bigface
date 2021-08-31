@@ -6,11 +6,13 @@ __author__ = "mawentao119@gmail.com"
 charis made a big change of this file
 """
 import os
-import logging
+
 from flask import current_app, session
 from flask_restful import Resource, reqparse
 from utils.file import mk_dirs, exists_path, rename_file, remove_dir
 from utils.gitit import remote_clone
+from utils.mylogger import getlogger
+
 
 class Suite(Resource):
     def __init__(self):
@@ -20,7 +22,7 @@ class Suite(Resource):
         self.parser.add_argument('new_name', type=str)
         self.parser.add_argument('key', type=str)
         self.parser.add_argument('project_name', type=str)
-        self.log = logging.getLogger("Suite")
+        self.log = getlogger(__name__)
         self.app = current_app._get_current_object()
 
     def post(self):

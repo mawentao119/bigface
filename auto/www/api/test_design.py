@@ -6,10 +6,10 @@ __author__ = "mawentao119@gmail.com"
 
 """
 
-import logging
 from flask import current_app, session, request
 from flask_restful import Resource, reqparse
 from utils.model_design import gen_casefile, save_model, create_model
+from utils.mylogger import getlogger
 
 
 class TestDesign(Resource):
@@ -24,7 +24,7 @@ class TestDesign(Resource):
         self.parser.add_argument('data', type=str)
 
         self.app = current_app._get_current_object()
-        self.log = logging.getLogger("TestDesign")
+        self.log = getlogger(__name__)
 
     def get(self):
         # TODO

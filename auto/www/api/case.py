@@ -14,7 +14,8 @@ from flask_restful import Resource, reqparse
 from utils.parsing import update_resource
 from utils.file import exists_path, rename_file, make_nod, remove_file, mk_dirs, remove_dir, write_file, read_file, copy_file, get_splitext
 from utils.gitit import remote_clone
-import logging
+from utils.mylogger import getlogger
+
 
 class Case(Resource):
     def __init__(self):
@@ -30,7 +31,7 @@ class Case(Resource):
         self.parser.add_argument('path', type=str)
         self.parser.add_argument('data', type=str)
         self.app = current_app._get_current_object()
-        self.log = logging.getLogger("Case")
+        self.log = getlogger(__name__)
 
     def get(self):
         args = self.parser.parse_args()

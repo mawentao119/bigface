@@ -3,10 +3,10 @@ import os
 import git
 
 from utils.file import remove_dir, mk_dirs
-import logging
 import shutil
+from utils.mylogger import getlogger
 
-log = logging.getLogger("Git")
+log = getlogger(__name__)
 
 
 def remote_clone(app, url):

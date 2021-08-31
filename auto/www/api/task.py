@@ -11,7 +11,7 @@ from flask import current_app, session
 from flask_restful import Resource, reqparse
 import os
 import time
-import logging
+from utils.mylogger import getlogger
 import multiprocessing
 
 from utils.file import remove_dir, get_splitext
@@ -30,14 +30,16 @@ class Task(Resource):
         self.parser.add_argument('conffile', type=str)
         self.parser.add_argument('key', type=str)
         self.parser.add_argument('task_no', type=str)
-        self.log = logging.getLogger("Task")
+        self.log = getlogger(__name__)
         self.app = current_app._get_current_object()
 
     def post(self):
         args = self.parser.parse_args()
 
-        if args["method"] == "run" or args["method"] == "editor_run":
-            return self.runall(args)
+        if args["method"] == "runcasefile" or args["method"] == "editor_run":
+            return self.run_case(args)
+        elif args["method"] == "runpydir" or args["method"] == "runrfdir":
+            return self.run_case(args)
         elif args["method"] == "debug_run":
             return self.debug_run(args)
         elif args["method"] == "debug_pytest":
@@ -65,30 +67,55 @@ class Task(Resource):
         else:
             return {"status": "fail", "msg": "Parameter 'method' Error:{}".format(args['method'])}
 
-    def runall(self, args):
+    def run_case(self, args):
+        method = args['method']  # runcasefile , editor_run , runpydir ,runrfdir
         cases = args['key']
-        if not os.path.isdir(cases):
-            fext = get_splitext(cases)[1]
-            if not fext in (".robot", ".py"):
-                return {"status": "fail", "msg": "失败：暂不支持运行此类型的文件 :" + fext}
-
-        fext = get_splitext(cases)[1]
         case_name = os.path.basename(cases)
         user = session["username"]
+        self.log.info("运行：method：{} , key: {}".format(method, cases))
+        if os.path.isdir(cases):
+            if method == "runpydir":
 
+                if not is_run(self.app, case_name):
+                    self.log.info("pytest_run: {}".format(cases))
+                    p = multiprocessing.Process(target=pytest_run, args=(cases, '', user))
+                    p.start()
+                    self.app.config["AUTO_ROBOT"].append(
+                        {"name": "%s" % case_name, "process": p})
+                    return {"status": "success", "msg": "运行:" + case_name}
+                else:
+                    return {"status": "fail", "msg": "失败：超过最大进程数，请等待."}
+
+            elif method == "runrfdir":
+                if not is_run(self.app, case_name):
+                    self.log.info("robot_run:{}".format(cases))
+                    p = multiprocessing.Process(target=robot_run, args=(cases, '', user))
+                    p.start()
+                    self.app.config["AUTO_ROBOT"].append(
+                        {"name": "%s" % case_name, "process": p})
+                    return {"status": "success", "msg": "运行:" + case_name}
+                else:
+                    return {"status": "fail", "msg": "失败：超过最大进程数，请等待."}
+
+            else:
+                return {"status": "fail", "msg": "无法理解的参数:{}" + method}
+
+        fext = get_splitext(cases)[1]
         if not is_run(self.app, case_name):
             if fext == ".robot":
+                self.log.info("robot_run:{}".format(cases))
                 p = multiprocessing.Process(target=robot_run, args=(cases, '', user))
-            else:
+            elif fext ==".py":
+                self.log.info("pytest_run: {}".format(cases))
                 p = multiprocessing.Process(target=pytest_run, args=(cases, '', user))
-
+            else:
+                return {"status": "fail", "msg": "暂不支持运行此类文件:{}" + fext}
             p.start()
             self.app.config["AUTO_ROBOT"].append(
                 {"name": "%s" % case_name, "process": p})
+            return {"status": "success", "msg": "运行:" + case_name}
         else:
             return {"status": "fail", "msg": "失败：超过最大进程数，请等待."}
-
-        return {"status": "success", "msg": "运行:" + case_name}
 
     def runpassfail(self, args, passed=True):
 

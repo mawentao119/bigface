@@ -17,7 +17,8 @@ from robot.api import ExecutionResult  #TODO Later
 from urllib.parse import quote
 from utils.file import exists_path
 from utils.testcaseunite import export_casexlsx, export_casexlsp, export_casexlsy, export_casezip, do_importfromxlsx ,do_importfromzip, do_uploadcaserecord, do_unzip_project
-import logging
+from utils.mylogger import getlogger
+
 
 class ManageFile(Resource):
     def __init__(self):
@@ -25,7 +26,7 @@ class ManageFile(Resource):
         self.parser.add_argument('data', type=str)
         self.parser.add_argument('file', type=werkzeug.datastructures.FileStorage, location='files', action='append')
         self.app = current_app._get_current_object()
-        self.log = logging.getLogger("ManageFile")
+        self.log = getlogger(__name__)
 
     def post(self):
         args = request.form.to_dict()

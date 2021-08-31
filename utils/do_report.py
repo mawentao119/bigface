@@ -10,9 +10,9 @@ import os
 from flask import current_app, url_for
 from utils.file import get_projectnamefromkey
 
-import logging
+from utils.mylogger import getlogger
 
-log = logging.getLogger('Utils.Report')
+log = getlogger(__name__)
 
 def get_caseinfo(key,method):
     """
