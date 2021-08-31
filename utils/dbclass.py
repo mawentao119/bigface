@@ -6,7 +6,8 @@ import logging
 from datetime import datetime, date
 
 # TODO DELETE from robot.api import TestData
-from robot.api import TestSuiteBuilder     # done
+from robot.api import TestSuiteBuilder
+from robot.errors import DataError
 
 
 log = logging.getLogger('TestDB')
@@ -726,8 +727,11 @@ class TestDB():
 
         log.info("Start refresh cases:"+target)
 
-        suite = TestSuiteBuilder().build(target)
-        self._refresh_rfcase(suite, mode)
+        try:
+            suite = TestSuiteBuilder().build(target)
+            self._refresh_rfcase(suite, mode)
+        except DataError:
+            log.info("没有发现 robot 用例，继续更新pytest")
 
         self._refresh_pycase(target, mode)
 
@@ -816,12 +820,14 @@ class TestDB():
         conf.hook.pytest_sessionstart(session=s)
         conf.hook.pytest_collection(session=s)
 
+        #print(suite_cases)
+
         for it in s.items:
             info_key = it.fspath.strpath
             info_name = it.nodeid.split("::", maxsplit=1)[1]
             tags = ""
             doc = "未提供"
-
+            #print("k:{}, n:{}".format(info_key,info_name))
             if [info_key, info_name] in suite_cases:
                 suite_cases.remove([info_key, info_name])  # delete the inserted cases.
                 sql = '''UPDATE testcase set info_tags='{}', 
@@ -833,21 +839,21 @@ class TestDB():
                 values('{}','{}','{}','{}');".format(info_key, info_name, tags, doc)
                 res = self.runsql(sql)
                 if not res:
-                    log.error("Insert testcase Fail:{}".format(e))
+                    log.error("Insert testcase Fail")
 
                 if not mode == 'start':
                     self.insert_loginfo('unknown', 'case',
                                         'create', info_key, info_name)
 
-            # deleted cases and renamed cases should be deleted
-            for i in suite_cases:
-                if i[0].endswith(".py"):         # Only delete pytest cases
-                    sql = "delete from testcase where info_key ='{}' and info_name='{}';".format(
-                        i[0], i[1])
-                    self.runsql(sql)
+        # deleted cases and renamed cases should be deleted
+        for i in suite_cases:
+            if i[0].endswith(".py"):         # Only delete pytest cases
+                sql = "delete from testcase where info_key ='{}' and info_name='{}';".format(
+                    i[0], i[1])
+                self.runsql(sql)
 
-                    if not mode == 'start':
-                        self.insert_loginfo('unknown', 'case', 'delete', i[0], i[1])
+                if not mode == 'start':
+                    self.insert_loginfo('unknown', 'case', 'delete', i[0], i[1])
 
 
     def get_testdata(self, target):

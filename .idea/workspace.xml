@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ab43467d-ad90-46a2-99ca-651bd4d7e6ad" name="Default" comment="Add pytest case init to db">
+    <list default="true" id="ab43467d-ad90-46a2-99ca-651bd4d7e6ad" name="Default" comment="Add pytest run function">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auto/www/api/task.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/task.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auto/www/api/tasklist.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/tasklist.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auto/www/templates/editor.html" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/templates/editor.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auto/www/api/manage_file.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/api/manage_file.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auto/www/static/lib/auto.js" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/static/lib/auto.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auto/www/templates/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/auto/www/templates/dashboard.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/dbclass.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/dbclass.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/run.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/testcaseunite.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/testcaseunite.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -354,13 +354,6 @@
       <option name="presentableId" value="Default" />
       <updated>1534349381434</updated>
     </task>
-    <task id="LOCAL-00082" summary="汉化">
-      <created>1596025892855</created>
-      <option name="number" value="00082" />
-      <option name="presentableId" value="LOCAL-00082" />
-      <option name="project" value="LOCAL" />
-      <updated>1596025892855</updated>
-    </task>
     <task id="LOCAL-00083" summary="汉化">
       <created>1596027870759</created>
       <option name="number" value="00083" />
@@ -697,7 +690,14 @@
       <option name="project" value="LOCAL" />
       <updated>1630299527352</updated>
     </task>
-    <option name="localTasksCounter" value="131" />
+    <task id="LOCAL-00131" summary="Add pytest run function">
+      <created>1630396024691</created>
+      <option name="number" value="00131" />
+      <option name="presentableId" value="LOCAL-00131" />
+      <option name="project" value="LOCAL" />
+      <updated>1630396024691</updated>
+    </task>
+    <option name="localTasksCounter" value="132" />
     <servers />
   </component>
   <component name="TodoView">
@@ -763,7 +763,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="init" />
     <MESSAGE value="add template dir" />
     <MESSAGE value="add new template by hand" />
     <MESSAGE value="delete user" />
@@ -788,7 +787,8 @@
     <MESSAGE value="bug fix to webterm and production env problems." />
     <MESSAGE value="Add pytest case show to left frame." />
     <MESSAGE value="Add pytest case init to db" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add pytest case init to db" />
+    <MESSAGE value="Add pytest run function" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add pytest run function" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

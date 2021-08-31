@@ -16,7 +16,7 @@ from robot.api import ExecutionResult  #TODO Later
 
 from urllib.parse import quote
 from utils.file import exists_path
-from utils.testcaseunite import export_casexlsx, export_casexlsy, export_casezip, do_importfromxlsx ,do_importfromzip, do_uploadcaserecord, do_unzip_project
+from utils.testcaseunite import export_casexlsx, export_casexlsp, export_casexlsy, export_casezip, do_importfromxlsx ,do_importfromzip, do_uploadcaserecord, do_unzip_project
 import logging
 
 class ManageFile(Resource):
@@ -47,6 +47,8 @@ class ManageFile(Resource):
             return self.__download(args)
         elif method == "downcaseinfox":
             return self.__downcaseinfox(args)
+        elif method == "downcaseinfop":
+            return self.__downcaseinfop(args)
         elif method == "downcaseinfoy":
             return self.__downcaseinfoy(args)
         elif method == "downcaseinfoz":
@@ -166,10 +168,25 @@ class ManageFile(Resource):
 
         return self.__sendfile(casefile)
 
+    def __downcaseinfop(self, args):
+        # charis added :
+        key = args['key']
+        self.log.info("下载智pytest研格式用例，目录:"+key)
+
+        (isok, casefile) = export_casexlsp(key, self.app.config['DB'], self.app.config['AUTO_TEMP'])
+
+        self.app.config['DB'].insert_loginfo(session['username'], 'caseinfo', 'download', key, 'zhiyan.xlsx')
+
+        if not isok:
+            self.log.error("下载用例失败:{}".format(casefile))
+            return "Fail:{}".format(casefile)
+
+        return self.__sendfile(casefile)
+
     def __downcaseinfoy(self, args):
         # charis added :
         key = args['key']
-        self.log.info("下载智研格式用例，目录:"+key)
+        self.log.info("下载robot智研格式用例，目录:"+key)
 
         (isok, casefile) = export_casexlsy(key, self.app.config['DB'], self.app.config['AUTO_TEMP'])
 

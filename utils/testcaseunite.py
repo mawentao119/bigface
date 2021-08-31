@@ -5,6 +5,7 @@ import copy
 import re
 
 import shutil
+import sys
 import zipfile
 
 from flask import current_app, session
@@ -16,6 +17,48 @@ from utils.file import remove_dir
 
 log = logging.getLogger("TestCaseUnite")
 
+def getCaseDoc_pytest(cpath, cname):
+    """
+    通过模块导入，得到 pytest 用的 doc ，至于代码，需要后续引入
+    :param cpath:
+    :param cname:
+    :return:
+    """
+    case_dir = os.path.dirname(cpath)
+    case_file = os.path.basename(cpath)
+    case_module = os.path.splitext(case_file)[0]
+    case_name = cname
+
+    if case_name.find("::") != -1:
+        case_class = case_name.split("::")[0]
+        case_name = case_name.split("::")[1]
+    else:
+        case_class = None
+
+    sys.path.insert(0, case_dir)
+    cm = __import__(case_module)
+
+    content = "Not found"
+
+    if not case_class:
+        fun = cm.__dict__.get(case_name, None)
+        if not fun:
+            log.info("找不到函数:{}".format(case_name))
+            return "Not found"
+        return fun.__doc__
+
+    else:
+        cls = cm.__dict__.get(case_class, None)
+        if not cls:
+            log.info("找不到类:{}".format(case_class))
+            return "Not found"
+        fun = cls.__dict__.get(case_name)
+        if not fun:
+            log.info("类{}中找不到函数:{}".format(case_class, case_name))
+            return "Not found"
+        return fun.__doc__
+
+    return "Not found"
 
 def getCaseContent(cpath, cname):
     """
@@ -172,7 +215,7 @@ def export_casexlsx(key, db, exp_filedir=''):
 
 def export_casexlsy(key, db, exp_filedir=''):
     """
-    Download ZHIYAN.com xls Format case , do zhiyan.com loading.
+    Download ZHIYAN.com xls Format case from robot case, do zhiyan.com loading.
     :param key: dir
     :param db: case info db
     :param exp_filedir: output dir
@@ -192,7 +235,7 @@ def export_casexlsy(key, db, exp_filedir=''):
 
     os.mkdir(dir) if not os.path.exists(dir) else None
 
-    export_file = os.path.join(dir, basename + '_ZHIYAN.xlsx')
+    export_file = os.path.join(dir, basename + '_rfZHIYAN.xlsx')
 
     db.refresh_caseinfo(export_dir, "Force")
 
@@ -202,7 +245,8 @@ def export_casexlsy(key, db, exp_filedir=''):
     res = db.runsql(sql)
     for i in res:
         (info_key, info_name, info_doc, info_tag) = i
-        cases.append([info_key, info_name, info_doc, info_tag])
+        if info_key.endswith(".robot"):        # Only robot file
+            cases.append([info_key, info_name, info_doc, info_tag])
 
     log.info(f"导出智研用例，目录：{key}, 导出文件:{export_file}")
 
@@ -258,6 +302,107 @@ def export_casexlsy(key, db, exp_filedir=''):
                    case_code_base,
                    case_code_src,
                    case_run_command])
+
+    os.remove(export_file) if os.path.exists(export_file) else None
+    wb.save(export_file)
+    log.info("生成测试用例文件 {} 到目录 {}".format(export_dir, export_file))
+    return True, export_file
+
+
+def export_casexlsp(key, db, exp_filedir=''):
+    """
+    Download ZHIYAN.com xls Format case from pytest case , do zhiyan.com loading.
+    :param key: dir
+    :param db: case info db
+    :param exp_filedir: output dir
+    :return: result, file_name
+    """
+
+    export_dir = key
+    if not os.path.isdir(export_dir):
+        log.error("不支持导出一个文件中的用例:" + export_dir)
+        return (False, "不支持导出一个文件中的用例:" + export_dir)
+
+    basename = os.path.basename(export_dir)
+
+    dir = exp_filedir
+    if dir == '':
+        dir = os.environ["AUTO_TEMP"]
+
+    os.mkdir(dir) if not os.path.exists(dir) else None
+
+    export_file = os.path.join(dir, basename + '_pyZHIYAN.xlsx')
+
+    log.info("开始刷新用例...")
+    db.refresh_caseinfo(export_dir, "Force")
+    log.info("完成刷新用例...")
+
+    cases = []
+    sql = "SELECT info_key,info_name,info_doc,info_tags FROM testcase WHERE info_key like '{}%' ;".format(
+        key)
+    res = db.runsql(sql)
+    for i in res:
+        (info_key, info_name, info_doc, info_tag) = i
+        if info_key.endswith(".py"):                     # Only pytest file
+            cases.append([info_key, info_name, info_doc, info_tag])
+
+    log.info(f"导出智研用例，目录：{key}, 导出文件:{export_file}")
+
+    wb = Workbook()
+    ws = wb.active
+    ws.append(["用例标题",
+               "所属目录",
+               "用例场景",
+               "前置条件",
+               "操作步骤",
+               "预期结果",
+               "备注",
+               "用例标签",
+               "关联TAPD",
+               "用例级别",
+               "是否模板",
+               "执行平台",
+               "代码库地址",
+               "代码路径",
+               "执行命令"])
+    for c in cases:
+        case_path = c[0]
+        case_name = c[1]                                                                           # 用例标题 required
+
+        case_tags = c[3]
+        if not os.path.exists(case_path):
+            continue
+        case_content = getCaseDoc_pytest(case_path, case_name)
+        case_doc = case_content
+        dir_name = os.path.splitext(case_path)[0].replace(os.environ["PROJECT_DIR"]+'/', '')        # 所属目录 required
+        case_scenario = os.path.basename(case_path)
+        case_pre_action = "准备测试环境"
+        case_exp_result = "执行成功，断言通过"
+        case_tapd = os.environ.get("PROJECT_NAME", "")
+        case_level = "P0"
+        case_is_template = "No"
+        case_platform = "tcase"
+        case_code_base = "https://git.woa.com/Dollar/DollarPS.git"                                   # 代码库地址 required
+        case_code_src = dir_name + ".robot:" + case_name
+        case_run_command = "cd $HOME; pytest " + case_path + "::" + case_name  # 执行命令 required
+
+        ws.append([case_name,
+                   dir_name,
+                   case_scenario,
+                   case_pre_action,
+                   case_content,
+                   case_exp_result,
+                   case_doc,
+                   case_tags,
+                   case_tapd,
+                   case_level,
+                   case_is_template,
+                   case_platform,
+                   case_code_base,
+                   case_code_src,
+                   case_run_command])
+
+        #log.info("write case to file: {} : {}".format(case_name, case_path))
 
     os.remove(export_file) if os.path.exists(export_file) else None
     wb.save(export_file)
