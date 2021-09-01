@@ -234,9 +234,9 @@ def generate_high_light(doc_dir):
     ''' This is new fun, Invoked by project.get ,then loaded in editor.html. '''
 
     log.info("生成高亮显示 js ...")
-    project = get_projectnamefromkey(doc_dir)
+    project = os.environ["PROJECT_NAME"]
     kwd = os.getcwd() + "/keyword/" + project
-    jsd = os.getcwd() + "/auto/www/static/js/" + project
+    jsd = os.getcwd() + "/auto/www/static/js"
     if not os.path.exists(jsd):
         mk_dirs(jsd)
     if not os.path.exists(kwd):
@@ -271,7 +271,7 @@ def generate_auto_complete(doc_dir):  # This is new fun, Invoked by project.get 
 
     project = get_projectnamefromkey(doc_dir)
     kwd = os.getcwd() + "/keyword/" + project
-    jsd = os.getcwd() + "/auto/www/static/js/" + project
+    jsd = os.getcwd() + "/auto/www/static/js"
     if not os.path.exists(jsd):
         mk_dirs(jsd)
     if not os.path.exists(kwd):
@@ -371,12 +371,12 @@ def generate_resource_xml(srcfile, desfile):
 
     return cp.stdout
 
-def prepare_editorjs(key):
-    project = get_projectnamefromkey(key)
-    jsd = os.getcwd() + "/auto/www/static/js/" + project
-    desd = os.getcwd() + "/auto/www/static/js"
-    copy_file(jsd + '/highlight.js' , desd + '/highlight.js') if os.path.exists(jsd + '/highlight.js') else None
-    copy_file(jsd + '/autocomplete.js', desd + '/autocomplete.js') if os.path.exists(jsd + '/autocomplete.js') else None
+# def prepare_editorjs(key):
+#     project = get_projectnamefromkey(key)
+#     jsd = os.getcwd() + "/auto/www/static/js/" + project
+#     desd = os.getcwd() + "/auto/www/static/js"
+#     copy_file(jsd + '/highlight.js' , desd + '/highlight.js') if os.path.exists(jsd + '/highlight.js') else None
+#     copy_file(jsd + '/autocomplete.js', desd + '/autocomplete.js') if os.path.exists(jsd + '/autocomplete.js') else None
 
 def update_resource(path):
     '''when update,rename,delete resource file, xml file should be updated.'''

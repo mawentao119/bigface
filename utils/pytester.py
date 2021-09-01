@@ -30,13 +30,14 @@ def get_pytest_data(path):
     conf.hook.pytest_collection(session=s)
 
     for it in s.items:
-        case_name = it.nodeid.split("::",maxsplit=1)[1]
+        case_name = it.nodeid.split("::", maxsplit=1)[1]
+        status = db_cli.get_casestatus(path, case_name)
+        print("status:{} {} :{}".format(path,case_name,status))
         icons = 'icon-step'
-        # TODO: Database status
-        # if status == 'FAIL':
-        #     icons = 'icon-step_fail'
-        # if status == 'PASS':
-        #     icons = 'icon-step_pass'
+        if status == 'FAIL':
+            icons = 'icon-step_fail'
+        if status == 'PASS':
+            icons = 'icon-step_pass'
         children.append({
             "text": case_name, "iconCls": icons, "state": "open",
             "attributes": {
@@ -136,7 +137,7 @@ def pytest_run(case_key, args="", user='', catigory=''):
 
     reports = []
     for i, item in enumerate(s.items):
-        log.info("name: {} ,node: {}".format(item.name , item.nodeid))
+        log.info("name: {} ,fspath: {}".format(item.name, item.fspath))
         nextitem = s.items[i + 1] if i + 1 < len(s.items) else None
         reports.append(runner.runtestprotocol(item=item, log=False, nextitem=nextitem))
 
@@ -216,8 +217,9 @@ def update_pycase_info(username, reports, out):
     duration = 0
 
     for r in reports:
-        source = r[1].fspath
-        name = r[1].head_line
+        source = r[1].fspath   # fspath in report while fspath.strpath in session.items
+        source = os.path.join(os.getcwd(), source)  # ref path in report while abs path in session.items
+        name = r[1].nodeid.split("::", maxsplit=1)[1]
         if r[1].outcome == "passed":
             status = "PASS"
         else:

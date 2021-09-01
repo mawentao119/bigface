@@ -68,11 +68,19 @@ class Task(Resource):
             return {"status": "fail", "msg": "Parameter 'method' Error:{}".format(args['method'])}
 
     def run_case(self, args):
+        """
+        使用 multiprocessing Process 进行后台任务的执行
+        兼容问题：在 Mac上运行会引起 app 多次重启，只要调用就会重启
+        在 centos 上运行不会，参见：https://docs.python.org/3/library/multiprocessing.html ：Contexts and start methods
+        :param args:
+        :return:
+        """
         method = args['method']  # runcasefile , editor_run , runpydir ,runrfdir
         cases = args['key']
         case_name = os.path.basename(cases)
         user = session["username"]
         self.log.info("运行：method：{} , key: {}".format(method, cases))
+        #multiprocessing.set_start_method('spawn')   # Todo : Mac兼容问题需要解决
         if os.path.isdir(cases):
             if method == "runpydir":
 

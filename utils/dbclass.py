@@ -33,6 +33,21 @@ class DBcli():
 
         return self.runsql(sql)
 
+    def get_casestatus(self, info_key, info_name):
+        """
+        duplictate function of TestDB
+        :param info_key:
+        :param info_name:
+        :return:
+        """
+        sql = "select run_status,info_name from testcase where info_key='{}' and info_name ='{}'; ".format(
+            info_key, info_name)
+        res = self.runsql(sql)
+        if not res:
+            return 'unknown'
+        (status, name) = res.fetchone()
+        return status
+
 class TestDB():
     def __init__(self, confdir):
         # Init system TestDBID with file TestCaseDB.id if exists, Create new if not exists.
@@ -809,6 +824,10 @@ class TestDB():
 
         from _pytest import config
         from _pytest import main
+
+        if os.path.isfile(target) and (not os.path.splitext(target)[1] == ".py"):
+            return
+
         conf = config.get_config(os.path.dirname(target))
         pm = conf.pluginmanager
         args = ["--co", target]
