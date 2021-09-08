@@ -58,6 +58,7 @@ def getCaseDoc_pytest(cpath, cname):
             return "Not found"
         return fun.__doc__
 
+    sys.path.pop()
     return "Not found"
 
 def getCaseContent(cpath, cname):
@@ -311,7 +312,7 @@ def export_casexlsy(key, db, exp_filedir=''):
 
 def export_casexlsp(key, db, exp_filedir=''):
     """
-    Download ZHIYAN.com xls Format case from pytest case , do zhiyan.com loading.
+    下载pytest用例生成符合智研平台的xls文件.可以直接导入 zhiyan.com
     :param key: dir
     :param db: case info db
     :param exp_filedir: output dir

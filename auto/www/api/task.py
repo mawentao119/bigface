@@ -35,6 +35,7 @@ class Task(Resource):
 
     def post(self):
         args = self.parser.parse_args()
+        self.log.info("Request args:{}".format(args))
 
         if args["method"] == "runcasefile" or args["method"] == "editor_run":
             return self.run_case(args)
