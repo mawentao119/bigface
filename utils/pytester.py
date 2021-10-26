@@ -47,9 +47,11 @@ def get_pytest_data(path):
         })
     return children
 
-def debug_pytest_run(path):
+
+def debug_pytest_run(path, user="unknown", is_api=False):
     """
     editor界面调试运行 pytest 测试用例
+    :param user: run user
     :param path: pytest file
     :return: output->str
     """

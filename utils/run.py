@@ -26,16 +26,16 @@ log = getlogger(__name__)
 db_cli = DBcli(os.environ["DB_FILE"])
 
 # This fun is for debug the test case, result is temporliy in /runtime dir
-def robot_debugrun(app, cases):
+def robot_debugrun(app, cases, user="unknown", is_api=False):
 
     out = app.config['AUTO_TEMP']
     if not exists_path(out):
         mk_dirs(out)
 
     cmd = 'robot --outputdir='+out+' '+cases
-    cp = subRun(cmd, shell=True, stdout=PIPE,stderr=STDOUT, text=True, timeout=60)  # timeout: sec
+    cp = subRun(cmd, shell=True, stdout=PIPE,stderr=STDOUT, text=True, timeout=300)  # timeout: sec
 
-    app.config['DB'].insert_loginfo(session['username'], 'case', 'debug', cases, 'OK')
+    app.config['DB'].insert_loginfo(user, 'case', 'debug', cases, 'OK')
 
     return cp.stdout
 
@@ -432,19 +432,21 @@ class RobotRun(threading.Thread):
 
         lock.release()
 
-def py_debugrun(app, pyfile):
+
+def py_debugrun(app, pyfile, user="unknown", is_api=False):
     cmd = 'python ' + pyfile
     cp = subRun(cmd, shell=True, stdout=PIPE, stderr=STDOUT, text=True, timeout=120)  # timeout: sec
 
-    app.config['DB'].insert_loginfo(session['username'], 'lib', 'debug', pyfile, 'OK')
+    app.config['DB'].insert_loginfo(user, 'lib', 'debug', pyfile, 'OK')
 
     return cp.stdout
 
-def bzt_debugrun(app, yamlfile):
+
+def bzt_debugrun(app, yamlfile, user="unknown", is_api=False):
 
     cmd = 'bzt ' + yamlfile
     cp = subRun(cmd, shell=True, stdout=PIPE, stderr=STDOUT, text=True, timeout=180)  # timeout: sec
 
-    app.config['DB'].insert_loginfo(session['username'], 'case', 'debug', yamlfile, 'OK')
+    app.config['DB'].insert_loginfo(user, 'case', 'debug', yamlfile, 'OK')
 
     return cp.stdout

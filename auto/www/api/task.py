@@ -28,6 +28,7 @@ class Task(Resource):
         self.parser.add_argument('case', type=str)
         self.parser.add_argument('tags', type=str)
         self.parser.add_argument('conffile', type=str)
+        self.parser.add_argument('apiuser', type=str)
         self.parser.add_argument('key', type=str)
         self.parser.add_argument('task_no', type=str)
         self.log = getlogger(__name__)
@@ -226,22 +227,41 @@ class Task(Resource):
 
     def debug_run(self, args):
         fext = os.path.splitext(args['key'])[1]
+
+        is_api = False
+
+        user = "unknown"
+        if session.get("username"):
+            user = session['username']
+        if args.get('apiuser'):
+            user = args['apiuser']
+            is_api = True
+
         if fext == ".robot":
-            result = robot_debugrun(self.app, args['key'])
+            result = robot_debugrun(self.app, args['key'], user, is_api)
             return {"data": decorate_robotout(result)}
         if fext == ".py":
-            result = py_debugrun(self.app, args['key'])
+            result = py_debugrun(self.app, args['key'], user, is_api)
             return {"data": decorate_pyout(result)}
         if fext == ".yaml":
-            result = bzt_debugrun(self.app, args['key'])
+            result = bzt_debugrun(self.app, args['key'], user, is_api)
             return {"data": decorate_pyout(result)}
         return {"data": "暂不支持运行此类文件 <{}> .".format(fext)}
 
     def debug_pytest(self, args):
+
+        is_api = False
+        user = "unknown"
+        if session.get("username"):
+            user = session['username']
+        if args.get('apiuser'):
+            user = args['apiuser']
+            is_api = True
+
         fext = os.path.splitext(args['key'])[1]
         if not fext == ".py":
             return {"data": "pytest不支持运行此类文件:{}.".format(fext)}
-        result = debug_pytest_run(args['key'])
+        result = debug_pytest_run(args['key'], user, is_api)
         return {"data": decorate_pytestout(result)}
 
     def rerun_task(self, args):
