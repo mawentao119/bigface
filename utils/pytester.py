@@ -4,7 +4,7 @@ from _pytest import config
 from _pytest import main
 from _pytest import runner
 from utils.dbclass import DBcli
-from utils.file import exists_path, make_nod, write_file, read_file, mk_dirs
+from utils.file import exists_path, make_nod, write_file, read_file, mk_dirs, get_rand_name
 from utils.mylogger import getlogger
 
 log = getlogger(__name__)
@@ -12,7 +12,95 @@ db_cli = DBcli(os.environ["DB_FILE"])
 
 ## function for api run test case
 def api_pytest(args):
-    return {"data": "pass"}
+    case_file = args.get("key")
+    if not case_file:
+        return {"result": "ParameterError", "msg": "need parameter:key"}
+
+    if case_file.find("${PROJECT_DIR}") != -1:
+        case_file = case_file.replace("${PROJECT_DIR}", os.environ.get("PROJECT_DIR"))
+    if case_file.find("${PROJECT}") != -1:
+        case_file = case_file.replace("${PROJECT}", os.environ.get("PROJECT_DIR"))
+
+    if case_file.find("::") != -1:
+        real_file = case_file.split("::")[0]
+    else:
+        real_file = case_file
+
+    if not os.path.exists(real_file):
+        return {"result": "ParameterError", "msg": "file not found:{}".format(case_file)}
+
+    if not args.get("apiuser"):
+        return {"result": "ParameterError", "msg": "need parameter:apiuser"}
+
+    basedir = os.environ.get("API_RUN_DIR")
+    if not basedir:
+        return {"result": "SystemError", "msg": "cannot find ${API_RUN_DIR}"}
+
+    user = args.get("apiuser")
+    jobid = get_rand_name()
+    outputdir = os.path.join(basedir, jobid)
+    mk_dirs(outputdir) if not os.path.exists(outputdir) else None
+
+    log.info("user:{} ,pytest key:{}, case:{} ,outputdir:{}".format(user, case_file, case, outputdir))
+
+    log.info("界面执行pytest用例文件:{}".format(case_file))
+    conf = config.get_config(os.path.dirname(case_file))
+    pm = conf.pluginmanager
+    ext_args = [case_file]
+    conf = pm.hook.pytest_cmdline_parse(pluginmanager=pm, args=ext_args)
+    s = main.Session.from_config(conf)
+
+    conf.hook.pytest_sessionstart(session=s)
+    conf.hook.pytest_collection(session=s)
+
+    session = s
+    reports = []
+    for i, item in enumerate(session.items):
+        nextitem = session.items[i + 1] if i + 1 < len(session.items) else None
+        reports.append(runner.runtestprotocol(item=item, log=False, nextitem=nextitem))
+
+    call_pass = 0
+    call_fail = 0
+
+    html = ""
+    for r in reports:
+        output = """
+            <tr><td>{}</td> <td>{}</td> <td>{}</td> <td>{}</td></tr>
+            <tr><td></td> <td>{}</td> <td>{}</td> <td>{}</td></tr>
+            <tr><td></td> <td>{}</td> <td>{}</td> <td>{}</td></tr>
+            """.format(r[0].head_line, r[0].when, r[0].outcome, r[0].longreprtext,
+                       r[1].when, r[1].outcome, r[1].longreprtext,
+                       r[2].when, r[2].outcome, r[2].longreprtext, )
+        html += output
+
+        if r[1].outcome == "passed":
+            call_pass += 1
+        else:
+            call_fail += 1
+
+    head = """
+        <html>
+        <body>
+        <p>{}</p>
+        <table border="1">
+        <tr>
+            <th>Case Name</th>
+            <th>Stage</th>
+            <th>Result</th>
+            <th>Info</th>
+        </tr>
+        """.format(case_file)
+    tail = """
+        </table>
+        </body>
+        </html>
+        """
+
+    with open(outputdir + '/log.html', 'w') as af:
+        af.write(head + html + tail)
+
+    return {"result": "[  PASSED  ]" if call_fail == 0 else "[  FAILED  ]",
+            "PASS": call_pass, "FAIL": call_fail, "log": "api_report/" + jobid + "/log.html"}
 
 def get_pytest_data(path):
     """

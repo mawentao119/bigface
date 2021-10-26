@@ -1,4 +1,32 @@
-## uniRobot Project
+## bigface Project
+
+#### 通过api直接执行 RF 或 pytest 的测试用例
+* 直接执行RF的文件（suite）
+```buildoutcfg
+curl -H "Content-Type: application/json" -X POST -d '{"method": "api_rf", "category": "case", "apiuser": "charis", "key": "/Users/pi/PycharmProjects/bigface/project/DollarKV_test/TestCase/DT.robot" }' "http://localhost:8080/api/v1/task/"
+{"result": "[  PASSED  ]", "passed": 3, "failed": 0, "log": "1635224066.6731892/log.html", "report": "1635224066.6731892/report.html"}
+```
+* 指定特定的 RF 的case
+```buildoutcfg
+curl -H "Content-Type: application/json" -X POST -d '{"method": "api_rf", "category": "case", "apiuser": "charis", "key": "/Users/pi/PycharmProjects/bigface/project/DollarKV_test/TestCase/DT.robot","case":"水电费1" }' "http://localhost:8080/api/v1/task/" 
+{"result": "[  PASSED  ]", "passed": 1, "failed": 0, "log": "1635224393.212168/log.html", "report": "1635224393.212168/report.html"}
+```
+* 直接执行pytest 的测试文件
+```buildoutcfg
+curl -H "Content-Type: application/json" -X POST -d '{"method": "api_pytest", "category": "case", "apiuser": "charis", "key": "/Users/pi/PycharmProjects/bigface/project/DollarKV_test/TestCase/pytestdir/test_abc.py" }' "http://localhost:8080/api/v1/task/"
+{"result": "[  PASSED  ]", "PASS": 4, "FAIL": 0, "log": "1635230160.839029/log.html"}
+```
+* 执行pytest特定的case 
+```buildoutcfg
+curl -H "Content-Type: application/json" -X POST -d '{"method": "api_pytest", "category": "case", "apiuser": "charis", "key": "/Users/pi/PycharmProjects/bigface/project/DollarKV_test/TestCase/pytestdir/test_abc.py::test_abcf1" }' "http://localhost:8080/api/v1/task/"
+{"result": "[  PASSED  ]", "PASS": 1, "FAIL": 0, "log": "api_report/1635230756.99748/log.html"}
+```
+* 执行pytest特定测试类下的特定的测试函数
+```buildoutcfg
+curl -H "Content-Type: application/json" -X POST -d '{"method": "api_pytest", "category": "case", "apiuser": "charis", "key": "/Users/pi/PycharmProjects/bigface/project/DollarKV_test/TestCase/pytestdir/test_abc.py::Test_abcClass::test_abcC2" }' "http://localhost:8080/api/v1/task/"
+{"result": "[  PASSED  ]", "PASS": 1, "FAIL": 0, "log": "api_report/1635230841.6304588/log.html"}
+```
+
 ####  RobotFramework WebUI for testers that can not use Local IDE for some reasons.
 ### Deeply Modified [AutoLink Github](https://github.com/small99/AutoLink)
 * Update RF version support from 3.0 to 3.2。

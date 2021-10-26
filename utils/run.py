@@ -31,6 +31,15 @@ def api_rf(args):
     case_file = args.get("key")
     if not case_file:
         return {"result": "ParameterError", "msg": "need parameter:key"}
+
+    if case_file.find("${PROJECT_DIR}") != -1:
+        case_file = case_file.replace("${PROJECT_DIR}", os.environ.get("PROJECT_DIR"))
+    if case_file.find("${PROJECT}") != -1:
+        case_file = case_file.replace("${PROJECT}", os.environ.get("PROJECT_DIR"))
+
+    if not os.path.exists(case_file):
+        return {"result": "ParameterError", "msg": "file not found:{}".format(case_file)}
+
     if not args.get("apiuser"):
         return {"result": "ParameterError", "msg": "need parameter:apiuser"}
 
