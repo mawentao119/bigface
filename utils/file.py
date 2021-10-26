@@ -6,7 +6,7 @@ __author__ = "苦叶子"
 Basic Operation of OS
 """
 
-import os, stat, codecs
+import os, stat, codecs, time
 import shutil
 
 
@@ -116,6 +116,8 @@ def read_file(path, mode="r", encoding="utf-8"):
 
     return {"status": True, "data": data}
 
+def get_rand_name():
+    return str(time.time())
 
 def get_projectnamefromkey(key):
     # "//a/b/c/workspace/user/project/dir1/dir2/abc.robot --> project"

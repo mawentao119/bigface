@@ -15,8 +15,8 @@ from utils.mylogger import getlogger
 import multiprocessing
 
 from utils.file import remove_dir, get_splitext
-from utils.run import robot_run, is_run, is_full, stop_robot, robot_debugrun, py_debugrun,bzt_debugrun
-from utils.pytester import debug_pytest_run, pytest_run
+from utils.run import robot_run, is_run, is_full, stop_robot, robot_debugrun, py_debugrun,bzt_debugrun, api_rf
+from utils.pytester import debug_pytest_run, pytest_run, api_pytest
 
 class Task(Resource):
     def __init__(self):
@@ -62,6 +62,11 @@ class Task(Resource):
 
         elif args["method"] == "stop":
             return stop_robot(self.app, args)
+
+        elif args["method"] == "api_rf":
+            return api_rf(args)
+        elif args["method"] == "api_pytest":
+            return api_pytest(args)
 
         elif args["method"] == "delete":
             delete_task_record(self.app, args)

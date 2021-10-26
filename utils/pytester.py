@@ -10,6 +10,10 @@ from utils.mylogger import getlogger
 log = getlogger(__name__)
 db_cli = DBcli(os.environ["DB_FILE"])
 
+## function for api run test case
+def api_pytest(args):
+    return {"data": "pass"}
+
 def get_pytest_data(path):
     """
     pytest testcase finder

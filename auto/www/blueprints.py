@@ -181,6 +181,18 @@ def view_report(project, task):
 
     return send_file(job_path)
 
+@routes.route("/api_report/<jobid>/<filename>")
+def api_report(jobid, filename):
+
+    basedir = os.environ.get("API_RUN_DIR")
+    file_path = os.path.join(basedir, jobid, filename)
+
+    if not os.path.exists(file_path):
+        log.error("Cannot file file:{}".format(file_path))
+        file_path = "default.html"
+
+    return send_file(file_path)
+
 
 @routes.route("/q_view_report/<username>/<project>/<task>")
 def q_view_report(username, project, task):

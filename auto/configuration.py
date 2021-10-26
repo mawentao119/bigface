@@ -30,6 +30,7 @@ class Config:
     DB_DIR    = os.path.join(AUTO_HOME, "DBs")
     SPACE_DIR = os.path.join(AUTO_HOME, "workspace")
     AUTO_TEMP = os.path.join(AUTO_HOME, "runtime")
+    API_RUN_DIR = os.path.join(AUTO_HOME, "apirun")
 
     CASE_TEMPLATE_DIR = os.path.join(APP_DIR, 'auto/www/templates/case_template')
 
@@ -37,6 +38,7 @@ class Config:
     os.mkdir(DB_DIR) if not os.path.exists(DB_DIR) else None
     os.mkdir(SPACE_DIR) if not os.path.exists(SPACE_DIR) else None
     os.mkdir(AUTO_TEMP) if not os.path.exists(AUTO_TEMP) else None
+    os.mkdir(API_RUN_DIR) if not os.path.exists(API_RUN_DIR) else None
 
     log.info("初始化数据库...")
     DB = TestDB(AUTO_HOME)
@@ -49,6 +51,7 @@ class Config:
     os.environ["AUTO_HOME"] = AUTO_HOME
     os.environ["SPACE_DIR"] = SPACE_DIR
     os.environ["AUTO_TEMP"] = AUTO_TEMP
+    os.environ["API_RUN_DIR"] = API_RUN_DIR
     os.environ["DB_FILE"] = DB.get_dbfile()
 
     os.environ["BF_RESOURCE"]  = os.path.join(APP_DIR, 'utils/case_resource')

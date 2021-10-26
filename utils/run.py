@@ -17,13 +17,86 @@ from email.header import Header
 import json
 
 from robot.api import TestSuiteBuilder, ResultWriter, ExecutionResult    # done
-from utils.file import exists_path, make_nod, write_file, read_file, mk_dirs
+from utils.file import exists_path, make_nod, write_file, read_file, mk_dirs, get_rand_name
 from utils.dbclass import DBcli
 
 from utils.mylogger import getlogger
 
 log = getlogger(__name__)
 db_cli = DBcli(os.environ["DB_FILE"])
+
+# function for api run test case
+def api_rf(args):
+
+    case_file = args.get("key")
+    if not case_file:
+        return {"result": "ParameterError", "msg": "need parameter:key"}
+    if not args.get("apiuser"):
+        return {"result": "ParameterError", "msg": "need parameter:apiuser"}
+
+    basedir = os.environ.get("API_RUN_DIR")
+    if not basedir:
+        return {"result": "SystemError", "msg": "cannot find ${API_RUN_DIR}"}
+
+    case_style = True
+    case = args.get("case")
+    if not case:
+        case_style = False
+
+    user = args.get("apiuser")
+    jobid = get_rand_name()
+    outputdir = os.path.join(basedir, jobid)
+    mk_dirs(outputdir) if not os.path.exists(outputdir) else None
+
+    log.info("user:{} ,RF key:{}, case:{} ,outputdir:{}".format(user, case_file, case, outputdir))
+
+    if case_style:
+        ext_args = "--test " + case
+    else:
+        ext_args = ""
+
+    cmd = 'robot ' + ext_args + ' --outputdir=' + outputdir + ' ' + case_file
+
+    log.info("CMD:{}".format(cmd))
+    with open(outputdir + "/cmd.txt", 'w') as f:
+        f.write("{}|robot|{}|--outputdir={}|{}\n".format("api_rf", ext_args, outputdir, case_file))
+
+    cp = subRun(cmd, shell=True, stdout=PIPE, stderr=STDOUT, text=True, timeout=7200)  # timeout: sec 2hrs
+
+    with open(outputdir + "/debug.txt", 'w') as f:
+        f.write(cp.stdout)
+
+    db_cli.insert_loginfo(user, 'task', 'api_rf', case_file, 'OK')
+
+    try:
+
+        detail_result = ExecutionResult(outputdir + "/output.xml")
+
+    except Exception as e:
+        log.error("Open output.xml Exception:{},\n May robot run fail, console:{}".format(e, cp.stdout))
+        return
+
+    # Report and xUnit files can be generated based on the result object.
+    ResultWriter(detail_result).write_results(report=outputdir + '/report.html', log=outputdir + '/log.html')
+    logfile = os.path.join(jobid, "log.html")
+    rptfile = os.path.join(jobid, "report.html")
+
+    s = detail_result.suite
+
+    #source = s.source
+    success = 0
+    fail = 0
+    if os.path.isfile(s.source):
+        for t in s.tests._items:
+            tags = ",".join(t.tags)
+            success += 1 if t.status == 'PASS' else 0
+            fail += 1 if t.status == 'FAIL' else 0
+        result = {"result": "[  PASSED  ]" if fail == 0 else "[  FAILED  ]",
+                  "passed": success, "failed": fail,
+                  "log": "/api_report/" + logfile, "report": "/api_report/" + rptfile}
+        return result
+
+    return {"result": "[  PASSED  ]", "msg": "Not a dir:{}".format(s.source)}
 
 # This fun is for debug the test case, result is temporliy in /runtime dir
 def robot_debugrun(app, cases, user="unknown", is_api=False):
